@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        if (localStorage.getItem("userId")) {
+            window.location.replace("/dashboard.html");
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProResume | The Intelligent Resume Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- REFINED AMARANTH THEME --- */
+        :root {
+            --primary: #E88BA9; 
+            --accent: #C45576;  
+            --bg: #F8F2F4;      
+            --card-bg: rgba(255, 255, 255, 0.6); 
+            --border: rgba(255, 255, 255, 0.8); 
+            --text-main: #2D2427; 
+            --text-dim: #706266;  
+            --shadow-dark: rgba(135, 115, 122, 0.12);
+            /* Smooth easing for the floating effect */
+            --ease-float: cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        * { box-sizing: border-box; cursor: none !important; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg);
+            color: var(--text-main); 
+            line-height: 1.5;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.8) 0%, transparent 40%),
+                radial-gradient(circle at 85% 90%, rgba(232, 139, 169, 0.12) 0%, transparent 40%),
+                radial-gradient(rgba(196, 85, 118, 0.04) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 24px 24px; 
+            background-position: 0 0, 0 0, 12px 12px; 
+            background-attachment: fixed;
+        }
+
+        /* --- Physics Custom Cursor --- */
+        #cursor-glow {
+            position: fixed; top: 0; left: 0; width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(232, 139, 169, 0.15) 0%, transparent 60%);
+            border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); 
+            z-index: 9999; filter: blur(40px);
+            transition: width 0.3s var(--ease-float), height 0.3s var(--ease-float), background 0.3s;
+        }
+
+        #cursor-dot {
+            position: fixed; top: 0; left: 0; width: 8px; height: 8px;
+            background: var(--accent); border-radius: 50%; pointer-events: none;
+            transform: translate(-50%, -50%); z-index: 10000;
+            box-shadow: 0 0 12px 2px rgba(196, 85, 118, 0.3); 
+            transition: transform 0.15s var(--ease-float), background 0.2s;
+        }
+
+        /* --- Dense Parallax Symbols --- */
+        .symbols-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 0;
+        }
+        .sym-wrapper { position: absolute; will-change: transform; }
+        .resume-symbol {
+            width: 100%; height: 100%; display: block; color: var(--accent); 
+            filter: drop-shadow(0 15px 20px var(--shadow-dark));
+        }
+        
+        .w-1 { top: 15%; left: 8%; width: 140px; height: 140px; opacity: 0.12; }
+        .w-2 { top: 65%; right: 10%; width: 180px; height: 180px; opacity: 0.08;}
+        .w-3 { top: 78%; left: 20%; width: 90px; height: 90px; opacity: 0.15;}
+        .w-4 { top: 20%; right: 25%; width: 110px; height: 110px; opacity: 0.09;}
+        .w-5 { top: 40%; left: -2%; width: 160px; height: 160px; opacity: 0.06;}
+        .w-6 { top: 10%; right: 5%; width: 90px; height: 90px; opacity: 0.12;}
+        .w-7 { top: 85%; right: 30%; width: 120px; height: 120px; opacity: 0.07;}
+        .w-8 { top: 50%; left: 25%; width: 160px; height: 160px; opacity: 0.05;}
+        .w-9 { top: 30%; right: 5%; width: 130px; height: 130px; opacity: 0.1;}
+        .w-10 { top: 70%; left: 5%; width: 150px; height: 150px; opacity: 0.06;}
+        .w-11 { top: 5%; left: 35%; width: 80px; height: 80px; opacity: 0.11;}
+        .w-12 { top: 90%; right: 45%; width: 100px; height: 100px; opacity: 0.08;}
+        .w-13 { top: 45%; right: 35%; width: 140px; height: 140px; opacity: 0.07;}
+        .w-14 { top: 25%; left: 45%; width: 95px; height: 95px; opacity: 0.09;}
+        .w-15 { top: 85%; left: 35%; width: 110px; height: 110px; opacity: 0.1;}
+        .w-16 { top: 55%; right: 2%; width: 110px; height: 110px; opacity: 0.08;}
+        .w-17 { top: 12%; left: 60%; width: 75px; height: 75px; opacity: 0.13;}
+        .w-18 { top: 75%; right: 40%; width: 140px; height: 140px; opacity: 0.05;}
+        .w-19 { top: 35%; left: 70%; width: 95px; height: 95px; opacity: 0.12;}
+        .w-20 { top: 88%; left: 10%; width: 130px; height: 130px; opacity: 0.06;}
+
+        nav, .hero, .metrics-section, .features-section, footer { position: relative; z-index: 10; }
+
+        /* --- Premium Navbar --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 8%; position: fixed; width: 100%; top: 0;
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            background: rgba(248, 242, 244, 0.7); z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.6);
+            transform: translateY(-100%); animation: slideDown 0.6s 0.1s var(--ease-float) forwards;
+            transition: padding 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+        nav.scrolled { padding: 16px 8%; background: rgba(248, 242, 244, 0.95); box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+        @keyframes slideDown { to { transform: translateY(0); } }
+        .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
+        .logo span { color: var(--accent); }
+
+        /* --- Tightened Hero Section --- */
+        .hero {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+            min-height: 75vh; padding: 160px 5% 20px;
+        }
+
+        /* --- STRICT 2-LINE HEADLINE WRAPPER --- */
+        .headline-wrapper {
+            display: grid; grid-template-columns: 1fr; align-items: end;
+            width: 100%; max-width: 1400px; /* Widened to guarantee space */
+            margin: 0 auto 20px;
+            min-height: 2.5em; 
+        }
+
+        .story-phrase {
+            grid-column: 1; grid-row: 1; width: 100%;
+            font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 800; 
+            line-height: 1.15; letter-spacing: -1.2px; color: var(--text-main); 
+            text-shadow: 0 8px 16px rgba(0,0,0,0.02);
+            pointer-events: none; z-index: 1;
+        }
+        .story-phrase.active { pointer-events: auto; z-index: 2; }
+        .story-phrase .accent { color: var(--accent); }
+
+        /* Forces lines to remain unbroken on desktop */
+        .phrase-line { display: block; width: 100%; }
+        @media (min-width: 768px) { .phrase-line { white-space: nowrap; } }
+
+        /* The Mask for each word */
+        .word-mask { 
+            display: inline-block; overflow: hidden; vertical-align: bottom; 
+            padding-bottom: 0.15em; margin-right: 0.15em;
+        }
+        
+        /* The actual words doing the floating */
+        .word-mask span { 
+            display: inline-block; 
+            transform: translateY(120%); opacity: 0;
+            transition: transform 0.8s var(--ease-float), opacity 0.6s ease;
+        }
+        
+        /* Floating States */
+        .word-mask span.visible { transform: translateY(0); opacity: 1; }
+        .word-mask span.float-out { transform: translateY(-120%); opacity: 0; }
+
+        /* Hero Subtext */
+        .hero p {
+            font-size: 1.1rem; color: var(--text-dim); max-width: 580px;
+            margin: 0 auto 40px; font-weight: 500; line-height: 1.6;
+            opacity: 0; transform: translateY(20px);
+            transition: opacity 0.8s 0.3s, transform 0.8s 0.3s;
+        }
+        .hero p.visible { opacity: 1; transform: translateY(0); }
+
+        /* Buttons (Locked) */
+        .cta-group { 
+            display: flex; gap: 16px; opacity: 0; transform: translateY(20px);
+            justify-content: center; align-items: center; width: 100%;
+            transition: opacity 0.8s 0.5s, transform 0.8s 0.5s;
+        }
+        .cta-group.visible { opacity: 1; transform: translateY(0); }
+
+        .btn {
+            height: 52px; padding: 0 32px; border-radius: 26px; 
+            font-weight: 700; text-decoration: none; font-size: 0.95rem;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; border: 1px solid transparent;
+            transition: transform 0.2s var(--ease-float), box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .btn-primary { background: var(--accent); color: #ffffff; box-shadow: 0 8px 16px rgba(196, 85, 118, 0.2), inset 0 2px 0 rgba(255,255,255,0.2); }
+        .btn-primary:hover { transform: translateY(-3px); background: #b84869; box-shadow: 0 12px 24px rgba(196, 85, 118, 0.3), inset 0 2px 0 rgba(255,255,255,0.3); }
+        .btn-secondary { background: var(--card-bg); color: var(--accent); border: 1px solid var(--border); backdrop-filter: blur(12px); box-shadow: 0 8px 16px rgba(0,0,0,0.02); }
+        .btn-secondary:hover { background: #ffffff; transform: translateY(-3px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); }
+
+        /* --- Metrics Section (Tightened Layout) --- */
+        .metrics-section { padding: 20px 8% 60px; max-width: 1200px; margin: 0 auto; z-index: 20; position: relative;}
+        .metrics-grid { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 30px; }
+        .metric-item { text-align: center; opacity: 0; transform: translateY(20px); transition: all 0.6s var(--ease-float); }
+        .metric-item.visible { opacity: 1; transform: translateY(0); }
+        .metric-item h3 { font-size: 2.6rem; font-weight: 800; color: var(--accent); margin-bottom: 4px; line-height: 1; letter-spacing: -1px;}
+        .metric-item p { font-size: 0.85rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px;}
+
+        /* --- 3D Features Grid --- */
+        .section-header { text-align: center; margin-bottom: 48px; opacity: 0; transform: translateY(20px); transition: all 0.6s var(--ease-float);}
+        .section-header.visible { opacity: 1; transform: translateY(0); }
+        .section-header h2 { font-size: 2.2rem; font-weight: 800; color: var(--text-main); margin-bottom: 12px; letter-spacing: -0.5px;}
+        .section-header p { font-size: 1.05rem; color: var(--text-dim); max-width: 540px; margin: 0 auto; line-height: 1.6;}
+
+        .features-section { padding: 40px 0 80px; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; padding: 0 8%; max-width: 1250px; margin: 0 auto; perspective: 1500px; }
+        
+        .f-card {
+            background: var(--card-bg); padding: 40px 32px; border-radius: 20px;
+            border: 1px solid var(--border); opacity: 0; transform: translateY(30px) rotateX(-5deg);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            transition: opacity 0.6s ease, transform 0.6s var(--ease-float), box-shadow 0.4s ease;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.02), inset 0 1px 0 var(--border);
+            transform-style: preserve-3d; cursor: pointer !important;
+        }
+        .f-card.visible { opacity: 1; transform: translateY(0) rotateX(0); }
+        .f-card:hover { background: #ffffff; z-index: 2; box-shadow: 0 25px 50px rgba(135, 115, 122, 0.12), inset 0 1px 0 var(--border); }
+
+        .f-card .icon-placeholder {
+            width: 44px; height: 44px; border-radius: 12px; background: rgba(196, 85, 118, 0.08);
+            margin-bottom: 20px; display: flex; align-items: center; justify-content: center; color: var(--accent);
+            transform: translateZ(30px); transition: transform 0.4s var(--ease-float);
+        }
+        .f-card .icon-placeholder svg { width: 22px; height: 22px; }
+        .f-card h3 { color: var(--text-main); font-size: 1.25rem; margin-bottom: 12px; transform: translateZ(20px); transition: transform 0.4s var(--ease-float); }
+        .f-card p { color: var(--text-dim); font-weight: 500; font-size: 0.95rem; line-height: 1.6; transform: translateZ(10px); transition: transform 0.4s var(--ease-float); }
+        
+        .f-card:hover .icon-placeholder { transform: translateZ(50px); }
+        .f-card:hover h3 { transform: translateZ(30px); }
+        .f-card:hover p { transform: translateZ(20px); }
+
+        footer { padding: 40px 8%; text-align: center; color: var(--text-dim); font-size: 0.9rem; font-weight: 600; border-top: 1px solid rgba(0,0,0,0.05); background: rgba(255,255,255,0.3);}
+        nav .cta-group-nav { display: flex; gap: 16px; align-items: center; }
+        nav .btn-primary { height: 40px; padding: 0 20px; font-size: 0.85rem; border-radius: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="symbols-container">
+        <div class="sym-wrapper w-1" data-z="-2"><svg class="resume-symbol sym-svg" data-speed="0.03" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg></div>
+        <div class="sym-wrapper w-2" data-z="1"><svg class="resume-symbol sym-svg" data-speed="-0.02" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.084-.903 1.92-2.022 1.92H5.772c-1.119 0-2.022-.836-2.022-1.92v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.928-1.93-2.05-1.93H5.378c-1.122 0-2.05.85-2.05 1.93v3.783c0 .722.348 1.396.75 1.661m16.5 0l-1.42 1.25a2.25 2.25 0 01-1.45.545H12m4.5-4.5h.008v.008H16.5v-.008zm-9 0h.008v.008H7.5v-.008z"></path></svg></div>
+        <div class="sym-wrapper w-3" data-z="3"><svg class="resume-symbol sym-svg" data-speed="0.05" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5"></path></svg></div>
+        <div class="sym-wrapper w-4" data-z="-1"><svg class="resume-symbol sym-svg" data-speed="-0.03" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+        <div class="sym-wrapper w-5" data-z="-3"><svg class="resume-symbol sym-svg" data-speed="0.07" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg></div>
+        <div class="sym-wrapper w-6" data-z="2"><svg class="resume-symbol sym-svg" data-speed="-0.06" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5"></path></svg></div>
+        <div class="sym-wrapper w-7" data-z="-1"><svg class="resume-symbol sym-svg" data-speed="0.04" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.084-.903 1.92-2.022 1.92H5.772c-1.119 0-2.022-.836-2.022-1.92v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.928-1.93-2.05-1.93H5.378c-1.122 0-2.05.85-2.05 1.93v3.783c0 .722.348 1.396.75 1.661m16.5 0l-1.42 1.25a2.25 2.25 0 01-1.45.545H12m4.5-4.5h.008v.008H16.5v-.008zm-9 0h.008v.008H7.5v-.008z"></path></svg></div>
+        <div class="sym-wrapper w-8" data-z="4"><svg class="resume-symbol sym-svg" data-speed="-0.02" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+        <div class="sym-wrapper w-9" data-z="-2"><svg class="resume-symbol sym-svg" data-speed="0.03" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5"></path></svg></div>
+        <div class="sym-wrapper w-10" data-z="1"><svg class="resume-symbol sym-svg" data-speed="-0.05" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg></div>
+        <div class="sym-wrapper w-11" data-z="3"><svg class="resume-symbol sym-svg" data-speed="0.05" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+        <div class="sym-wrapper w-12" data-z="-3"><svg class="resume-symbol sym-svg" data-speed="-0.03" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.084-.903 1.92-2.022 1.92H5.772c-1.119 0-2.022-.836-2.022-1.92v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.928-1.93-2.05-1.93H5.378c-1.122 0-2.05.85-2.05 1.93v3.783c0 .722.348 1.396.75 1.661m16.5 0l-1.42 1.25a2.25 2.25 0 01-1.45.545H12m4.5-4.5h.008v.008H16.5v-.008zm-9 0h.008v.008H7.5v-.008z"></path></svg></div>
+        <div class="sym-wrapper w-13" data-z="2"><svg class="resume-symbol sym-svg" data-speed="0.04" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg></div>
+        <div class="sym-wrapper w-14" data-z="-1"><svg class="resume-symbol sym-svg" data-speed="-0.05" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+        <div class="sym-wrapper w-15" data-z="1"><svg class="resume-symbol sym-svg" data-speed="0.03" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5"></path></svg></div>
+        <div class="sym-wrapper w-16" data-z="2"><svg class="resume-symbol sym-svg" data-speed="-0.04" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg></div>
+        <div class="sym-wrapper w-17" data-z="-2"><svg class="resume-symbol sym-svg" data-speed="0.05" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5"></path></svg></div>
+        <div class="sym-wrapper w-18" data-z="3"><svg class="resume-symbol sym-svg" data-speed="-0.02" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+        <div class="sym-wrapper w-19" data-z="-1"><svg class="resume-symbol sym-svg" data-speed="0.04" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.084-.903 1.92-2.022 1.92H5.772c-1.119 0-2.022-.836-2.022-1.92v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.928-1.93-2.05-1.93H5.378c-1.122 0-2.05.85-2.05 1.93v3.783c0 .722.348 1.396.75 1.661m16.5 0l-1.42 1.25a2.25 2.25 0 01-1.45.545H12m4.5-4.5h.008v.008H16.5v-.008zm-9 0h.008v.008H7.5v-.008z"></path></svg></div>
+        <div class="sym-wrapper w-20" data-z="-3"><svg class="resume-symbol sym-svg" data-speed="-0.06" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg></div>
+    </div>
+
+    <div id="cursor-glow"></div>
+    <div id="cursor-dot"></div>
+
+    <nav id="navbar">
+        <div class="logo">Pro<span>Resume</span></div>
+        <div class="cta-group-nav">
+            <a href="/auth.html" style="color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 0.85rem;">Login</a>
+            <a href="/auth.html" class="btn btn-primary">Sign Up</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="headline-wrapper">
+            
+            <h1 class="story-phrase active">
+                <span class="phrase-line">
+                    <span class="word-mask"><span>The</span></span>
+                    <span class="word-mask"><span>intelligent</span></span>
+                    <span class="word-mask"><span>resume</span></span>
+                    <span class="word-mask"><span>builder</span></span>
+                </span>
+                <span class="phrase-line">
+                    <span class="word-mask"><span>that</span></span>
+                    <span class="word-mask"><span>lands</span></span>
+                    <span class="word-mask"><span>the</span></span>
+                    <span class="word-mask"><span class="accent">job.</span></span>
+                </span>
+            </h1>
+            
+            <h1 class="story-phrase">
+                <span class="phrase-line">
+                    <span class="word-mask"><span>Craft</span></span>
+                    <span class="word-mask"><span>professional</span></span>
+                    <span class="word-mask"><span>applications</span></span>
+                </span>
+                <span class="phrase-line">
+                    <span class="word-mask"><span>that</span></span>
+                    <span class="word-mask"><span>demand</span></span>
+                    <span class="word-mask"><span class="accent">attention.</span></span>
+                </span>
+            </h1>
+            
+            <h1 class="story-phrase">
+                <span class="phrase-line">
+                    <span class="word-mask"><span>Your</span></span>
+                    <span class="word-mask"><span>fastest</span></span>
+                    <span class="word-mask"><span>route</span></span>
+                    <span class="word-mask"><span>to</span></span>
+                </span>
+                <span class="phrase-line">
+                    <span class="word-mask"><span>the</span></span>
+                    <span class="word-mask"><span class="accent">offer</span></span>
+                    <span class="word-mask"><span class="accent">letter.</span></span>
+                </span>
+            </h1>
+            
+        </div>
+        
+        <p id="hero-desc">Built for the modern job market. Intelligent, ATS-optimized templates engineered to highlight your value and capture attention instantly.</p>
+        
+        <div class="cta-group" id="hero-cta">
+            <a href="/auth.html" class="btn btn-primary">Start Building Now</a>
+            <a href="#features" class="btn btn-secondary">Explore Features</a>
+        </div>
+    </section>
+
+    <div class="metrics-section">
+        <div class="metrics-grid">
+            <div class="metric-item reveal-target">
+                <h3>10k+</h3>
+                <p>Resumes Built</p>
+            </div>
+            <div class="metric-item reveal-target" style="transition-delay: 0.1s;">
+                <h3>98%</h3>
+                <p>ATS Success Rate</p>
+            </div>
+            <div class="metric-item reveal-target" style="transition-delay: 0.2s;">
+                <h3>40+</h3>
+                <p>Premium Layouts</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="features" class="features-section">
+        <div class="section-header reveal-target">
+            <h2>Designed for professionals</h2>
+            <p>Everything you need to architect a standout application, bundled into one seamless experience.</p>
+        </div>
+        
+        <div class="features">
+            <div class="f-card reveal-target">
+                <div class="icon-placeholder">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                </div>
+                <h3>Intelligent Editor</h3>
+                <p>Real-time live preview with automated formatting. Change layouts with a single click without breaking your structure.</p>
+            </div>
+            <div class="f-card reveal-target" style="transition-delay: 0.1s;">
+                <div class="icon-placeholder">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h3>ATS Validated</h3>
+                <p>Our templates are rigorously parsed against major Applicant Tracking Systems to ensure your data is always read correctly.</p>
+            </div>
+            <div class="f-card reveal-target" style="transition-delay: 0.2s;">
+                <div class="icon-placeholder">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 002-2v-4M17 8l-5-5-5 5M12 3v12"></path></svg>
+                </div>
+                <h3>Cloud Vault</h3>
+                <p>Save multiple versions securely to the cloud. Access, duplicate, and export your professional history from anywhere.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 ProResume Builder. Built for developers, designers, and professionals.
+    </footer>
+
+    <script>
+        // 1. CORE PHYSICS ENGINE
+        const lerp = (start, end, factor) => start + (end - start) * factor;
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let dotX = mouseX, dotY = mouseY, glowX = mouseX, glowY = mouseY;
+        let scrollY = 0;
+        
+        const cursorGlow = document.getElementById('cursor-glow');
+        const cursorDot = document.getElementById('cursor-dot');
+        const symWrappers = document.querySelectorAll('.sym-wrapper');
+        const symSvgs = document.querySelectorAll('.sym-svg');
+        const navbar = document.getElementById('navbar');
+
+        // 2. MOUSE TRACKING
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            symSvgs.forEach(svg => {
+                const speed = parseFloat(svg.getAttribute('data-speed'));
+                const x = (mouseX - centerX) * speed;
+                const y = (mouseY - centerY) * speed;
+                svg.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // 3. SCROLL PARALLAX
+        window.addEventListener('scroll', () => {
+            scrollY = window.scrollY;
+            
+            if(scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+
+            symWrappers.forEach(wrap => {
+                const zIndex = parseInt(wrap.getAttribute('data-z'));
+                const speed = zIndex * 0.15; 
+                wrap.style.transform = `translateY(${scrollY * speed}px)`;
+            });
+        });
+
+        // 4. MAIN ANIMATION LOOP
+        function animate() {
+            dotX = lerp(dotX, mouseX, 0.4); dotY = lerp(dotY, mouseY, 0.4);
+            glowX = lerp(glowX, mouseX, 0.1); glowY = lerp(glowY, mouseY, 0.1);
+
+            cursorDot.style.transform = `translate(calc(${dotX}px - 50%), calc(${dotY}px - 50%))`;
+            cursorGlow.style.transform = `translate(calc(${glowX}px - 50%), calc(${glowY}px - 50%))`;
+            
+            requestAnimationFrame(animate);
+        }
+        animate(); 
+
+        // 5. HOVER EFFECTS (Locked Buttons)
+        document.querySelectorAll('a, button').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                cursorGlow.style.background = 'radial-gradient(circle, rgba(196, 85, 118, 0.4) 0%, transparent 60%)';
+                cursorDot.style.transform = `translate(calc(${dotX}px - 50%), calc(${dotY}px - 50%)) scale(2)`;
+                cursorDot.style.background = '#ffffff';
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                cursorGlow.style.background = 'radial-gradient(circle, rgba(232, 139, 169, 0.15) 0%, transparent 60%)';
+                cursorDot.style.transform = `translate(calc(${dotX}px - 50%), calc(${dotY}px - 50%)) scale(1)`;
+                cursorDot.style.background = 'var(--accent)';
+            });
+        });
+
+        document.querySelectorAll('.f-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                const cx = rect.width / 2; const cy = rect.height / 2;
+                
+                card.style.transform = `perspective(1000px) rotateX(${((y - cy) / cy) * -4}deg) rotateY(${((x - cx) / cx) * 4}deg) translateY(-5px) scale3d(1.01, 1.01, 1.01)`;
+                cursorGlow.style.background = 'radial-gradient(circle, rgba(196, 85, 118, 0.25) 0%, transparent 60%)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale3d(1, 1, 1)';
+                cursorGlow.style.background = 'radial-gradient(circle, rgba(232, 139, 169, 0.15) 0%, transparent 60%)';
+            });
+        });
+
+        // 6. FLOATING WORDS ANIMATION SEQUENCE
+        const phrases = document.querySelectorAll('.story-phrase');
+        let currentIndex = 0;
+
+        function floatOut(phrase) {
+            const words = phrase.querySelectorAll('.word-mask span');
+            words.forEach((word, i) => {
+                setTimeout(() => {
+                    word.classList.remove('visible');
+                    word.classList.add('float-out');
+                }, i * 40); // Fast wave out
+            });
+            return words.length * 40 + 600; // Return total time taken to clear phrase
+        }
+
+        function floatIn(phrase) {
+            phrase.classList.add('active');
+            const words = phrase.querySelectorAll('.word-mask span');
+            
+            // Instantly reset positions to bottom while invisible
+            words.forEach(word => {
+                word.style.transition = 'none';
+                word.classList.remove('float-out');
+                word.classList.remove('visible');
+            });
+
+            // Re-enable transition and float up into view
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    words.forEach((word, i) => {
+                        word.style.transition = ''; // Restore CSS transitions
+                        setTimeout(() => {
+                            word.classList.add('visible');
+                        }, i * 60); // Smooth wave in
+                    });
+                });
+            });
+        }
+
+        // Start the continuous rotation loop
+        setTimeout(() => {
+            setInterval(() => {
+                const currentPhrase = phrases[currentIndex];
+                const duration = floatOut(currentPhrase);
+                
+                setTimeout(() => {
+                    currentPhrase.classList.remove('active');
+                    currentIndex = (currentIndex + 1) % phrases.length;
+                    floatIn(phrases[currentIndex]);
+                }, duration);
+
+            }, 4500); // Wait 4.5 seconds before changing
+        }, 1000);
+
+        // 7. INITIAL PAGE LOAD REVEAL
+        window.addEventListener('load', () => {
+            const firstPhraseWords = phrases[0].querySelectorAll('.word-mask span');
+            firstPhraseWords.forEach((word, i) => {
+                setTimeout(() => word.classList.add('visible'), 100 + (i * 60)); 
+            });
+            
+            document.getElementById('hero-desc').classList.add('visible');
+            document.getElementById('hero-cta').classList.add('visible');
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.reveal-target').forEach(el => observer.observe(el));
+        document.querySelectorAll('.metric-item').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

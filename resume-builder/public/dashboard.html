@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | ProResume</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 🌸 MID-TONE AMARANTH THEME (Zero glare, highly readable) 🌸 */
+            --primary: #F497B4; /* Soft Amaranth Pink */
+            --accent: #c94b73;  /* Deep muted pink for contrast */
+            --bg: #cfc0c4;      /* Deep mid-tone dusty rose/taupe */
+            --card-bg: #dad0d3; /* Soft matte tone for cards, slightly lifted from bg */
+            --border: rgba(100, 85, 90, 0.18); /* Tinted soft border */
+            --text-main: #2a2224; /* Deep muted brown-grey for high contrast */
+            --text-dim: #5c4d52;  /* Muted secondary text */
+        }
+
+        * { box-sizing: border-box; cursor: none !important; } 
+
+        /* 🚨 SMOOTH SCROLLING ENABLED 🚨 */
+        html { scroll-behavior: smooth; }
+
+        body { 
+            margin: 0; 
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg);
+            color: var(--text-main); 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            display: flex;
+            flex-direction: column;
+            
+            /* 🚨 ADDED GRID & OPTIMIZED GLOWS 🚨 */
+            background-image: 
+                /* Muted, low-opacity radial glows */
+                radial-gradient(circle at 10% 10%, rgba(244, 151, 180, 0.1) 0%, transparent 35%),
+                radial-gradient(circle at 90% 90%, rgba(0, 0, 0, 0.01) 0%, transparent 35%),
+                /* Subtle Dotted Grid Pattern */
+                radial-gradient(rgba(130, 110, 115, 0.1) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 30px 30px; /* Grid is 30x30 */
+            background-position: 0 0, 0 0, 15px 15px; /* Offset the grid dots */
+        }
+
+        /* 🚨 REMOVED CURSOR GLOW 🚨 */
+        #cursor-dot {
+            position: fixed; top: 0; left: 0; width: 6px; height: 6px;
+            background: var(--primary); border-radius: 50%;
+            pointer-events: none; transform: translate(-50%, -50%);
+            z-index: 10000; box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* --- Header (Now Sticky) --- */
+        .header-flex { 
+            display: flex; justify-content: space-between; align-items: center; 
+            height: 80px; 
+            padding: 0 4%; 
+            border-bottom: 1px solid var(--border); 
+            background: rgba(207, 192, 196, 0.85); /* Matches deeper background */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky; top: 0; z-index: 1000;
+            
+            /* 🚨 ENHANCED HEADER DEPTH 🚨 */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+        .logo-wrapper { position: relative; display: flex; align-items: center; }
+        .logo-dot {
+            position: absolute; top: 0px; left: -18px; width: 6px; height: 6px;
+            background-color: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary);
+        }
+        .header-flex h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; color: var(--text-main); margin: 0; }
+        .header-flex h1 span { color: #4d0a2f; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        
+        .nav-link { 
+            color: var(--text-dim); font-size: 0.9rem; font-weight: 600; 
+            text-decoration: none; transition: 0.3s; margin-right: 15px; 
+            position: relative;
+        }
+        .nav-link:hover { color: var(--text-main); }
+        .nav-link.active { color: var(--accent); }
+
+        /* =========================================
+           🚨 AVATAR & DROPDOWN MENU CSS 🚨
+           ========================================= */
+        .user-menu-container { position: relative; }
+        .user-menu-btn {
+            background: transparent; border: 1px solid var(--border); color: var(--accent);
+            font-weight: 700; font-size: 0.85rem; padding: 6px 16px 6px 6px; 
+            border-radius: 30px; cursor: none; display: flex; align-items: center; gap: 10px; transition: 0.3s;
+            
+            /* 🚨 ENHANCED BUTTON DEPTH 🚨 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .user-menu-btn:hover, .user-menu-btn.active {
+            background: rgba(244, 151, 180, 0.15); border-color: rgba(244, 151, 180, 0.4);
+            
+            /* 🚨 DEEPER LIFTED SHADOW 🚨 */
+            box-shadow: 0 6px 18px rgba(244, 151, 180, 0.2);
+        }
+        .chevron-icon { transition: transform 0.3s ease; }
+        .user-menu-btn.active .chevron-icon { transform: rotate(180deg); }
+
+        .user-avatar {
+            width: 28px; height: 28px; border-radius: 50%; background: rgba(0, 0, 0, 0.05);
+            display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .user-avatar svg { width: 16px; height: 16px; color: var(--text-dim); }
+
+        .user-dropdown {
+            position: absolute; top: calc(100% + 12px); right: 0; background: var(--card-bg);
+            border: 1px solid var(--border); border-radius: 12px; padding: 16px; min-width: 240px;
+            backdrop-filter: blur(20px); 
+            
+            /* 🚨 MULTI-LAYERED DROPDOWN SHADOW & RIM LIGHT 🚨 */
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.4);
+            opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); z-index: 1000;
+        }
+        .user-dropdown.show { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .user-info-header { text-align: center; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .user-fullname-display { font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .user-email-display { font-size: 0.8rem; color: var(--text-dim); word-break: break-all; font-weight: 500; }
+
+        .logout-btn { 
+            width: 100%; padding: 10px; background: rgba(239, 68, 68, 0.05); color: #ef4444; 
+            border: 1px solid rgba(239, 68, 68, 0.15); border-radius: 8px; font-weight: 600; font-size: 0.85rem; transition: 0.3s; cursor: none;
+        }
+        .logout-btn:hover { background: #ef4444; color: white; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(239, 68, 68, 0.25); }
+
+        /* =========================================
+           🚨 PAGE HEADER (HERO) 🚨
+           ========================================= */
+        .page-header {
+            padding: 10vh 4% 8vh 4%; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        .page-header h2 {
+            font-size: 3.5rem; 
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0 0 16px 0;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            
+            /* 🚨 INCREASED TEXT SHADOW DEPTH 🚨 */
+            text-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        .page-header h2 span {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .page-header p {
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            margin: 0;
+            max-width: 650px;
+            line-height: 1.6;
+        }
+        
+        .hero-action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+            align-items: center;
+        }
+
+        .btn-explore {
+            padding: 14px 32px;
+            border-radius: 30px;
+            background: rgba(244, 151, 180, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(244, 151, 180, 0.3);
+            font-size: 1rem; font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); cursor: none;
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+            
+            /* 🚨 LAYERED BUTTON SHADOWS 🚨 */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.04);
+        }
+        .btn-explore:hover {
+            background: var(--primary); color: #fff; border-color: transparent;
+            
+            /* 🚨 EXTREME GLOW ON HOVER 🚨 */
+            box-shadow: 0 15px 30px rgba(244, 151, 180, 0.4), 0 5px 10px rgba(244, 151, 180, 0.2); 
+            transform: translateY(-3px);
+        }
+
+        /* 🚨 Customizer Button (Muted Background) 🚨 */
+        .btn-custom {
+            background: rgba(201, 75, 115, 0.05); 
+            color: var(--accent); 
+            border-color: rgba(201, 75, 115, 0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05), 0 2px 5px rgba(0,0,0,0.03);
+        }
+        .btn-custom:hover {
+            background: linear-gradient(135deg, var(--primary), var(--accent)); 
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 15px 30px rgba(244, 151, 180, 0.35), 0 5px 10px rgba(244, 151, 180, 0.2); 
+            transform: translateY(-3px);
+        }
+        .btn-custom:hover svg {
+            stroke: #fff;
+        }
+
+        /* =========================================
+           🚨 SCROLLABLE GRID & STICKY PANEL 🚨
+           ========================================= */
+        .dashboard-layout {
+            display: grid; 
+            grid-template-columns: 1.5fr 1fr; 
+            gap: 40px;
+            padding: 20px 4% 80px 4%; 
+            align-items: start; 
+            scroll-margin-top: 110px; 
+        }
+
+        .left-column { 
+            display: flex; flex-direction: column;
+        }
+
+        .main-tab-view {
+            display: none;
+            flex-direction: column; gap: 20px;
+            animation: slideUpFade 0.4s ease forwards;
+        }
+        .main-tab-view.active { display: flex; }
+
+        .section-title { 
+            font-size: 0.8rem; font-weight: 800; color: var(--accent); text-transform: uppercase; 
+            letter-spacing: 3px; margin-bottom: 5px; display: flex; align-items: center; gap: 15px; flex-shrink: 0;
+        }
+        .section-title::after { content: ""; height: 1px; flex: 1; background: linear-gradient(to right, var(--border), transparent); }
+
+        /* Templates Grid */
+        .templates-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+        .card { 
+            background: var(--card-bg); padding: 16px; border-radius: 16px; 
+            border: 1px solid var(--border); transition: all 0.3s ease; display: flex; flex-direction: row; align-items: center; gap: 15px;
+            
+            /* 🚨 LAYERED CARD DEPTH & RIM LIGHT 🚨 */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.03), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        }
+        .card:hover { 
+            transform: translateY(-5px); background: #eee8ea; 
+            
+            /* 🚨 MASSIVE HOVER ELEVATION 🚨 */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.06), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+            border-color: rgba(244, 151, 180, 0.4); 
+        }
+        .card.active { 
+            border-color: var(--primary); background: rgba(244, 151, 180, 0.08); 
+            
+            /* 🚨 ACTIVE INNER GLOW SHADOW 🚨 */
+            box-shadow: inset 0 0 0 1px rgba(244,151,180,0.2), 0 8px 20px rgba(244, 151, 180, 0.15); 
+        }
+
+        .icon-preview {
+            width: 55px; flex-shrink: 0; aspect-ratio: 1 / 1.414; 
+            background: #c8b8bc; border-radius: 4px; border: 1px solid var(--border); display: flex; overflow: hidden; pointer-events: none;
+            
+            /* 🚨 INSET SHADOW TO MAKE IT LOOK LIKE A RECESSED WINDOW 🚨 */
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.06);
+        }
+        .card-text { display: flex; flex-direction: column; justify-content: center; pointer-events: none;}
+        .card-title { font-weight: 700; font-size: 1rem; margin-bottom: 3px; color: var(--text-main); }
+        .card-desc { color: var(--text-dim); font-size: 0.8rem; line-height: 1.3; }
+
+        /* --- SAVED ARCHIVES SECTION --- */
+        #saved-resumes-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        
+        .saved-card { 
+            background: var(--card-bg); padding: 24px; border-radius: 16px; 
+            border: 1px solid var(--border); transition: 0.3s; position: relative; display: flex; flex-direction: column;
+            
+            /* 🚨 DEEP BASE SHADOW & RIM LIGHT 🚨 */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.03), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        }
+        .saved-card:hover { 
+            border-color: rgba(244, 151, 180, 0.4); transform: translateY(-5px); background: #eee8ea; 
+            
+            /* 🚨 ELEVATED HOVER 🚨 */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.06), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+        }
+        
+        .resume-icon-badge {
+            width: 44px; height: 44px; background: linear-gradient(135deg, rgba(244,151,180,0.15), transparent); border: 1px solid rgba(244,151,180,0.2);
+            border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; transition: 0.3s;
+            
+            /* 🚨 BADGE INNER & OUTER DEPTH 🚨 */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05), inset 0 1px 1px rgba(255,255,255,0.4);
+        }
+        .resume-icon-badge svg { color: var(--accent); width: 20px; height: 20px;}
+        .saved-card:hover .resume-icon-badge { background: linear-gradient(135deg, var(--primary), var(--accent)); box-shadow: 0 12px 25px rgba(244, 151, 180, 0.35), inset 0 1px 1px rgba(255,255,255,0.5); transform: translateY(-2px); }
+        .saved-card:hover .resume-icon-badge svg { color: #fff; }
+        
+        .btn-workspace {
+            width: 100%; padding: 12px; border-radius: 8px; background: rgba(0,0,0,0.03);
+            color: var(--accent); font-weight: 600; border: none; cursor: none; transition: 0.3s; margin-top: 20px; font-size: 0.85rem;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+        }
+        .btn-workspace:hover { background: var(--primary); color: #fff; transform: translateY(-2px); box-shadow: 0 12px 25px rgba(244, 151, 180, 0.3); }
+        
+        .delete-btn {
+            position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(248, 113, 113, 0.1); display: flex; align-items: center; justify-content: center;
+            color: #ef4444; cursor: none; transition: 0.3s; border: 1px solid rgba(248, 113, 113, 0.2); z-index: 10; opacity: 0; transform: scale(0.8);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+        }
+        .saved-card:hover .delete-btn { opacity: 1; transform: scale(1); }
+        .delete-btn:hover { background: #ef4444; color: white; transform: rotate(90deg) scale(1.1); box-shadow: 0 10px 25px rgba(248, 113, 113, 0.4);}
+        .saved-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin: 0 0 6px 0; }
+        .saved-card p { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+
+        /* --- RIGHT SIDE: STICKY PREVIEW PANEL --- */
+        .right-column {
+            position: sticky;
+            top: 110px; 
+            height: calc(100vh - 140px); 
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 24px; padding: 30px; display: flex; flex-direction: column; align-items: center;
+            backdrop-filter: blur(20px); overflow: hidden; 
+            
+            /* 🚨 EXTREME PANEL SHADOW WITH RIM LIGHT 🚨 */
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.05), inset 0 1px 1px rgba(255,255,255,0.4);
+        }
+
+        .real-right-content {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.5s ease 0.1s, visibility 0.5s ease 0.1s;
+        }
+        .real-right-content.visible { opacity: 1; visibility: visible; }
+
+        .large-preview-wrapper {
+            flex: 1; width: 100%; display: flex; justify-content: center; align-items: center; min-height: 0; margin-bottom: 20px;
+        }
+
+        .large-preview {
+            height: 100%; aspect-ratio: 1 / 1.414; background: #c8b8bc; border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.05); overflow: hidden; display: flex; transition: 0.3s ease; position: relative;
+            
+            /* 🚨 MASSIVE PAPER SHADOW & COUNTER-LIGHT 🚨 */
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.08), -5px -5px 20px rgba(255,255,255,0.5);
+        }
+
+        .panel-text-area { flex-shrink: 0; width: 100%; }
+        .panel-title { font-size: 1.3rem; font-weight: 800; color: var(--text-main); text-align: center; margin-bottom: 5px; transition: 0.3s;}
+        .panel-desc { font-size: 0.85rem; color: var(--text-dim); text-align: center; line-height: 1.4; margin-bottom: 15px; transition: 0.3s;}
+
+        /* 🚨 BUTTON GROUP FOR TEMPLATE SELECTION 🚨 */
+        .template-actions {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn-generate {
+            flex: 1; padding: 14px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #fff; font-weight: 800; font-size: 0.95rem; border: none; transition: 0.3s; cursor: none;
+            box-shadow: 0 12px 30px rgba(201, 75, 115, 0.3), inset 0 1px 1px rgba(255,255,255,0.3);
+        }
+        .btn-generate:hover:not(:disabled) { 
+            transform: translateY(-3px); 
+            box-shadow: 0 18px 40px rgba(201, 75, 115, 0.45), inset 0 1px 1px rgba(255,255,255,0.4); 
+        }
+        .btn-generate:active:not(:disabled) { transform: scale(0.98); }
+        .btn-generate:disabled { background: rgba(0,0,0,0.05); color: var(--text-dim); box-shadow: none; opacity: 0.5;}
+
+        .btn-customizer {
+            flex: 1; padding: 14px; border-radius: 10px; background: rgba(255,255,255,0.4);
+            color: var(--accent); font-weight: 800; font-size: 0.95rem; border: 1px solid var(--border); transition: 0.3s; cursor: none;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+        }
+        .btn-customizer:hover:not(:disabled) { 
+            background: #fff; transform: translateY(-3px); 
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1); 
+        }
+        .btn-customizer:active:not(:disabled) { transform: scale(0.98); }
+        .btn-customizer:disabled { opacity: 0.5; cursor: default; }
+
+        /* --- CSS Template Shapes --- */
+        .academic-p { border-top: 8% solid var(--accent); background: #fff; width: 100%; height: 100%; }
+        .minimal-p { background: #fff; width: 60%; height: 100%; margin: auto; border-radius: 2px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .modern-p { width: 100%; height: 100%; display: flex; }
+        .modern-p .side { width: 35%; background: var(--accent); height: 100%; }
+        .modern-p .main { width: 65%; background: #fff; height: 100%; }
+        .attorney-p { background: #f3f4f2; border-bottom: 8% solid #8c7b5b; width: 100%; height: 100%; }
+
+        /* =========================================
+           🚨 WELCOMING ANIMATION OVERLAY 🚨
+           ========================================= */
+        .welcome-overlay {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            background: var(--card-bg); display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 20; transition: opacity 0.5s ease, visibility 0.5s ease;
+            overflow: hidden;
+        }
+        .welcome-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .welcome-orb {
+            position: absolute; width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(244, 151, 180, 0.15) 0%, transparent 60%);
+            border-radius: 50%; filter: blur(30px);
+            animation: breathe 4s infinite alternate ease-in-out;
+            z-index: 1;
+        }
+
+        .float-card {
+            position: absolute;
+            background: #dad0d3; /* Matches deeper card theme */
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            
+            /* 🚨 DEEP FLOAT SHADOW 🚨 */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.5);
+            z-index: 2;
+        }
+        .fc-1 { width: 140px; height: 45px; top: 25%; left: 10%; animation: float1 6s infinite ease-in-out; }
+        .fc-2 { width: 160px; height: 110px; top: 45%; right: 5%; animation: float2 8s infinite ease-in-out; }
+        .fc-3 { width: 100px; height: 100px; bottom: 15%; left: 20%; animation: float3 7s infinite ease-in-out; border-radius: 50%; display: flex; align-items: center; justify-content: center;}
+
+        .welcome-text-content {
+            position: relative; z-index: 5; text-align: center; max-width: 85%;
+            animation: slideUpFade 1s ease forwards;
+        }
+        .w-title {
+            font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .w-desc { font-size: 0.95rem; color: var(--text-dim); line-height: 1.6; }
+
+        @keyframes breathe { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(1.1); opacity: 1; } }
+        @keyframes float1 { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-20px) rotate(2deg); } }
+        @keyframes float2 { 0%, 100% { transform: translateY(0) rotate(3deg); } 50% { transform: translateY(-25px) rotate(-3deg); } }
+        @keyframes float3 { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(20px) scale(1.05); } }
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="cursor-dot"></div>
+
+    <header class="header-flex">
+        <div class="logo-wrapper">
+            <h1>Pro<span>Resume</span></h1>
+        </div>
+        <div class="nav-right">
+            <a href="#" id="link-templates" class="nav-link active" onclick="switchMainTab('templates', event)">Templates</a>
+            <a href="#" id="link-saved" class="nav-link" onclick="switchMainTab('saved', event)">Saved Resumes</a>
+            
+            <div class="user-menu-container">
+                <button class="user-menu-btn" id="user-menu-btn">
+                    <div class="user-avatar" id="user-avatar-container">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <span id="user-greeting">Welcome!</span>
+                    <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                
+                <div class="user-dropdown" id="user-dropdown">
+                    <div class="user-info-header">
+                        <div class="user-fullname-display" id="user-fullname-display">Loading...</div>
+                        <div class="user-email-display" id="user-email-display">loading...</div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">Sign Out</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <h2 id="banner-greeting">Craft Your <span>Legacy</span></h2>
+        <p>Explore our collection of premium templates. Select a baseline layout to initialize the builder, or seamlessly manage your saved archives below.</p>
+        
+        <div class="hero-action-buttons">
+            <button class="btn-explore" onclick="switchMainTab('templates', event); document.getElementById('workspace').scrollIntoView({behavior: 'smooth'})">
+                Built in templates
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+            </button>
+            <button class="btn-explore btn-custom" onclick="window.location.href='customize.html'">
+                Customize Yourself
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="dashboard-layout" id="workspace">
+        
+        <div class="left-column">
+            
+            <div id="view-templates" class="main-tab-view active">
+                <div class="section-title">Draft a New Masterpiece</div>
+                <div class="templates-grid">
+                    <div class="card" id="card-academic" onclick="selectTemplate('academic')">
+                        <div class="icon-preview"><div class="academic-p"></div></div>
+                        <div class="card-text">
+                            <div class="card-title">Technical Executive</div>
+                            <div class="card-desc">High-density layout.</div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="card-minimal" onclick="selectTemplate('minimal')">
+                        <div class="icon-preview"><div class="minimal-p"></div></div>
+                        <div class="card-text">
+                            <div class="card-title">Sleek Minimalist</div>
+                            <div class="card-desc">Elegance in typography.</div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="card-modern" onclick="selectTemplate('modern')">
+                        <div class="icon-preview"><div class="modern-p"><div class="side"></div><div class="main"></div></div></div>
+                        <div class="card-text">
+                            <div class="card-title">Contemporary Creative</div>
+                            <div class="card-desc">Visual hierarchy & flair.</div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="card-attorney" onclick="selectTemplate('attorney')">
+                        <div class="icon-preview"><div class="attorney-p"></div></div>
+                        <div class="card-text">
+                            <div class="card-title">Traditional Corporate</div>
+                            <div class="card-desc">Built for formal roles.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-saved" class="main-tab-view">
+                <div class="section-title">Saved Archives</div>
+                <div id="saved-resumes-container">
+                    <p style="color: var(--text-dim); font-size: 0.85rem;">Synchronizing your library...</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="right-column" id="right-column">
+            
+            <div class="welcome-overlay" id="idle-overlay">
+                <div class="welcome-orb"></div>
+                
+                <div class="float-card fc-1">
+                    <div style="width: 50%; height: 6px; background: rgba(244,151,180,0.4); border-radius: 4px; margin: 18px auto;"></div>
+                </div>
+                <div class="float-card fc-2">
+                    <div style="width: 80%; height: 8px; background: rgba(0,0,0,0.06); border-radius: 4px; margin: 20px 10% 15px 10%;"></div>
+                    <div style="width: 60%; height: 6px; background: rgba(0,0,0,0.04); border-radius: 4px; margin: 10px 10%;"></div>
+                    <div style="width: 50%; height: 6px; background: rgba(0,0,0,0.04); border-radius: 4px; margin: 10px 10%;"></div>
+                </div>
+                <div class="float-card fc-3">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(244,151,180,0.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 17 22 12"></polyline></svg>
+                </div>
+
+                <div class="welcome-text-content">
+                    <div class="w-title">Awaiting Selection</div>
+                    <div class="w-desc">Select a premium template from the library on the left to start building your professional story.</div>
+                </div>
+            </div>
+
+            <div class="real-right-content" id="real-right-content">
+                <div class="large-preview-wrapper">
+                    <div class="large-preview" id="main-preview"></div>
+                </div>
+                
+                <div class="panel-text-area">
+                    <div class="panel-title" id="panel-title">Select a Template</div>
+                    <div class="panel-desc" id="panel-desc">Choose a design to view details and start building.</div>
+                    
+                    <div class="template-actions">
+                        <button class="btn-generate" id="btn-quick-edit" onclick="generateResume()">Quick Editor</button>
+                        <button class="btn-customizer" id="btn-pro-custom" onclick="sendToCustomizer()">Pro Customizer</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <template id="saved-card-template">
+        <div class="saved-card">
+            <div class="resume-icon-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            </div>
+            <h3 class="resume-title"></h3>
+            <p class="resume-date"></p>
+            <button class="btn-workspace edit-btn">Open Workspace</button>
+            <button class="delete-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+        </div>
+    </template>
+
+    <script>
+        const dot = document.getElementById('cursor-dot');
+
+        document.addEventListener('mousemove', (e) => {
+            dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('mousedown', () => { 
+            dot.style.transform = 'translate(-50%, -50%) scale(1.5)'; 
+        });
+        document.addEventListener('mouseup', () => { 
+            dot.style.transform = 'translate(-50%, -50%) scale(1)'; 
+        });
+
+        document.addEventListener('mouseover', (e) => {
+            const target = e.target.closest('button:not(:disabled), .card, .user-menu-btn, .nav-link, .saved-card, .btn-explore');
+            if(target) {
+                dot.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            }
+        });
+        document.addEventListener('mouseout', (e) => {
+            const target = e.target.closest('button:not(:disabled), .card, .user-menu-btn, .nav-link, .saved-card, .btn-explore');
+            if(target) {
+                dot.style.transform = 'translate(-50%, -50%) scale(1)';
+            }
+        });
+
+        function switchMainTab(tabId, event) {
+            if(event) event.preventDefault();
+            
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.getElementById('link-' + tabId).classList.add('active');
+
+            document.querySelectorAll('.main-tab-view').forEach(view => view.classList.remove('active'));
+            document.getElementById('view-' + tabId).classList.add('active');
+
+            document.getElementById('idle-overlay').classList.remove('hidden');
+            document.getElementById('real-right-content').classList.remove('visible');
+            
+            currentTemplate = "";
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+
+            document.getElementById('workspace').scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+
+        const menuBtn = document.getElementById('user-menu-btn');
+        const dropdown = document.getElementById('user-dropdown');
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            dropdown.classList.toggle('show');
+            menuBtn.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+                menuBtn.classList.remove('active');
+            }
+        });
+
+        // 🚨 METICULOUSLY ALIGNED, ABSOLUTE POSITIONED TEMPLATES FOR STUDIO 🚨
+        const fullTemplateHTML = {
+            "academic": `
+                <div class="element text-element" style="left: 40px; top: 40px; width: 714px; font-family: 'Inter', sans-serif; font-size: 34px; font-weight: 900; color: #111111; line-height: 1.1; text-transform: uppercase;">SARAH JENKINS</div>
+                <div class="element text-element" style="left: 40px; top: 82px; width: 300px; font-family: 'Inter', sans-serif; font-size: 14.5px; font-weight: 700; color: #4a148c; text-transform: capitalize; letter-spacing: 0.5px;">Lead Product Designer</div>
+                <div class="element text-element" style="left: 354px; top: 55px; width: 400px; font-family: 'Inter', sans-serif; font-size: 11px; color: #555555; text-align: right; line-height: 1.6;">San Francisco, CA 94105 | +1 (555) 123-4567<br>sarah.jenkins@example.com | linkedin.com/in/sarahjenkins-design<br>github.com/sarahdesigns</div>
+                <div class="element shape-element" style="left: 40px; top: 110px; width: 714px; height: 1px; background-color: transparent; border-bottom: 2px solid transparent; z-index: 1;"></div>
+
+                <div class="element text-element" style="left: 40px; top: 130px; width: 440px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: #4a148c; border-bottom: 2px solid #4a148c; padding-bottom: 4px; text-transform: uppercase;">PROFILE SUMMARY</div>
+                <div class="element text-element" style="left: 40px; top: 165px; width: 440px; font-family: 'Inter', sans-serif; font-size: 11.5px; line-height: 1.6; color: #111111; text-align: justify;">Visionary and data-driven Lead Product Designer with 8+ years of experience in creating intuitive, human-centric digital products. Proven track record of spearheading end-to-end design lifecycles for Fortune 500 clients, resulting in up to 40% increases in user retention and a 25% boost in conversion rates. Highly adept at cross-functional collaboration, scaling complex design systems from scratch, and translating intricate technical requirements into elegant interfaces.</div>
+
+                <div class="element text-element" style="left: 40px; top: 280px; width: 440px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: #4a148c; border-bottom: 2px solid #4a148c; padding-bottom: 4px; text-transform: uppercase;">EXPERIENCE</div>
+                
+                <div class="element text-element" style="left: 40px; top: 315px; width: 440px; font-family: 'Inter', sans-serif; font-size: 14.5px; font-weight: 700; color: #111111;">Lead Product Designer</div>
+                <div class="element text-element" style="left: 40px; top: 335px; width: 440px; font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 700; color: #4a148c;">CreativeTech Solutions Inc.</div>
+                <div class="element text-element" style="left: 40px; top: 355px; width: 440px; font-family: 'Inter', sans-serif; font-size: 11px; color: #666666;">Mar 2020 - Present</div>
+                <div class="element text-element" style="left: 55px; top: 375px; width: 425px; font-family: 'Inter', sans-serif; font-size: 11px; line-height: 1.6; color: #111111;">• <strong>Redesign Leadership:</strong> Spearheaded the complete overhaul of the flagship fintech mobile application, resulting in a 4.9-star app store rating and a 35% increase in daily active users.<br>• <strong>Design System Architecture:</strong> Developed and maintained a unified, scalable design system from the ground up, reducing design-to-development handoff friction by 40%.<br>• <strong>Mentorship & Strategy:</strong> Managed and mentored a high-performing team of 5 junior and mid-level designers.<br>• <strong>User Research:</strong> Conducted quarterly moderated usability testing sessions with over 500 active users.</div>
+
+                <div class="element text-element" style="left: 40px; top: 505px; width: 440px; font-family: 'Inter', sans-serif; font-size: 14.5px; font-weight: 700; color: #111111;">Senior UX/UI Designer</div>
+                <div class="element text-element" style="left: 40px; top: 525px; width: 440px; font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 700; color: #4a148c;">Innovate Web Agency</div>
+                <div class="element text-element" style="left: 40px; top: 545px; width: 440px; font-family: 'Inter', sans-serif; font-size: 11px; color: #666666;">Jun 2018 - Feb 2020</div>
+                <div class="element text-element" style="left: 55px; top: 565px; width: 425px; font-family: 'Inter', sans-serif; font-size: 11px; line-height: 1.6; color: #111111;">• <strong>Enterprise Solutions:</strong> Developed high-fidelity wireframes, user flows, and interactive prototypes for 20+ enterprise clients, including major healthcare and e-commerce brands.<br>• <strong>Conversion Optimization:</strong> Conducted rigorous A/B testing on checkout flows that led to a 15% increase in e-commerce conversion rates.</div>
+
+                <div class="element text-element" style="left: 40px; top: 665px; width: 440px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: #4a148c; border-bottom: 2px solid #4a148c; padding-bottom: 4px; text-transform: uppercase;">PROJECTS</div>
+                
+                <div class="element text-element" style="left: 40px; top: 700px; width: 440px; font-family: 'Inter', sans-serif; font-size: 14.5px; font-weight: 700; color: #111111;">FinTech Analytics Dashboard</div>
+                <div class="element text-element" style="left: 40px; top: 720px; width: 440px; font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 700; color: #4a148c;">Figma, React, D3.js</div>
+                <div class="element text-element" style="left: 40px; top: 740px; width: 440px; font-family: 'Inter', sans-serif; font-size: 11px; color: #666666;">github.com/sjenkins/fintech | live-fintech.com</div>
+                <div class="element text-element" style="left: 55px; top: 760px; width: 425px; font-family: 'Inter', sans-serif; font-size: 11px; line-height: 1.6; color: #111111;">• <strong>Objective:</strong> Designed a comprehensive financial analytics dashboard capable of handling and visualizing real-time stock market data streams.<br>• <strong>Impact:</strong> Streamlined data visualization components with custom D3.js charts, increasing user engagement time by 25%.</div>
+
+                <div class="element text-element" style="left: 40px; top: 830px; width: 440px; font-family: 'Inter', sans-serif; font-size: 14.5px; font-weight: 700; color: #111111;">EcoTracker Sustainability App</div>
+                <div class="element text-element" style="left: 40px; top: 850px; width: 440px; font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 700; color: #4a148c;">Sketch, Swift, Firebase</div>
+                <div class="element text-element" style="left: 40px; top: 870px; width: 440px; font-family: 'Inter', sans-serif; font-size: 11px; color: #666666;">github.com/sjenkins/eco</div>
+                <div class="element text-element" style="left: 55px; top: 890px; width: 425px; font-family: 'Inter', sans-serif; font-size: 11px; line-height: 1.6; color: #111111;">• <strong>Objective:</strong> Conceptualized, prototyped, and tested a consumer-facing carbon footprint tracking application.<br>• <strong>Impact:</strong> Awarded 1st place in the Global Sustainability Hackathon 2019; successfully acquired seed funding based on the interactive prototype.</div>
+
+                <div class="element text-element" style="left: 510px; top: 130px; width: 244px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: #4a148c; border-bottom: 2px solid #4a148c; padding-bottom: 4px; text-transform: uppercase;">TECHNICAL SKILLS</div>
+                
+                <div class="element shape-element" style="left: 510px; top: 165px; width: 115px; height: 26px; border-radius: 4px; background-color: #ffffff; border: 1px solid #cccccc; z-index: 1;"></div>
+                <div class="element text-element" style="left: 510px; top: 170px; width: 115px; font-family: 'Inter', sans-serif; font-size: 11px; text-align: center; color: #444444; z-index: 2;">UI/UX Design</div>
+                <div class="element shape-element" style="left: 630px; top: 165px; width: 120px; height: 26px; border-radius: 4px; background-color: #ffffff; border: 1px solid #cccccc; z-index: 1;"></div>
+                <div class="element text-element" style="left: 630px; top: 170px; width: 120px; font-family: 'Inter', sans-serif; font-size: 11px; text-align: center; color: #444444; z-index: 2;">User Research</div>
+                <div class="element shape-element" style="left: 510px; top: 196px; width: 115px; height: 26px; border-radius: 4px; background-color: #ffffff; border: 1px solid #cccccc; z-index: 1;"></div>
+                <div class="element text-element" style="left: 510px; top: 201px; width: 115px; font-family: 'Inter', sans-serif; font-size: 11px; text-align: center; color: #444444; z-index: 2;">Prototyping</div>
+                <div class="element shape-element" style="left: 630px; top: 196px; width: 120px; height: 26px; border-radius: 4px; background-color: #ffffff; border: 1px solid #cccccc; z-index: 1;"></div>
+                <div class="element text-element" style="left: 630px; top: 201px; width: 120px; font-family: 'Inter', sans-serif; font-size: 11px; text-align: center; color: #444444; z-index: 2;">Figma / Sketch</div>
+                <div class="element shape-element" style="left: 510px; top: 227px; width: 115px; height: 26px; border-radius: 4px; background-color: #ffffff; border: 1px solid #cccccc; z-index: 1;"></div>
+                <div class="element text-element" style="left: 510px; top: 232px; width: 115px; font-family: 'Inter', sans-serif; font-size: 11px; text-align: center; color: #444444; z-index: 2;">Agile Methodology</div>
+                
+                <div class="element text-element" style="left: 510px; top: 280px; width: 244px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: #4a148c; border-bottom: 2px solid #4a148c; padding-bottom: 4px; text-transform: uppercase;">EDUCATION</div>
+                <div class="element text-element" style="left: 510px; top: 315px; width: 244px; font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 700; color: #111111;">M.S. Human-Computer Interaction</div>
+                <div class="element text-element" style="left: 510px; top: 335px; width: 244px; font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600; color: #4a148c;">Stanford University</div>
+                <div class="element text-element" style="left: 510px; top: 355px; width: 244px; font-family: 'Inter', sans-serif; font-size: 11px; color: #666666;">Sep 2016 - May 2018 | Stanford, CA</div>
+
+                <div class="element text-element" style="left: 510px; top: 390px; width: 244px; font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 700; color: #111111;">B.F.A. Interaction Design</div>
+                <div class="element text-element" style="left: 510px; top: 410px; width: 244px; font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600; color: #4a148c;">California College of the Arts</div>
+                <div class="element text-element" style="left: 510px; top: 430px; width: 244px; font-family: 'Inter', sans-serif; font-size: 11px; color: #666666;">Sep 2012 - May 2016 | San Francisco, CA</div>
+
+                <div class="element text-element" style="left: 510px; top: 480px; width: 244px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: #4a148c; border-bottom: 2px solid #4a148c; padding-bottom: 4px; text-transform: uppercase;">CERTIFICATIONS</div>
+                <div class="element text-element" style="left: 525px; top: 515px; width: 229px; font-family: 'Inter', sans-serif; font-size: 11.5px; line-height: 1.6; color: #111111;">• Google UX Design Professional Certificate (Aug 2021)<br>• Certified Usability Analyst (CUA) (Nov 2019)<br>• IBM Front-End Development Badge (Jan 2018)</div>
+
+                <div class="element text-element" style="left: 510px; top: 600px; width: 244px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: #4a148c; border-bottom: 2px solid #4a148c; padding-bottom: 4px; text-transform: uppercase;">ADDITIONAL STRENGTHS</div>
+                <div class="element text-element" style="left: 525px; top: 635px; width: 229px; font-family: 'Inter', sans-serif; font-size: 11.5px; line-height: 1.6; color: #111111;">• <strong>Industry Recognition:</strong> Winner of the UX/UI Design Excellence Award 2022.<br>• <strong>Thought Leadership:</strong> Featured in the 'Top 50 Designers of the Year' list by DesignWeekly Magazine.<br>• <strong>Public Speaking:</strong> Keynote Speaker at Global Design Conference 2021.</div>
+
+                <div class="element text-element" style="left: 510px; top: 760px; width: 244px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: #4a148c; border-bottom: 2px solid #4a148c; padding-bottom: 4px; text-transform: uppercase;">HOBBIES & LANGUAGES</div>
+                <div class="element text-element" style="left: 525px; top: 795px; width: 229px; font-family: 'Inter', sans-serif; font-size: 11.5px; line-height: 1.6; color: #111111;">• English (Native), Spanish (Fluent), French (Conversational)<br>• Travel Photography, Rock Climbing, Indie Game Development, Typography</div>
+            `,
+            "minimal": `
+                <div class="element text-element" style="left: 42px; top: 40px; width: 710px; font-family: 'Times New Roman', serif; font-size: 42.6px; text-align: center; font-variant: small-caps; letter-spacing: 1px; color: #000;">SARAH JENKINS</div>
+                <div class="element text-element" style="left: 42px; top: 95px; width: 710px; font-family: 'Times New Roman', serif; font-size: 13.3px; text-align: center; color: #000;">San Francisco, CA 94105 | (555) 123-4567 | sarah.jenkins@example.com | linkedin.com/in/sarahjenkins-design</div>
+                
+                <div class="element text-element" style="left: 42px; top: 140px; width: 710px; font-family: 'Times New Roman', serif; font-size: 15.3px; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">Professional Summary</div>
+                <div class="element text-element" style="left: 42px; top: 170px; width: 710px; font-family: 'Times New Roman', serif; font-size: 14px; line-height: 1.3; color: #000; text-align: justify;">Visionary and data-driven Lead Product Designer with 8+ years of experience in creating intuitive, human-centric digital products. Proven track record of spearheading end-to-end design lifecycles for Fortune 500 clients, resulting in up to 40% increases in user retention and a 25% boost in conversion rates. Highly adept at cross-functional collaboration, scaling complex design systems from scratch, and translating intricate technical requirements into elegant, accessible interfaces.</div>
+
+                <div class="element text-element" style="left: 42px; top: 255px; width: 710px; font-family: 'Times New Roman', serif; font-size: 15.3px; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">Experience</div>
+                
+                <div class="element text-element" style="left: 42px; top: 285px; width: 500px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; color: #000;">Lead Product Designer</div>
+                <div class="element text-element" style="left: 552px; top: 285px; width: 200px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; text-align: right; color: #000;">Mar 2020 – Present</div>
+                <div class="element text-element" style="left: 42px; top: 305px; width: 710px; font-family: 'Times New Roman', serif; font-size: 14px; font-style: italic; color: #000;">CreativeTech Solutions Inc.</div>
+                <div class="element text-element" style="left: 60px; top: 325px; width: 692px; font-family: 'Times New Roman', serif; font-size: 14px; line-height: 1.3; color: #000;">• <strong>Redesign Leadership:</strong> Spearheaded the complete overhaul of the flagship fintech mobile application, resulting in a 4.9-star app store rating.<br>• <strong>Design System Architecture:</strong> Developed and maintained a unified, scalable design system from the ground up.<br>• <strong>Mentorship:</strong> Managed and mentored a high-performing team of 5 junior and mid-level designers.<br>• <strong>User Research:</strong> Conducted quarterly moderated usability testing sessions with over 500 active users.</div>
+
+                <div class="element text-element" style="left: 42px; top: 410px; width: 500px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; color: #000;">Senior UX/UI Designer</div>
+                <div class="element text-element" style="left: 552px; top: 410px; width: 200px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; text-align: right; color: #000;">Jun 2018 – Feb 2020</div>
+                <div class="element text-element" style="left: 42px; top: 430px; width: 710px; font-family: 'Times New Roman', serif; font-size: 14px; font-style: italic; color: #000;">Innovate Web Agency</div>
+                <div class="element text-element" style="left: 60px; top: 450px; width: 692px; font-family: 'Times New Roman', serif; font-size: 14px; line-height: 1.3; color: #000;">• <strong>Enterprise Solutions:</strong> Developed high-fidelity wireframes, user flows, and interactive prototypes for 20+ enterprise clients.<br>• <strong>Conversion Optimization:</strong> Conducted rigorous A/B testing on checkout flows that led to a 15% increase in e-commerce conversion rates.</div>
+
+                <div class="element text-element" style="left: 42px; top: 515px; width: 710px; font-family: 'Times New Roman', serif; font-size: 15.3px; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">Education</div>
+                <div class="element text-element" style="left: 42px; top: 545px; width: 500px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; color: #000;">M.S. Human-Computer Interaction</div>
+                <div class="element text-element" style="left: 552px; top: 545px; width: 200px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; text-align: right; color: #000;">May 2018</div>
+                <div class="element text-element" style="left: 42px; top: 565px; width: 710px; font-family: 'Times New Roman', serif; font-size: 14px; font-style: italic; color: #000;">Stanford University | Stanford, CA</div>
+
+                <div class="element text-element" style="left: 42px; top: 615px; width: 710px; font-family: 'Times New Roman', serif; font-size: 15.3px; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">Projects</div>
+                <div class="element text-element" style="left: 42px; top: 645px; width: 500px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; color: #000;">FinTech Analytics Dashboard | Figma, React, D3.js</div>
+                <div class="element text-element" style="left: 552px; top: 645px; width: 200px; font-family: 'Times New Roman', serif; font-size: 14px; text-align: right; color: #000;">github.com/sjenkins/fintech-dash</div>
+                <div class="element text-element" style="left: 60px; top: 665px; width: 692px; font-family: 'Times New Roman', serif; font-size: 14px; line-height: 1.3; color: #000;">• <strong>Objective:</strong> Designed a comprehensive financial analytics dashboard capable of handling and visualizing real-time stock market data streams.<br>• <strong>Impact:</strong> Streamlined data visualization components with custom D3.js charts, increasing user engagement time by 25%.</div>
+
+                <div class="element text-element" style="left: 42px; top: 730px; width: 710px; font-family: 'Times New Roman', serif; font-size: 15.3px; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">Technical Skills</div>
+                <div class="element text-element" style="left: 42px; top: 760px; width: 710px; font-family: 'Times New Roman', serif; font-size: 14px; line-height: 1.3; color: #000;"><b>Design & UI Tools:</b> Figma, Sketch, Adobe Creative Suite, InVision, Zeplin<br><b>Prototyping & Motion:</b> Principle, Framer, Webflow, ProtoPie, After Effects<br><b>Web Technologies:</b> HTML5, CSS3, Basic React.js, Tailwind CSS, JavaScript (ES6+)</div>
+
+                <div class="element text-element" style="left: 42px; top: 825px; width: 710px; font-family: 'Times New Roman', serif; font-size: 15.3px; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">Certifications</div>
+                <div class="element text-element" style="left: 42px; top: 855px; width: 500px; font-family: 'Times New Roman', serif; font-size: 14px; color: #000;">Google UX Design Professional Certificate (Link)</div>
+                <div class="element text-element" style="left: 552px; top: 855px; width: 200px; font-family: 'Times New Roman', serif; font-size: 14px; text-align: right; color: #000;">Aug 2021</div>
+
+                <div class="element text-element" style="left: 42px; top: 895px; width: 710px; font-family: 'Times New Roman', serif; font-size: 15.3px; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">Extracurricular</div>
+                <div class="element text-element" style="left: 42px; top: 925px; width: 500px; font-family: 'Times New Roman', serif; font-size: 14px; color: #000;"><b>Lead Design Mentor</b> — <em>Design Hub San Francisco</em></div>
+                <div class="element text-element" style="left: 552px; top: 925px; width: 200px; font-family: 'Times New Roman', serif; font-size: 14px; text-align: right; color: #000;">2020 - Present</div>
+                <div class="element text-element" style="left: 60px; top: 945px; width: 692px; font-family: 'Times New Roman', serif; font-size: 14px; line-height: 1.3; color: #000;">• Guided over 30 young designers in portfolio building, resume refinement, and interview preparation.</div>
+                
+                <div class="element text-element" style="left: 42px; top: 990px; width: 710px; font-family: 'Times New Roman', serif; font-size: 15.3px; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">Achievements</div>
+                <div class="element text-element" style="left: 60px; top: 1020px; width: 692px; font-family: 'Times New Roman', serif; font-size: 14px; color: #000;">• Winner of UX/UI Design Excellence Award 2022.<br>• Featured in the 'Top 50 Designers of the Year' list by DesignWeekly Magazine.<br>• Keynote Speaker at Global Design Conference 2021 on 'The Future of Accessibility in Web3'.</div>
+            `,
+            "modern": `
+                <div class="element shape-element" style="left: 0px; top: 0px; width: 278px; height: 1123px; background-color: #292929; z-index: 1;"></div>
+                <div class="element shape-element" style="left: 45px; top: 53px; width: 186px; height: 186px; border-radius: 50%; background-color: #cbd5e1; background-image: url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80'); background-size: cover; border: 4px solid #fff; z-index: 2;"></div>
+                
+                <div class="element text-element" style="left: 33px; top: 270px; width: 212px; font-family: 'Lato', sans-serif; font-size: 17.3px; font-weight: 800; color: #fff; letter-spacing: 2px; text-transform: uppercase; z-index: 2;">ABOUT ME</div>
+                <div class="element text-element" style="left: 33px; top: 300px; width: 212px; font-family: 'Lato', sans-serif; font-size: 11.5px; color: #e5e7eb; line-height: 1.5; z-index: 2; text-align: justify;">Visionary and data-driven Lead Product Designer with 8+ years of experience in creating intuitive, human-centric digital products. Proven track record of spearheading end-to-end design lifecycles for Fortune 500 clients, resulting in up to 40% increases in user retention and a 25% boost in conversion rates.</div>
+
+                <div class="element text-element" style="left: 33px; top: 435px; width: 212px; font-family: 'Lato', sans-serif; font-size: 17.3px; font-weight: 800; color: #fff; letter-spacing: 2px; text-transform: uppercase; z-index: 2;">SKILLS</div>
+                <div class="element shape-element" style="left: 40px; top: 475px; width: 1px; height: 170px; background-color: #555; z-index: 2;"></div>
+                
+                <div class="element shape-element" style="left: 36px; top: 480px; width: 9px; height: 9px; border-radius: 50%; background-color: #292929; border: 1.5px solid #ccc; z-index: 3;"></div>
+                <div class="element text-element" style="left: 55px; top: 477px; width: 190px; font-family: 'Lato', sans-serif; font-size: 12px; color: #fff; font-weight: 600; z-index: 2;">UI/UX Design</div>
+                <div class="element shape-element" style="left: 55px; top: 497px; width: 180px; height: 4px; background-color: rgba(255,255,255,0.2); z-index: 2;"></div>
+                <div class="element shape-element" style="left: 55px; top: 497px; width: 171px; height: 4px; background-color: #fff; z-index: 3;"></div>
+
+                <div class="element shape-element" style="left: 36px; top: 530px; width: 9px; height: 9px; border-radius: 50%; background-color: #292929; border: 1.5px solid #ccc; z-index: 3;"></div>
+                <div class="element text-element" style="left: 55px; top: 527px; width: 190px; font-family: 'Lato', sans-serif; font-size: 12px; color: #fff; font-weight: 600; z-index: 2;">User Research</div>
+                <div class="element shape-element" style="left: 55px; top: 547px; width: 180px; height: 4px; background-color: rgba(255,255,255,0.2); z-index: 2;"></div>
+                <div class="element shape-element" style="left: 55px; top: 547px; width: 158px; height: 4px; background-color: #fff; z-index: 3;"></div>
+
+                <div class="element shape-element" style="left: 36px; top: 580px; width: 9px; height: 9px; border-radius: 50%; background-color: #292929; border: 1.5px solid #ccc; z-index: 3;"></div>
+                <div class="element text-element" style="left: 55px; top: 572px; width: 190px; font-family: 'Lato', sans-serif; font-size: 12px; color: #fff; font-weight: 600; z-index: 2;">Prototyping</div>
+                <div class="element shape-element" style="left: 55px; top: 592px; width: 180px; height: 4px; background-color: rgba(255,255,255,0.2); z-index: 2;"></div>
+                <div class="element shape-element" style="left: 55px; top: 592px; width: 165px; height: 4px; background-color: #fff; z-index: 3;"></div>
+
+                <div class="element shape-element" style="left: 36px; top: 630px; width: 9px; height: 9px; border-radius: 50%; background-color: #292929; border: 1.5px solid #ccc; z-index: 3;"></div>
+                <div class="element text-element" style="left: 55px; top: 627px; width: 190px; font-family: 'Lato', sans-serif; font-size: 12px; color: #fff; font-weight: 600; z-index: 2;">Agile Leadership</div>
+                <div class="element shape-element" style="left: 55px; top: 647px; width: 180px; height: 4px; background-color: rgba(255,255,255,0.2); z-index: 2;"></div>
+                <div class="element shape-element" style="left: 55px; top: 647px; width: 153px; height: 4px; background-color: #fff; z-index: 3;"></div>
+
+                <div class="element text-element" style="left: 33px; top: 700px; width: 212px; font-family: 'Lato', sans-serif; font-size: 17.3px; font-weight: 800; color: #fff; letter-spacing: 2px; text-transform: uppercase; z-index: 2;">REFERENCE</div>
+                <div class="element shape-element" style="left: 40px; top: 740px; width: 1px; height: 90px; background-color: #555; z-index: 2;"></div>
+                
+                <div class="element shape-element" style="left: 36px; top: 745px; width: 9px; height: 9px; border-radius: 50%; background-color: #292929; border: 1.5px solid #ccc; z-index: 3;"></div>
+                <div class="element text-element" style="left: 55px; top: 742px; width: 190px; font-family: 'Lato', sans-serif; font-size: 13px; font-weight: 700; color: #fff; z-index: 2;">Alex Hamilton</div>
+                <div class="element text-element" style="left: 55px; top: 762px; width: 190px; font-family: 'Lato', sans-serif; font-size: 11px; color: #aaa; line-height: 1.4; z-index: 2;">Chief Technology Officer<br>CreativeTech Solutions</div>
+
+                <div class="element shape-element" style="left: 36px; top: 805px; width: 9px; height: 9px; border-radius: 50%; background-color: #292929; border: 1.5px solid #ccc; z-index: 3;"></div>
+                <div class="element text-element" style="left: 55px; top: 802px; width: 190px; font-family: 'Lato', sans-serif; font-size: 13px; font-weight: 700; color: #fff; z-index: 2;">Maria Garcia</div>
+                <div class="element text-element" style="left: 55px; top: 822px; width: 190px; font-family: 'Lato', sans-serif; font-size: 11px; color: #aaa; line-height: 1.4; z-index: 2;">Director of Product Management<br>Innovate Web Agency</div>
+
+                <div class="element text-element" style="left: 33px; top: 900px; width: 212px; font-family: 'Lato', sans-serif; font-size: 17.3px; font-weight: 800; color: #fff; letter-spacing: 2px; text-transform: uppercase; z-index: 2;">INTERESTS & LANGUAGES</div>
+                <div class="element text-element" style="left: 33px; top: 940px; width: 212px; font-family: 'Lato', sans-serif; font-size: 12px; color: #ccc; line-height: 1.6; z-index: 2;"><b>Languages:</b> English, Spanish, French<br><b>Interests:</b> Travel Photography, Rock Climbing, Indie Game Development, Typography</div>
+
+                <div class="element text-element" style="left: 310px; top: 53px; width: 450px; font-family: 'Lato', sans-serif; font-size: 40px; font-weight: 700; color: #111; letter-spacing: 4px; text-transform: uppercase; line-height: 1.1; z-index: 2;">SARAH JENKINS</div>
+                <div class="element text-element" style="left: 310px; top: 105px; width: 450px; font-family: 'Lato', sans-serif; font-size: 16px; color: #555; letter-spacing: 1.3px; text-transform: uppercase; z-index: 2;">Lead Product Designer</div>
+                
+                <div class="element text-element" style="left: 310px; top: 150px; width: 225px; font-family: 'Lato', sans-serif; font-size: 11.5px; color: #555; line-height: 1.6; z-index: 2;"><b>P:</b> +1 (555) 123-4567<br><b>E:</b> sarah.jenkins@example.com</div>
+                <div class="element text-element" style="left: 535px; top: 150px; width: 225px; font-family: 'Lato', sans-serif; font-size: 11.5px; color: #555; line-height: 1.6; z-index: 2;"><b>A:</b> San Francisco, CA 94105<br><b>IN:</b> linkedin.com/in/sarahjenkins-design</div>
+
+                <div class="element text-element" style="left: 310px; top: 220px; width: 450px; font-family: 'Lato', sans-serif; font-size: 17.3px; font-weight: 800; color: #111; letter-spacing: 2.6px; text-transform: uppercase; z-index: 2;">WORK EXPERIENCE</div>
+                <div class="element shape-element" style="left: 330px; top: 260px; width: 1px; height: 350px; background-color: #ccc; z-index: 1;"></div>
+                
+                <div class="element shape-element" style="left: 325px; top: 265px; width: 12px; height: 12px; border-radius: 50%; background-color: #fff; border: 2.6px solid #999; z-index: 2;"></div>
+                <div class="element text-element" style="left: 350px; top: 262px; width: 330px; font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 600; color: #111; z-index: 2;">Lead Product Designer</div>
+                <div class="element text-element" style="left: 650px; top: 265px; width: 110px; font-family: 'Lato', sans-serif; font-size: 11.3px; color: #777; text-align: right; z-index: 2;">Mar 2020 - Present</div>
+                <div class="element text-element" style="left: 350px; top: 285px; width: 410px; font-family: 'Lato', sans-serif; font-size: 12.6px; color: #555; z-index: 2;">CreativeTech Solutions Inc.</div>
+                <div class="element text-element" style="left: 350px; top: 305px; width: 400px; font-family: 'Lato', sans-serif; font-size: 12px; color: #444; line-height: 1.5; z-index: 2;">• <strong>Redesign Leadership:</strong> Spearheaded the complete overhaul of the flagship fintech mobile application, resulting in a 4.9-star app store rating.<br>• <strong>Design System Architecture:</strong> Developed and maintained a unified, scalable design system from the ground up.<br>• <strong>Mentorship & Strategy:</strong> Managed and mentored a high-performing team of 5 junior and mid-level designers.<br>• <strong>User Research:</strong> Conducted quarterly moderated usability testing sessions with over 500 active users.</div>
+
+                <div class="element shape-element" style="left: 325px; top: 440px; width: 12px; height: 12px; border-radius: 50%; background-color: #fff; border: 2.6px solid #999; z-index: 2;"></div>
+                <div class="element text-element" style="left: 350px; top: 437px; width: 330px; font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 600; color: #111; z-index: 2;">Senior UX/UI Designer</div>
+                <div class="element text-element" style="left: 650px; top: 440px; width: 110px; font-family: 'Lato', sans-serif; font-size: 11.3px; color: #777; text-align: right; z-index: 2;">Jun 2018 - Feb 2020</div>
+                <div class="element text-element" style="left: 350px; top: 460px; width: 410px; font-family: 'Lato', sans-serif; font-size: 12.6px; color: #555; z-index: 2;">Innovate Web Agency</div>
+                <div class="element text-element" style="left: 350px; top: 480px; width: 400px; font-family: 'Lato', sans-serif; font-size: 12px; color: #444; line-height: 1.5; z-index: 2;">• <strong>Enterprise Solutions:</strong> Developed high-fidelity wireframes, user flows, and interactive prototypes for 20+ enterprise clients.<br>• <strong>Conversion Optimization:</strong> Conducted rigorous A/B testing on checkout flows that led to a 15% increase in e-commerce conversion rates.</div>
+
+                <div class="element text-element" style="left: 310px; top: 630px; width: 450px; font-family: 'Lato', sans-serif; font-size: 17.3px; font-weight: 800; color: #111; letter-spacing: 2.6px; text-transform: uppercase; z-index: 2;">EDUCATION</div>
+                <div class="element shape-element" style="left: 330px; top: 670px; width: 1px; height: 120px; background-color: #ccc; z-index: 1;"></div>
+                
+                <div class="element shape-element" style="left: 325px; top: 675px; width: 12px; height: 12px; border-radius: 50%; background-color: #fff; border: 2.6px solid #999; z-index: 2;"></div>
+                <div class="element text-element" style="left: 350px; top: 672px; width: 330px; font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 600; color: #111; z-index: 2;">M.S. Human-Computer Interaction</div>
+                <div class="element text-element" style="left: 650px; top: 675px; width: 110px; font-family: 'Lato', sans-serif; font-size: 11.3px; color: #777; text-align: right; z-index: 2;">Sep 2016 – May 2018</div>
+                <div class="element text-element" style="left: 350px; top: 695px; width: 410px; font-family: 'Lato', sans-serif; font-size: 12.6px; color: #555; z-index: 2;">Stanford University - Stanford, CA</div>
+
+                <div class="element shape-element" style="left: 325px; top: 745px; width: 12px; height: 12px; border-radius: 50%; background-color: #fff; border: 2.6px solid #999; z-index: 2;"></div>
+                <div class="element text-element" style="left: 350px; top: 742px; width: 330px; font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 600; color: #111; z-index: 2;">B.F.A. Interaction Design</div>
+                <div class="element text-element" style="left: 650px; top: 745px; width: 110px; font-family: 'Lato', sans-serif; font-size: 11.3px; color: #777; text-align: right; z-index: 2;">Sep 2012 – May 2016</div>
+                <div class="element text-element" style="left: 350px; top: 765px; width: 410px; font-family: 'Lato', sans-serif; font-size: 12.6px; color: #555; z-index: 2;">California College of the Arts - San Francisco, CA</div>
+
+                <div class="element text-element" style="left: 310px; top: 840px; width: 450px; font-family: 'Lato', sans-serif; font-size: 17.3px; font-weight: 800; color: #111; letter-spacing: 2.6px; text-transform: uppercase; z-index: 2;">PROJECTS</div>
+                <div class="element shape-element" style="left: 330px; top: 880px; width: 1px; height: 110px; background-color: #ccc; z-index: 1;"></div>
+                
+                <div class="element shape-element" style="left: 325px; top: 885px; width: 12px; height: 12px; border-radius: 50%; background-color: #fff; border: 2.6px solid #999; z-index: 2;"></div>
+                <div class="element text-element" style="left: 350px; top: 882px; width: 330px; font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 600; color: #111; z-index: 2;">FinTech Analytics Dashboard | Figma, React</div>
+                <div class="element text-element" style="left: 650px; top: 885px; width: 110px; font-family: 'Lato', sans-serif; font-size: 11.3px; color: #777; text-align: right; z-index: 2;">github.com/sjenkins/fintech-dash</div>
+                <div class="element text-element" style="left: 350px; top: 905px; width: 400px; font-family: 'Lato', sans-serif; font-size: 12px; color: #444; line-height: 1.5; z-index: 2;">• <strong>Objective:</strong> Designed a comprehensive financial analytics dashboard capable of handling and visualizing real-time stock market data streams.<br>• <strong>Impact:</strong> Streamlined data visualization components with custom D3.js charts, increasing user engagement time by 25%.</div>
+            `,
+            "attorney": `
+                <div class="element shape-element" style="left: 0px; top: 0px; width: 794px; height: 1123px; background-color: #f9f9f9; z-index: 0;"></div>
+                <div class="element shape-element" style="left: 45px; top: 45px; width: 704px; height: 1033px; border: 2px solid #8c7b5b; background-color: transparent; z-index: 1;"></div>
+                
+                <div class="element text-element" style="left: 65px; top: 75px; width: 664px; font-family: 'Times New Roman', serif; font-size: 29.3px; text-align: center; color: #000; font-variant: small-caps; letter-spacing: 0.5px;">SARAH JENKINS</div>
+                <div class="element text-element" style="left: 65px; top: 115px; width: 664px; font-family: 'Times New Roman', serif; font-size: 12px; text-align: center; color: #000;">+1 (555) 123-4567 | sarah.jenkins@example.com | linkedin.com/in/sarahjenkins-design | San Francisco, CA 94105</div>
+                
+                <div class="element text-element" style="left: 85px; top: 160px; width: 624px; font-family: 'Times New Roman', serif; font-size: 14.6px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">SUMMARY</div>
+                <div class="element text-element" style="left: 85px; top: 190px; width: 624px; font-family: 'Times New Roman', serif; font-size: 13.3px; line-height: 1.4; color: #000; text-align: justify;">Visionary and data-driven Lead Product Designer with 8+ years of experience in creating intuitive, human-centric digital products. Proven track record of spearheading end-to-end design lifecycles for Fortune 500 clients, resulting in up to 40% increases in user retention and a 25% boost in conversion rates. Highly adept at cross-functional collaboration, scaling complex design systems from scratch, and translating intricate technical requirements into elegant, accessible interfaces.</div>
+
+                <div class="element text-element" style="left: 85px; top: 290px; width: 624px; font-family: 'Times New Roman', serif; font-size: 14.6px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">WORK EXPERIENCE</div>
+                
+                <div class="element text-element" style="left: 85px; top: 320px; width: 400px; font-family: 'Times New Roman', serif; font-size: 13.3px; font-weight: bold; color: #000;">Lead Product Designer</div>
+                <div class="element text-element" style="left: 509px; top: 320px; width: 200px; font-family: 'Times New Roman', serif; font-size: 13.3px; text-align: right; color: #000;">Mar 2020 - Present</div>
+                <div class="element text-element" style="left: 85px; top: 340px; width: 624px; font-family: 'Times New Roman', serif; font-size: 13.3px; font-style: italic; color: #333;">CreativeTech Solutions Inc.</div>
+                <div class="element text-element" style="left: 105px; top: 365px; width: 604px; font-family: 'Times New Roman', serif; font-size: 13.3px; line-height: 1.4; color: #000;">– <strong>Redesign Leadership:</strong> Spearheaded the complete overhaul of the flagship fintech mobile application, resulting in a 4.9-star app store rating.<br>– <strong>Design System Architecture:</strong> Developed and maintained a unified, scalable design system from the ground up, reducing design-to-development handoff friction by 40%.<br>– <strong>User Research:</strong> Conducted quarterly moderated usability testing sessions with over 500 active users to drive iterative, user-focused improvements.</div>
+
+                <div class="element text-element" style="left: 85px; top: 460px; width: 400px; font-family: 'Times New Roman', serif; font-size: 13.3px; font-weight: bold; color: #000;">Senior UX/UI Designer</div>
+                <div class="element text-element" style="left: 509px; top: 460px; width: 200px; font-family: 'Times New Roman', serif; font-size: 13.3px; text-align: right; color: #000;">Jun 2018 - Feb 2020</div>
+                <div class="element text-element" style="left: 85px; top: 480px; width: 624px; font-family: 'Times New Roman', serif; font-size: 13.3px; font-style: italic; color: #333;">Innovate Web Agency</div>
+                <div class="element text-element" style="left: 105px; top: 505px; width: 604px; font-family: 'Times New Roman', serif; font-size: 13.3px; line-height: 1.4; color: #000;">– <strong>Enterprise Solutions:</strong> Developed high-fidelity wireframes, user flows, and interactive prototypes for 20+ enterprise clients.<br>– <strong>Conversion Optimization:</strong> Conducted rigorous A/B testing on checkout flows that led to a 15% increase in e-commerce conversion rates.</div>
+
+                <div class="element text-element" style="left: 85px; top: 580px; width: 624px; font-family: 'Times New Roman', serif; font-size: 14.6px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">EDUCATION</div>
+                <div class="element text-element" style="left: 85px; top: 610px; width: 400px; font-family: 'Times New Roman', serif; font-size: 13.3px; font-weight: bold; color: #000;">M.S. Human-Computer Interaction</div>
+                <div class="element text-element" style="left: 509px; top: 610px; width: 200px; font-family: 'Times New Roman', serif; font-size: 13.3px; text-align: right; color: #000;">Sep 2016 – May 2018</div>
+                <div class="element text-element" style="left: 85px; top: 630px; width: 624px; font-family: 'Times New Roman', serif; font-size: 13.3px; font-style: italic; color: #333;">Stanford University, Stanford, CA</div>
+
+                <div class="element text-element" style="left: 85px; top: 670px; width: 400px; font-family: 'Times New Roman', serif; font-size: 13.3px; font-weight: bold; color: #000;">B.F.A. Interaction Design</div>
+                <div class="element text-element" style="left: 509px; top: 670px; width: 200px; font-family: 'Times New Roman', serif; font-size: 13.3px; text-align: right; color: #000;">Sep 2012 – May 2016</div>
+                <div class="element text-element" style="left: 85px; top: 690px; width: 624px; font-family: 'Times New Roman', serif; font-size: 13.3px; font-style: italic; color: #333;">California College of the Arts, San Francisco, CA</div>
+
+                <div class="element text-element" style="left: 85px; top: 740px; width: 624px; font-family: 'Times New Roman', serif; font-size: 14.6px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">PROJECTS</div>
+                <div class="element text-element" style="left: 85px; top: 770px; width: 400px; font-family: 'Times New Roman', serif; font-size: 13.3px; font-weight: bold; color: #000;">FinTech Analytics Dashboard | Figma, React, D3.js</div>
+                <div class="element text-element" style="left: 509px; top: 770px; width: 200px; font-family: 'Times New Roman', serif; font-size: 13.3px; text-align: right; color: #000;">github.com/sjenkins/fintech-dash</div>
+                <div class="element text-element" style="left: 105px; top: 795px; width: 604px; font-family: 'Times New Roman', serif; font-size: 13.3px; line-height: 1.4; color: #000;">– <strong>Objective:</strong> Designed a comprehensive financial analytics dashboard capable of handling and visualizing real-time stock market data streams.<br>– <strong>Impact:</strong> Streamlined data visualization components with custom D3.js charts, increasing user engagement time by 25%.</div>
+
+                <div class="element text-element" style="left: 85px; top: 865px; width: 624px; font-family: 'Times New Roman', serif; font-size: 14.6px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">CERTIFICATIONS</div>
+                <div class="element text-element" style="left: 85px; top: 895px; width: 624px; font-family: 'Times New Roman', serif; font-size: 13.3px; color: #000;"><strong>Google UX Design Professional Certificate</strong> (Link) — Aug 2021</div>
+                <div class="element text-element" style="left: 85px; top: 915px; width: 624px; font-family: 'Times New Roman', serif; font-size: 13.3px; color: #000;"><strong>Certified Usability Analyst (CUA)</strong> (Link) — Nov 2019</div>
+
+                <div class="element text-element" style="left: 85px; top: 965px; width: 624px; font-family: 'Times New Roman', serif; font-size: 14.6px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 2.6px; color: #000;">TECHNICAL SKILLS</div>
+                <div class="element text-element" style="left: 85px; top: 995px; width: 624px; font-family: 'Times New Roman', serif; font-size: 13.3px; color: #000;"><strong>Design & UI Tools:</strong> Figma, Sketch, Adobe Creative Suite (Illustrator, Photoshop, XD), InVision, Zeplin<br><strong>Prototyping & Motion:</strong> Principle, Framer, Webflow, ProtoPie, After Effects<br><strong>Web Technologies:</strong> HTML5, CSS3, Basic React.js, Tailwind CSS, JavaScript (ES6+)</div>
+            `
+        };
+
+        function selectTemplate(templateId) {
+            currentTemplate = templateId;
+
+            document.getElementById('idle-overlay').classList.add('hidden');
+            document.getElementById('real-right-content').classList.add('visible');
+
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            document.getElementById(`card-${templateId}`).classList.add('active');
+
+            const thumnails = {
+                "academic": '<div class="academic-p"></div>',
+                "minimal": '<div class="minimal-p"></div>',
+                "modern": '<div class="modern-p"><div class="side"></div><div class="main"></div></div>',
+                "attorney": '<div class="attorney-p"></div>'
+            };
+
+            document.getElementById('main-preview').innerHTML = thumnails[templateId];
+
+            const descriptions = {
+                "academic": { title: "Technical Executive", desc: "A structured, data-dense format ideal for engineers, researchers, and technical managers." },
+                "minimal": { title: "Sleek Minimalist", desc: "Clean, breathable, and typography-focused. Perfect for designers and modern tech roles." },
+                "modern": { title: "Contemporary Creative", desc: "Features a bold sidebar to pull the recruiter's eye toward your contact info and core skills." },
+                "attorney": { title: "Traditional Corporate", desc: "A timeless, serif-driven aesthetic. The gold standard for legal and finance executives." }
+            };
+
+            document.getElementById('panel-title').innerText = descriptions[templateId].title;
+            document.getElementById('panel-desc').innerText = descriptions[templateId].desc;
+            
+            // Re-enabled buttons from your layout code
+            document.getElementById('btn-quick-edit').disabled = false; 
+            document.getElementById('btn-pro-custom').disabled = false; 
+        }
+
+        // BUTTON 1: QUICK EDITOR
+        function generateResume() {
+            if(!currentTemplate) return;
+            window.location.href = `editor.html?template=${currentTemplate}`;
+        }
+
+        // BUTTON 2: PRO CUSTOMIZER
+        function sendToCustomizer() {
+            if(!currentTemplate) return;
+            
+            localStorage.setItem("tempStudioHtml", fullTemplateHTML[currentTemplate]);
+            localStorage.setItem("tempStudioHeight", "1123");
+            window.location.href = `customize.html?mode=temp`;
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'auth.html';
+        }
+
+        // Added back the fetch function internally here for Saved Archives to work if dashboard.js isn't linked correctly
+        async function fetchSavedResumes() {
+            const userId = localStorage.getItem('userId');
+            const container = document.getElementById('saved-resumes-container');
+            
+            if (!userId) {
+                if(container) container.innerHTML = '<p style="color: var(--text-dim); font-size: 0.85rem;">Please log in to view saved resumes.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/resume/user/${userId}`);
+                const result = await response.json();
+
+                if(container) container.innerHTML = '';
+                if (response.ok && result.data && result.data.length > 0 && container) {
+                    result.data.forEach(resume => {
+                        const template = document.getElementById('saved-card-template');
+                        const clone = template.content.cloneNode(true);
+                        
+                        clone.querySelector('.resume-title').textContent = resume.personalInfo?.name || 'Untitled Resume';
+                        
+                        const date = new Date(resume.updatedAt || resume.createdAt).toLocaleDateString();
+                        clone.querySelector('.resume-date').textContent = `Last updated: ${date}`;
+                        
+                        clone.querySelector('.edit-btn').onclick = () => {
+                            if(resume.templateSpecificInputs && resume.templateSpecificInputs.isCustom) {
+                                window.location.href = `customize.html?id=${resume._id}`;
+                            } else {
+                                window.location.href = `editor.html?id=${resume._id}`;
+                            }
+                        };
+                        
+                        clone.querySelector('.delete-btn').onclick = async (e) => {
+                            e.stopPropagation();
+                            if(confirm("Are you sure you want to delete this resume?")) {
+                                try {
+                                    await fetch(`http://localhost:5000/api/resume/${resume._id}`, { method: 'DELETE' });
+                                    fetchSavedResumes(); // reload
+                                } catch(err) {
+                                    alert("Failed to delete.");
+                                }
+                            }
+                        };
+                        
+                        container.appendChild(clone);
+                    });
+                } else if(container) {
+                    container.innerHTML = '<p style="color: var(--text-dim); font-size: 0.85rem;">No saved resumes found.</p>';
+                }
+            } catch (error) {
+                console.error("Error fetching resumes:", error);
+                if(container) container.innerHTML = '<p style="color: #ef4444; font-size: 0.85rem;">Error loading saved resumes. Is your server running?</p>';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const storedName = localStorage.getItem('userName');
+            const greetingElement = document.getElementById("user-greeting");
+            const fullNameElement = document.getElementById("user-fullname-display");
+            const bannerGreeting = document.getElementById("banner-greeting");
+
+            if (storedName) {
+                const cleanName = storedName.trim();
+                const firstName = cleanName.split(' ')[0]; 
+                if (greetingElement) greetingElement.innerText = `Welcome, ${firstName.charAt(0).toUpperCase() + firstName.slice(1)}`;
+                if (fullNameElement) fullNameElement.innerText = cleanName;
+                if (bannerGreeting) bannerGreeting.innerHTML = `Ready to build, <span>${firstName.charAt(0).toUpperCase() + firstName.slice(1)}</span>?`;
+            } else {
+                if (greetingElement) greetingElement.innerText = `Welcome!`;
+                if (fullNameElement) fullNameElement.innerText = `User Account`;
+            }
+
+            const storedEmail = localStorage.getItem('userEmail') || localStorage.getItem('email');
+            const emailElement = document.getElementById("user-email-display");
+            if (storedEmail && emailElement) {
+                emailElement.innerText = storedEmail;
+            } else if (emailElement) {
+                emailElement.innerText = "Email not saved in storage";
+                emailElement.style.color = "#f87171";
+            }
+
+            const storedPhoto = localStorage.getItem('userPhoto'); 
+            const avatarContainer = document.getElementById('user-avatar-container');
+            if (storedPhoto && avatarContainer) {
+                avatarContainer.innerHTML = `<img src="${storedPhoto}" alt="User Avatar">`;
+            }
+
+            fetchSavedResumes();
+        });
+    </script>
+    <script src="dashboard.js"></script>
+
+</body>
+</html>

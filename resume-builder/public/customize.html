@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solaris Studio | ProResume Customizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            /* 🌸 MID-TONE AMARANTH THEME 🌸 */
+            --primary: #F497B4; 
+            --accent: #c94b73;  
+            --bg: #cfc0c4;      
+            --panel-bg: #dad0d3; 
+            --border: rgba(100, 85, 90, 0.2); 
+            --text-main: #2a2224; 
+            --text-dim: #5c4d52;  
+        }
+
+        * { box-sizing: border-box; }
+        
+        body { 
+            margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column;
+            
+            /* 🚨 SUBTLE DOTTED GRID BACKGROUND 🚨 */
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(244, 151, 180, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.02) 0%, transparent 40%),
+                radial-gradient(rgba(100, 85, 90, 0.15) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 24px 24px;
+            background-position: 0 0, 0 0, 12px 12px;
+        }
+
+        /* --- STUDIO HEADER --- */
+        .studio-header {
+            height: 65px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; background: rgba(218, 208, 211, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08), inset 0 -1px 0 rgba(255,255,255,0.4);
+        }
+        
+        .header-left { flex: 1; display: flex; align-items: center; }
+        .header-center { flex: 1; display: flex; justify-content: center; align-items: center; }
+        .header-right { flex: 1; display: flex; justify-content: flex-end; gap: 10px; }
+
+        .logo { font-weight: 800; font-size: 1.1rem; letter-spacing: -1px; color: var(--text-main); }
+        .logo span { color: var(--accent); }
+        
+        .doc-name-input {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-align: center;
+            padding: 6px 12px;
+            border-radius: 6px;
+            width: 250px;
+            transition: 0.2s;
+            outline: none;
+            font-family: inherit;
+        }
+        .doc-name-input:hover {
+            border-color: var(--border);
+            background: rgba(255,255,255,0.3);
+        }
+        .doc-name-input:focus {
+            border-color: var(--primary);
+            background: #fff;
+            color: #000;
+            box-shadow: 0 0 0 3px rgba(244, 151, 180, 0.2);
+        }
+
+        .btn-header {
+            padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.2); color: var(--text-main); font-weight: 600; 
+            cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; gap: 8px; font-size: 0.85rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+        }
+        .btn-header:hover { background: rgba(255,255,255,0.5); transform: translateY(-1px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); }
+        .btn-header.primary { 
+            background: linear-gradient(135deg, var(--primary), var(--accent)); 
+            color: white; border: none;
+            box-shadow: 0 10px 20px rgba(201, 75, 115, 0.25), inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        /* --- MAIN WORKSPACE --- */
+        .studio-body { display: flex; flex: 1; height: calc(100vh - 65px); }
+
+        .toolbox {
+            width: 75px; background: var(--panel-bg); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px;
+            overflow-y: auto;
+            box-shadow: 6px 0 25px rgba(0,0,0,0.04), inset -1px 0 0 rgba(255,255,255,0.3);
+        }
+        .toolbox::-webkit-scrollbar { display: none; }
+        .tool-icon {
+            width: 48px; height: 48px; border-radius: 12px; display: flex; flex-shrink: 0;
+            align-items: center; justify-content: center; cursor: pointer;
+            transition: 0.2s; color: var(--text-dim); border: 1px solid transparent;
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .tool-icon:hover { 
+            background: #eee8ea; color: var(--accent); border-color: var(--primary); 
+            box-shadow: 0 10px 20px rgba(244, 151, 180, 0.2); transform: scale(1.05);
+        }
+        .tool-icon.danger:hover { color: #ef4444; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.1); }
+
+        /* 🚨 ACTIVE TOOL FOR SELECTION 🚨 */
+        .active-tool {
+            background: var(--primary) !important;
+            color: white !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 10px 20px rgba(244, 151, 180, 0.3) !important;
+            transform: scale(1.05);
+        }
+
+        .canvas-container {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; padding: 50px; overflow-y: auto; position: relative;
+            gap: 30px; 
+        }
+        
+        .resume-page {
+            width: 794px; 
+            height: 1123px; 
+            background: white; 
+            position: relative; 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15), 0 10px 25px rgba(0,0,0,0.05);
+            flex-shrink: 0; overflow: hidden; 
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.3s ease;
+            transform-origin: top center; /* Critical for zooming properly */
+        }
+
+        /* --- INSPECTOR --- */
+        .inspector { 
+            width: 300px; background: var(--panel-bg); border-left: 1px solid var(--border); 
+            padding: 20px; overflow-y: auto;
+            box-shadow: -6px 0 25px rgba(0,0,0,0.04), inset 1px 0 0 rgba(255,255,255,0.3);
+        }
+        .inspector-title { font-size: 0.75rem; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 20px; letter-spacing: 2px; }
+        .prop-group { margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .prop-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .prop-row label { font-size: 0.8rem; color: var(--text-dim); font-weight: 700; }
+        
+        input[type="number"], input[type="url"], select { 
+            background: #eee8ea; border: 1px solid var(--border); color: var(--text-main); 
+            padding: 6px 8px; border-radius: 8px; width: 80px; font-family: inherit;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); outline: none;
+        }
+        select { width: 140px; font-size: 0.8rem; }
+        
+        .color-circle { width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; cursor: pointer; padding: 0; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
+        .btn-style { 
+            width: 35px; height: 35px; background: #eee8ea; border: 1px solid var(--border); 
+            color: var(--text-main); border-radius: 8px; cursor: pointer; display: flex; 
+            align-items: center; justify-content: center; transition: 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+        }
+        .btn-style:hover { background: #fff; border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.08); }
+
+        /* --- DYNAMIC ELEMENTS & UX --- */
+        .element { 
+            position: absolute; min-width: 2px; min-height: 2px; display: flex; 
+            align-items: center; justify-content: center; box-sizing: border-box; 
+            border: 1px solid transparent; cursor: grab; 
+        }
+        .element:active:not(.editing) { cursor: grabbing; }
+        .element:hover:not(.editing) { border: 1px dashed rgba(244, 151, 180, 0.6); }
+        
+        .element.selected { border: 2px solid var(--primary) !important; z-index: 99 !important; }
+        
+        /* 🚨 STYLING FOR MULTI-SELECTED ELEMENTS 🚨 */
+        .element.group-selected {
+            border: 2px dashed var(--accent) !important;
+            background-color: rgba(244, 151, 180, 0.05) !important;
+            z-index: 98 !important;
+        }
+
+        .element.editing { 
+            border: 2px dashed var(--accent) !important; 
+            cursor: text !important; 
+            outline: none; 
+            background: rgba(244, 151, 180, 0.05); 
+        }
+        ::selection { background: var(--primary); color: #fff; }
+        
+        .shape-element { background: #ddd; background-size: cover; background-position: center; background-repeat: no-repeat; }
+        .image-element { background-size: cover; background-position: center; }
+
+        /* 🚨 FEATURE: Text Overflow Fix 🚨 */
+        .text-element { 
+            display: block; text-align: left; color: #333; line-height: 1.5; font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden; word-break: break-word;
+        }
+
+        /* 🚨 FEATURE: Smooth Handles pulled inside so they aren't hidden by overflow 🚨 */
+        .handle { 
+            position: absolute; width: 12px; height: 12px; background: white; 
+            border: 2px solid var(--accent); border-radius: 50%; display: none; z-index: 100; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+        }
+        .selected:not(.editing) .handle { display: block; }
+        
+        .handle-nw { top: 0px; left: 0px; cursor: nwse-resize; }
+        .handle-n  { top: 0px; left: calc(50% - 6px); cursor: ns-resize; }
+        .handle-ne { top: 0px; right: 0px; cursor: nesw-resize; }
+        .handle-e  { top: calc(50% - 6px); right: 0px; cursor: ew-resize; }
+        .handle-se { bottom: 0px; right: 0px; cursor: nwse-resize; }
+        .handle-s  { bottom: 0px; left: calc(50% - 6px); cursor: ns-resize; }
+        .handle-sw { bottom: 0px; left: 0px; cursor: nesw-resize; }
+        .handle-w  { top: calc(50% - 6px); left: 0px; cursor: ew-resize; }
+
+        /* 🚨 FLOATING ZOOM CONTROLS 🚨 */
+        .zoom-controls {
+            position: fixed;
+            bottom: 30px;
+            left: calc(50% + 112px); /* Centered between toolbox and inspector */
+            transform: translateX(-50%);
+            background: rgba(218, 208, 211, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.4);
+            z-index: 1000;
+        }
+        .zoom-controls button {
+            background: #eee8ea;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .zoom-controls button:hover {
+            background: #fff;
+            border-color: var(--primary);
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+        .zoom-controls input[type="range"] {
+            width: 120px;
+            margin: 0;
+            cursor: pointer;
+        }
+        .zoom-controls span {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            width: 45px;
+            text-align: right;
+        }
+
+        /* 🚨 SMART ALIGNMENT GUIDES 🚨 */
+        .smart-guide {
+            position: absolute;
+            background: transparent;
+            z-index: 9999;
+            pointer-events: none;
+            display: none;
+        }
+        .smart-guide-v {
+            top: 0;
+            bottom: 0;
+            width: 0;
+            border-left: 1px dashed var(--accent);
+        }
+        .smart-guide-h {
+            left: 0;
+            right: 0;
+            height: 0;
+            border-top: 1px dashed var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="studio-header">
+        <div class="header-left">
+            <div class="logo">Solaris<span>Studio</span></div>
+        </div>
+        
+        <div class="header-center">
+            <input type="text" id="doc-name-input" class="doc-name-input" value="Untitled Design" placeholder="Name your resume...">
+        </div>
+
+        <div class="header-right">
+            <button class="btn-header" onclick="window.location.href='dashboard.html'"><i data-lucide="x"></i> Exit</button>
+            <button class="btn-header" onclick="downloadPDF()"><i data-lucide="download"></i> Download PDF</button>
+            <button class="btn-header primary" onclick="saveToArchives()"><i data-lucide="archive"></i> Save to Archives</button>
+        </div>
+    </header>
+
+    <div class="studio-body">
+        <aside class="toolbox">
+            <div class="tool-icon" title="Add Heading" onclick="addElement('text', 'Heading', '24px', '800')"><i data-lucide="type"></i></div>
+            <div class="tool-icon" title="Add Paragraph" onclick="addElement('text', 'Paragraph text...', '14px', '400')"><i data-lucide="text-cursor"></i></div>
+            <div class="tool-icon" title="Add Rectangle" onclick="addElement('shape', 'rect')"><i data-lucide="square"></i></div>
+            <div class="tool-icon" title="Add Line" onclick="addElement('shape', 'line')"><i data-lucide="minus"></i></div>
+            <div class="tool-icon" title="Add Circle" onclick="addElement('shape', 'circle')"><i data-lucide="circle"></i></div>
+            <div class="tool-icon" title="Add New Image" onclick="triggerImageUpload('global')"><i data-lucide="image"></i></div>
+            
+            <div style="margin-top: 10px; border-top: 1px solid var(--border); padding-top: 20px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                <div class="tool-icon" title="Undo (Ctrl+Z)" onclick="undo()"><i data-lucide="undo"></i></div>
+                <div class="tool-icon" title="Redo (Ctrl+Y)" onclick="redo()"><i data-lucide="redo"></i></div>
+                
+                <div class="tool-icon" title="Add New Page" onclick="addNewPage()"><i data-lucide="file-plus"></i></div>
+                <div class="tool-icon danger" title="Clear Canvas" onclick="clearCanvas()"><i data-lucide="trash-2"></i></div>
+            </div>
+            
+            <input type="file" id="image-input" hidden accept="image/*" onchange="handleImage(event)">
+        </aside>
+
+        <main class="canvas-container" id="workspace">
+            <div class="resume-page" id="page-1">
+                
+                <div class="element shape-element" style="left: 0px; top: 0px; width: 280px; height: 100%; background-color: #2f3b4c; z-index: 1;"></div>
+                
+                <div class="element shape-element" style="left: 70px; top: 45px; width: 140px; height: 140px; border-radius: 50%; background-color: #cbd5e1; background-image: url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80'); background-size: cover; z-index: 2;"></div>
+                
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 30px; top: 230px; font-size: 22px; font-weight: 700; color: #ffffff; z-index: 2;">Contact</div>
+                <div class="element shape-element" style="left: 30px; top: 265px; width: 220px; height: 1px; background-color: #ffffff; z-index: 2;"></div>
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 30px; top: 280px; width: 220px; font-size: 11px; color: #e2e8f0; z-index: 2; line-height: 1.8;">
+                    <b>Phone</b><br>123-456-7890<br><br>
+                    <b>Email</b><br>hello@reallygreatsite.com<br><br>
+                    <b>Address</b><br>123 Anywhere St., Any City
+                </div>
+
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 30px; top: 450px; font-size: 22px; font-weight: 700; color: #ffffff; z-index: 2;">Education</div>
+                <div class="element shape-element" style="left: 30px; top: 485px; width: 220px; height: 1px; background-color: #ffffff; z-index: 2;"></div>
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 30px; top: 500px; width: 220px; font-size: 11px; color: #e2e8f0; z-index: 2; line-height: 1.6;">
+                    2020 - 2023<br>
+                    <b style="font-size: 12px;">Bachelor of Business<br>Management</b><br>
+                    Borcelle University<br><br>
+                    2012 - 2016<br>
+                    <b style="font-size: 12px;">Bachelor of Business<br>Management</b><br>
+                    Borcelle University
+                </div>
+
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 30px; top: 710px; font-size: 22px; font-weight: 700; color: #ffffff; z-index: 2;">Expertise</div>
+                <div class="element shape-element" style="left: 30px; top: 745px; width: 220px; height: 1px; background-color: #ffffff; z-index: 2;"></div>
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 30px; top: 760px; width: 220px; font-size: 12px; color: #e2e8f0; z-index: 2; line-height: 2;">
+                    <ul style="margin: 0; padding-left: 18px;">
+                        <li>UI/UX</li>
+                        <li>Visual Design</li>
+                        <li>Wireframes</li>
+                        <li>Storyboards</li>
+                        <li>User Flows</li>
+                        <li>Process Flows</li>
+                    </ul>
+                </div>
+
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 30px; top: 940px; font-size: 22px; font-weight: 700; color: #ffffff; z-index: 2;">Language</div>
+                <div class="element shape-element" style="left: 30px; top: 975px; width: 220px; height: 1px; background-color: #ffffff; z-index: 2;"></div>
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 30px; top: 990px; width: 220px; font-size: 12px; color: #e2e8f0; z-index: 2; line-height: 2;">
+                    <b>English</b><br><b>Spanish</b>
+                </div>
+
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 320px; top: 50px; font-size: 38px; font-weight: 800; color: #1e293b; letter-spacing: 1px; z-index: 2;">Mariana Anderson</div>
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 320px; top: 100px; font-size: 16px; font-weight: 600; color: #64748b; letter-spacing: 3px; text-transform: uppercase; z-index: 2;">Marketing Manager</div>
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 320px; top: 140px; width: 430px; font-size: 11px; color: #64748b; line-height: 1.6; z-index: 2;">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet sem nec risus egestas accumsan. In enim nunc, tincidunt ut quam eget, luctus sollicitudin neque. Sed leo nisl, semper ac hendrerit a, sollicitudin in arcu.
+                </div>
+
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 320px; top: 240px; font-size: 20px; font-weight: 700; color: #1e293b; z-index: 2;">Experience</div>
+                <div class="element shape-element" style="left: 320px; top: 275px; width: 430px; height: 1px; background-color: #cbd5e1; z-index: 2;"></div>
+                
+                <div class="element shape-element" style="left: 329px; top: 310px; width: 2px; height: 280px; background-color: #94a3b8; z-index: 1;"></div>
+                
+                <div class="element shape-element" style="left: 324px; top: 305px; width: 12px; height: 12px; border-radius: 50%; background-color: white; border: 2px solid #1e293b; z-index: 3;"></div>
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 350px; top: 300px; width: 400px; font-size: 11px; color: #64748b; line-height: 1.6; z-index: 2;">
+                    <b style="color:#1e293b; font-size: 12px;">2022 - 2025</b><br>
+                    Ginyard International Co. | 123 Anywhere St., Any City<br>
+                    <b style="color:#1e293b; font-size: 13px;">Marketing Manager</b><br><br>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pharetra in lorem at laoreet. Donec hendrerit libero eget est tempor, quis tempus arcu elementum. In elementum elit at dui tristique feugiat. Mauris convallis, mi at mattis malesuada.
+                </div>
+
+                <div class="element shape-element" style="left: 324px; top: 455px; width: 12px; height: 12px; border-radius: 50%; background-color: white; border: 2px solid #1e293b; z-index: 3;"></div>
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 350px; top: 450px; width: 400px; font-size: 11px; color: #64748b; line-height: 1.6; z-index: 2;">
+                    <b style="color:#1e293b; font-size: 12px;">2020 - 2022</b><br>
+                    Ginyard International Co. | 123 Anywhere St., Any City<br>
+                    <b style="color:#1e293b; font-size: 13px;">Inside Sales Representative</b><br><br>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pharetra in lorem at laoreet. Donec hendrerit libero eget est tempor.
+                </div>
+
+                <div class="element shape-element" style="left: 324px; top: 585px; width: 12px; height: 12px; border-radius: 50%; background-color: white; border: 2px solid #1e293b; z-index: 3;"></div>
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 350px; top: 580px; width: 400px; font-size: 11px; color: #64748b; line-height: 1.6; z-index: 2;">
+                    <b style="color:#1e293b; font-size: 12px;">2018 - 2020</b><br>
+                    Ginyard International Co. | 123 Anywhere St., Any City<br>
+                    <b style="color:#1e293b; font-size: 13px;">Inside Sales Representative</b><br><br>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pharetra in lorem at laoreet. Donec hendrerit libero eget est tempor, quis tempus arcu elementum.
+                </div>
+
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 320px; top: 730px; font-size: 20px; font-weight: 700; color: #1e293b; z-index: 2;">Reference</div>
+                <div class="element shape-element" style="left: 320px; top: 765px; width: 430px; height: 1px; background-color: #cbd5e1; z-index: 2;"></div>
+                
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 320px; top: 780px; width: 200px; font-size: 11px; color: #64748b; line-height: 1.6; z-index: 2;">
+                    <b style="color:#1e293b; font-size: 14px;">Harumi Kobayashi</b><br>Wardiere Inc. / CEO<br><br>
+                    <span style="display:inline-block; width: 40px;">Phone:</span> 123-456-7890<br>
+                    <span style="display:inline-block; width: 40px;">Email:</span> hello@reallygreatsite.com
+                </div>
+                <div class="element text-element" contenteditable="false" spellcheck="false" style="left: 540px; top: 780px; width: 200px; font-size: 11px; color: #64748b; line-height: 1.6; z-index: 2;">
+                    <b style="color:#1e293b; font-size: 14px;">Bailey Dupont</b><br>Wardiere Inc. / CEO<br><br>
+                    <span style="display:inline-block; width: 40px;">Phone:</span> 123-456-7890<br>
+                    <span style="display:inline-block; width: 40px;">Email:</span> hello@reallygreatsite.com
+                </div>
+
+            </div>
+
+            <div class="zoom-controls">
+                <button onclick="changeZoom(-0.1)" title="Zoom Out"><i data-lucide="zoom-out"></i></button>
+                <input type="range" id="zoom-slider" min="0.5" max="1.5" step="0.1" value="1" oninput="updateZoom(this.value)">
+                <button onclick="changeZoom(0.1)" title="Zoom In"><i data-lucide="zoom-in"></i></button>
+                <span id="zoom-val">100%</span>
+            </div>
+            
+        </main>
+
+        <aside class="inspector" id="inspector">
+            <div id="no-selection">
+                <div class="inspector-title">Document Settings</div>
+                
+                <div class="prop-group">
+                    <div class="prop-row">
+                        <label>Canvas Height (px)</label>
+                        <input type="number" id="canvas-height-input" value="1123" step="100" onchange="updateCanvasHeight(this.value)">
+                    </div>
+                    
+                    <button class="btn-header" style="width:100%; border-color: rgba(255,255,255,0.1); color: var(--text-dim); justify-content: center;" onclick="resetCanvasHeight()">
+                        <i data-lucide="refresh-ccw" style="width: 14px;"></i> Reset to A4 Size
+                    </button>
+                </div>
+                
+                <p style="color: var(--text-dim); font-size: 0.8rem; text-align: center; margin-top: 40px;">Select an element to adjust properties.</p>
+            </div>
+
+            <div id="controls" style="display: none;">
+                <div class="inspector-title">Element Settings</div>
+                
+                <div class="prop-group">
+                    <div class="prop-row">
+                        <label>Layer Position</label>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn-style" onmousedown="event.preventDefault()" onclick="changeZIndex(1)" title="Bring Forward"><i data-lucide="layers"></i></button>
+                            <button class="btn-style" onmousedown="event.preventDefault()" onclick="changeZIndex(-1)" title="Send Backward"><i data-lucide="layer-lab"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="prop-row">
+                        <label>Width (px)</label>
+                        <input type="number" id="elem-width" oninput="updateDimensionsFromPanel()" onchange="saveState()">
+                    </div>
+                    <div class="prop-row">
+                        <label>Height (px)</label>
+                        <input type="number" id="elem-height" oninput="updateDimensionsFromPanel()" onchange="saveState()">
+                    </div>
+                </div>
+
+                <div id="text-controls" class="prop-group" style="display:none;">
+                    <div class="prop-row">
+                        <label>Font Family</label>
+                        <select id="font-family" onmousedown="if(window.getSelection().rangeCount > 0) window.savedRange = window.getSelection().getRangeAt(0);" onchange="applyTextFormat('fontFamily', this.value)">
+                            <option value="'Plus Jakarta Sans', sans-serif">Jakarta Sans</option>
+                            <option value="'Inter', sans-serif">Inter</option>
+                            <option value="'Merriweather', serif">Merriweather</option>
+                            <option value="'Playfair Display', serif">Playfair</option>
+                            <option value="'Roboto Mono', monospace">Roboto Mono</option>
+                        </select>
+                    </div>
+
+                    <div class="prop-row">
+                        <label>Font Size</label>
+                        <input type="number" id="font-size" oninput="applyTextFormat('fontSizePx', this.value, false)" onchange="saveState()">
+                    </div>
+
+                    <div class="prop-row">
+                        <label>Vertical Space</label>
+                        <input type="number" id="line-height" step="0.1" min="0.5" max="3" oninput="updateStyle('lineHeight', this.value, false)" onchange="saveState()">
+                    </div>
+                    <div class="prop-row">
+                        <label>Letter Space</label>
+                        <input type="number" id="letter-spacing" step="0.5" min="-5" max="20" oninput="updateStyle('letterSpacing', this.value + 'px', false)" onchange="saveState()">
+                    </div>
+                    
+                    <div class="prop-row">
+                        <label>Rich Format</label>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn-style" onmousedown="event.preventDefault()" onclick="applyTextFormat('bold')" title="Bold (Ctrl+B)"><i data-lucide="bold"></i></button>
+                            <button class="btn-style" onmousedown="event.preventDefault()" onclick="applyTextFormat('italic')" title="Italic (Ctrl+I)"><i data-lucide="italic"></i></button>
+                            <button class="btn-style" onmousedown="event.preventDefault()" onclick="applyTextFormat('underline')" title="Underline (Ctrl+U)"><i data-lucide="underline"></i></button>
+                            <button class="btn-style" onmousedown="event.preventDefault()" onclick="applyTextFormat('insertUnorderedList')" title="Bullet Points"><i data-lucide="list"></i></button>
+                            <button class="btn-style" onmousedown="event.preventDefault()" onclick="applyTextFormat('insertOrderedList')" title="Numbered List"><i data-lucide="list-ordered"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="prop-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                        <label>Hyperlink (Highlight text first)</label>
+                        <div style="display: flex; gap: 5px; width: 100%;">
+                            <input type="url" id="link-url" placeholder="https://..." style="flex: 1; width: 100%;">
+                            <button class="btn-style" onmousedown="event.preventDefault()" onclick="applyLink()" title="Apply Link"><i data-lucide="link"></i></button>
+                            <button class="btn-style" onmousedown="event.preventDefault()" onclick="applyTextFormat('unlink')" title="Remove Link"><i data-lucide="unlink"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="shape-fill-controls" class="prop-group" style="display:none;">
+                    <div class="prop-row" style="margin-bottom:10px;">
+                        <label>Shape Image Fill</label>
+                    </div>
+                    <button class="btn-header" style="width:100%;" onmousedown="event.preventDefault()" onclick="triggerImageUpload('shape')">
+                        <i data-lucide="image"></i> Fill with Image
+                    </button>
+                    <button class="btn-header" style="width:100%; margin-top:8px; border-color: rgba(255,255,255,0.05); color: var(--text-dim);" onmousedown="event.preventDefault()" onclick="removeShapeImage()">
+                        <i data-lucide="palette"></i> Revert to Color
+                    </button>
+                </div>
+
+                <div id="color-controls" class="prop-group">
+                    <div class="prop-row">
+                        <label>Main Color</label>
+                        <input type="color" class="color-circle" id="color-picker" oninput="handleColorChange(this.value, false)" onchange="saveState()">
+                    </div>
+                    <div class="prop-row">
+                        <label>Opacity</label>
+                        <input type="range" min="0" max="1" step="0.1" value="1" id="opacity-slider" oninput="updateStyle('opacity', this.value, false)" onchange="saveState()">
+                    </div>
+                </div>
+
+                <button class="btn-header" style="width:100%; border-color: #ef4444; color: #ef4444;" onmousedown="event.preventDefault()" onclick="deleteSelected()">
+                    <i data-lucide="trash-2"></i> Delete Element
+                </button>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        let selectedElement = null;
+        let clipboardElement = null;
+        let pageCount = 1;
+        let imageUploadTarget = 'global';
+        let highestZIndex = 10;
+        
+        // 🚨 GLOBAL ZOOM, SELECTION, AND GRID VARS 🚨
+        const SNAP_GRID = 10;
+        let zoomLevel = 1;
+        
+        // 🚨 MULTI-SELECT STATE 🚨
+        let isSelectionMode = false;
+        let isDrawingMarquee = false;
+        let startX = 0, startY = 0;
+        let selectedGroup = [];
+        
+        // 🚨 UNDO/REDO STATE SYSTEM 🚨
+        let historyStack = [];
+        let historyIndex = -1;
+
+        // 🚨 FEATURE 1: GLOBAL DESELECTION LISTENER (PowerPoint Style) 🚨
+        document.addEventListener('mousedown', (e) => {
+            if (isSelectionMode) return;
+            
+            // Ignore UI overlays so they don't trigger deselection while interacting with them
+            if (e.target.closest('.toolbox') || e.target.closest('.inspector') || e.target.closest('.studio-header') || e.target.closest('.handle') || e.target.closest('.zoom-controls')) return;
+            
+            // If clicking an actual element, let its own handlers deal with it
+            if (e.target.closest('.element')) return;
+            
+            // Deselect when clicking empty workspace or empty page space
+            if (e.target.id === 'workspace' || e.target.classList.contains('resume-page')) {
+                deselect({target: e.target});
+            }
+        });
+
+        // 🚨 FEATURE 2: ACTIVE PAGE DETECTION LOGIC 🚨
+        function getActivePage() {
+            const pages = Array.from(document.querySelectorAll('.resume-page'));
+            if (pages.length === 1) return pages[0];
+
+            let maxArea = 0;
+            let activePage = pages[0];
+            const workspace = document.getElementById('workspace');
+            const wsRect = workspace.getBoundingClientRect();
+
+            pages.forEach(page => {
+                const rect = page.getBoundingClientRect();
+                const intersectLeft = Math.max(rect.left, wsRect.left);
+                const intersectRight = Math.min(rect.right, wsRect.right);
+                const intersectTop = Math.max(rect.top, wsRect.top);
+                const intersectBottom = Math.min(rect.bottom, wsRect.bottom);
+                
+                const width = Math.max(0, intersectRight - intersectLeft);
+                const height = Math.max(0, intersectBottom - intersectTop);
+                const area = width * height;
+
+                if (area > maxArea) {
+                    maxArea = area;
+                    activePage = page;
+                }
+            });
+
+            return activePage;
+        }
+
+        // 🚨 ZOOM ENGINE LOGIC 🚨
+        function updateZoom(val) {
+            zoomLevel = parseFloat(val);
+            document.getElementById('zoom-val').innerText = Math.round(zoomLevel * 100) + '%';
+            
+            document.querySelectorAll('.resume-page').forEach(page => {
+                page.style.transform = `scale(${zoomLevel})`;
+                
+                // Ensures container scrollbar height matches visually scaled element
+                const heightDiff = (page.offsetHeight * zoomLevel) - page.offsetHeight;
+                page.style.marginBottom = heightDiff > 0 ? `${heightDiff + 50}px` : '0px';
+            });
+        }
+
+        function changeZoom(delta) {
+            let val = parseFloat(document.getElementById('zoom-slider').value) + delta;
+            val = Math.max(0.5, Math.min(1.5, val)); // limit zoom bounds
+            document.getElementById('zoom-slider').value = val;
+            updateZoom(val);
+        }
+
+        function saveState() {
+            if (historyIndex < historyStack.length - 1) {
+                historyStack = historyStack.slice(0, historyIndex + 1);
+            }
+            
+            const clone = document.getElementById('page-1').cloneNode(true);
+            clone.querySelectorAll('.selected, .editing').forEach(el => {
+                el.classList.remove('selected', 'editing');
+                if (el.classList.contains('text-element')) el.contentEditable = "false";
+            });
+            // remove guides from history state
+            clone.querySelectorAll('.smart-guide').forEach(el => el.remove());
+            
+            historyStack.push(clone.innerHTML);
+            
+            if (historyStack.length > 30) {
+                historyStack.shift();
+            } else {
+                historyIndex++;
+            }
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                deselect({target: document.getElementById('workspace')});
+                historyIndex--;
+                restoreState(historyStack[historyIndex]);
+            }
+        }
+
+        function redo() {
+            if (historyIndex < historyStack.length - 1) {
+                deselect({target: document.getElementById('workspace')});
+                historyIndex++;
+                restoreState(historyStack[historyIndex]);
+            }
+        }
+
+        function restoreState(htmlString) {
+            const page = document.getElementById('page-1');
+            page.innerHTML = htmlString;
+            const loadedElements = page.querySelectorAll('.element');
+            loadedElements.forEach(el => initElement(el));
+        }
+        
+        let currentRange = null;
+        document.addEventListener('selectionchange', () => {
+            const sel = window.getSelection();
+            if (sel.rangeCount > 0 && selectedElement && selectedElement.contains(sel.anchorNode)) {
+                currentRange = sel.getRangeAt(0);
+            }
+        });
+
+        document.getElementById('inspector').addEventListener('mousedown', (e) => {
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault(); 
+            }
+        });
+
+        function updateCanvasHeight(val) {
+            const pages = document.querySelectorAll('.resume-page');
+            pages.forEach(page => { page.style.height = val + 'px'; });
+            const sidebarBg = document.querySelector('.shape-element[style*="left: 0px"]');
+            if(sidebarBg) sidebarBg.style.height = '100%';
+            updateZoom(document.getElementById('zoom-slider').value); // Re-calculate margin scaling
+        }
+
+        function resetCanvasHeight() {
+            document.getElementById('canvas-height-input').value = 1123;
+            updateCanvasHeight(1123);
+        }
+
+        function addNewPage() {
+            pageCount++;
+            const newPage = document.createElement('div');
+            newPage.className = 'resume-page';
+            newPage.id = `page-${pageCount}`;
+            newPage.style.height = document.getElementById('canvas-height-input').value + 'px';
+            newPage.style.transformOrigin = "top center";
+            newPage.style.transform = `scale(${zoomLevel})`;
+            document.getElementById('workspace').appendChild(newPage);
+        }
+
+        function clearCanvas() {
+            if(confirm("Are you sure you want to clear the entire canvas? This cannot be undone.")) {
+                document.querySelectorAll('.resume-page').forEach(page => page.innerHTML = '');
+                deselect({target: document.getElementById('workspace')});
+                saveState();
+            }
+        }
+
+        function bringToFront(el) {
+            highestZIndex++;
+            el.style.zIndex = highestZIndex;
+        }
+
+        function addResizeHandles(el) {
+            const dirs = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+            dirs.forEach(dir => {
+                const handle = document.createElement('div');
+                handle.className = `handle handle-${dir}`;
+                el.appendChild(handle);
+            });
+        }
+
+        function bindElementEvents(el) {
+            if (el.classList.contains('text-element')) {
+                el.contentEditable = "false"; 
+                
+                el.addEventListener('dblclick', (e) => { 
+                    e.stopPropagation();
+                    el.contentEditable = "true";
+                    el.classList.add('editing');
+                    el.focus(); 
+                });
+
+                el.addEventListener('blur', () => {
+                    saveState();
+                });
+            }
+
+            makeDraggable(el);
+            makeResizable(el); 
+            
+            el.addEventListener('mousedown', (e) => { 
+                if (e.target.classList.contains('handle')) return;
+                if (el.classList.contains('editing')) {
+                    e.stopPropagation(); 
+                    return; 
+                }
+                
+                e.stopPropagation(); 
+                if (selectedElement !== el) {
+                    selectElement(el); 
+                }
+            });
+        }
+
+        function addElement(type, content, size = '16px', weight = '400') {
+            const el = document.createElement('div');
+            el.className = `element ${type}-element`;
+            
+            if (type === 'text') {
+                el.innerHTML = content;
+                el.contentEditable = "false";
+                el.spellcheck = false;
+                el.style.fontSize = size;
+                el.style.fontWeight = weight;
+                el.style.color = '#333333';
+                el.style.fontFamily = "'Plus Jakarta Sans', sans-serif";
+                el.style.lineHeight = "1.5";
+            } else if (type === 'shape') {
+                if (content === 'circle') {
+                    el.style.borderRadius = '50%';
+                    el.style.width = '100px';
+                    el.style.height = '100px';
+                } else if (content === 'line') {
+                    el.style.width = '200px';
+                    el.style.height = '2px';
+                } else {
+                    el.style.width = '100px';
+                    el.style.height = '100px';
+                }
+                el.style.backgroundColor = '#F497B4';
+            }
+
+            el.style.left = '50px';
+            el.style.top = '50px';
+
+            addResizeHandles(el);
+            
+            // 🚨 FEATURE 2: ADDS ELEMENT DIRECTLY TO CURRENT ACTIVE PAGE
+            getActivePage().appendChild(el);
+            
+            bringToFront(el);
+            bindElementEvents(el);
+            selectElement(el);
+            saveState();
+        }
+
+        function selectElement(el) {
+            if (selectedElement && selectedElement !== el) {
+                selectedElement.classList.remove('selected', 'editing');
+                if(selectedElement.classList.contains('text-element')) {
+                    selectedElement.contentEditable = "false";
+                }
+            }
+            
+            selectedElement = el;
+            el.classList.add('selected');
+            bringToFront(el);
+            
+            document.getElementById('no-selection').style.display = 'none';
+            document.getElementById('controls').style.display = 'block';
+            document.getElementById('text-controls').style.display = 'none';
+            document.getElementById('shape-fill-controls').style.display = 'none';
+            document.getElementById('color-controls').style.display = 'block';
+
+            document.getElementById('elem-width').value = el.offsetWidth;
+            document.getElementById('elem-height').value = el.offsetHeight;
+
+            if(el.classList.contains('text-element')) {
+                document.getElementById('text-controls').style.display = 'block';
+                document.getElementById('font-size').value = parseInt(window.getComputedStyle(el).fontSize);
+                
+                let currentLh = el.style.lineHeight;
+                document.getElementById('line-height').value = currentLh ? parseFloat(currentLh) : 1.5;
+                
+                let currentLs = window.getComputedStyle(el).letterSpacing;
+                document.getElementById('letter-spacing').value = currentLs !== 'normal' ? parseFloat(currentLs) : 0;
+                
+                document.getElementById('color-picker').value = rgbToHex(window.getComputedStyle(el).color);
+                
+                let currentFont = window.getComputedStyle(el).fontFamily;
+                const fontSelect = document.getElementById('font-family');
+                for(let i=0; i<fontSelect.options.length; i++) {
+                    if(currentFont.replace(/['"]/g, '').includes(fontSelect.options[i].value.split(',')[0].replace(/['"]/g, ''))) {
+                        fontSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            } 
+            else if(el.classList.contains('shape-element')) {
+                document.getElementById('shape-fill-controls').style.display = 'block';
+                if (el.style.backgroundImage && el.style.backgroundImage !== 'none') {
+                    document.getElementById('color-controls').style.display = 'none';
+                } else {
+                    document.getElementById('color-picker').value = rgbToHex(window.getComputedStyle(el).backgroundColor);
+                }
+            }
+            document.getElementById('opacity-slider').value = window.getComputedStyle(el).opacity || 1;
+        }
+
+        function updateDimensionsFromPanel() {
+            if (!selectedElement) return;
+            const w = document.getElementById('elem-width').value;
+            const h = document.getElementById('elem-height').value;
+            if (w) selectedElement.style.width = w + 'px';
+            if (h) selectedElement.style.height = h + 'px';
+        }
+
+        function deselect(e) {
+            if (!e || e.target.classList.contains('resume-page') || e.target.id === 'workspace') {
+                if (selectedElement) {
+                    selectedElement.classList.remove('selected', 'editing');
+                    if (selectedElement.classList.contains('text-element')) {
+                        selectedElement.contentEditable = "false";
+                    }
+                }
+                selectedElement = null;
+                currentRange = null; 
+                document.getElementById('no-selection').style.display = 'block';
+                document.getElementById('controls').style.display = 'none';
+                window.getSelection().removeAllRanges();
+            }
+        }
+
+        function updateStyle(prop, val, save = true) { 
+            if (selectedElement) {
+                if (val === 'px') val = '0px'; 
+                selectedElement.style[prop] = val; 
+                
+                if (['lineHeight', 'fontSize', 'letterSpacing', 'color'].includes(prop)) {
+                    selectedElement.querySelectorAll('*').forEach(child => {
+                        child.style[prop] = val; 
+                        if (prop === 'fontSize' && child.hasAttribute('size')) {
+                            child.removeAttribute('size');
+                        }
+                    });
+                }
+                if (save) saveState();
+            } 
+        }
+        
+        function applyTextFormat(command, val = null, save = true) {
+            if (!selectedElement || !selectedElement.classList.contains('text-element')) return;
+
+            const isEditing = selectedElement.classList.contains('editing');
+            const hasSelection = currentRange && currentRange.toString().length > 0 && selectedElement.contains(currentRange.commonAncestorContainer);
+
+            if (isEditing) {
+                selectedElement.focus();
+                if (hasSelection) {
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(currentRange);
+                }
+
+                if (command === 'fontSizePx') {
+                    document.execCommand('fontSize', false, '7');
+                    selectedElement.querySelectorAll('font[size="7"]').forEach(font => {
+                        font.removeAttribute('size');
+                        font.style.fontSize = val + 'px';
+                    });
+                } else if (command === 'fontFamily') {
+                    document.execCommand('fontName', false, val.split(',')[0].replace(/['"]/g, ''));
+                } else if (command === 'foreColor') {
+                    document.execCommand('foreColor', false, val);
+                } else {
+                    document.execCommand(command, false, val);
+                }
+                
+                const newSel = window.getSelection();
+                if (newSel.rangeCount > 0) currentRange = newSel.getRangeAt(0);
+
+            } else {
+                if (command === 'fontSizePx') updateStyle('fontSize', val + 'px', false);
+                if (command === 'fontFamily') updateStyle('fontFamily', val, false);
+                if (command === 'foreColor') updateStyle('color', val, false);
+                if (command === 'bold') {
+                    const w = window.getComputedStyle(selectedElement).fontWeight;
+                    updateStyle('fontWeight', w >= 600 ? '400' : '700', false);
+                }
+                if (command === 'italic') {
+                    const i = window.getComputedStyle(selectedElement).fontStyle;
+                    updateStyle('fontStyle', i === 'italic' ? 'normal' : 'italic', false);
+                }
+                if (command === 'underline') {
+                    const u = window.getComputedStyle(selectedElement).textDecorationLine;
+                    updateStyle('textDecoration', u === 'underline' ? 'none' : 'underline', false);
+                }
+                if (command === 'insertUnorderedList' || command === 'insertOrderedList') {
+                    selectedElement.contentEditable = "true";
+                    selectedElement.focus();
+                    document.execCommand('selectAll', false, null);
+                    document.execCommand(command, false, val);
+                    selectedElement.contentEditable = "false";
+                    window.getSelection().removeAllRanges();
+                }
+            }
+            if (save) saveState();
+        }
+
+        function handleColorChange(val, save = true) {
+            if (!selectedElement) return;
+            if (selectedElement.classList.contains('text-element')) {
+                applyTextFormat('foreColor', val, save);
+            } else {
+                updateStyle('backgroundColor', val, save);
+            }
+        }
+
+        function applyLink() {
+            let url = document.getElementById('link-url').value;
+            if (url && currentRange) {
+                if (!/^https?:\/\//i.test(url)) url = 'http://' + url;
+                selectedElement.contentEditable = "true";
+                selectedElement.focus();
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(currentRange);
+                document.execCommand('createLink', false, url);
+                saveState();
+            }
+        }
+
+        function changeZIndex(amt) {
+            if (!selectedElement) return;
+            selectedElement.style.zIndex = (parseInt(selectedElement.style.zIndex) || 10) + amt;
+            if (parseInt(selectedElement.style.zIndex) > highestZIndex) {
+                highestZIndex = parseInt(selectedElement.style.zIndex);
+            }
+            saveState();
+        }
+
+        function deleteSelected() { 
+            if (selectedElement) { 
+                selectedElement.remove(); 
+                deselect({target: document.getElementById('workspace')}); 
+                saveState();
+            } 
+        }
+
+        // 🚨 SMART GUIDES LOGIC 🚨
+        function calculateSnap(el, newLeft, newTop, newWidth, newHeight) {
+            const threshold = 5; // Snap pixel radius
+            let snappedX = false; let snappedY = false;
+            let guideX = -1; let guideY = -1;
+
+            // Check all other elements on the same page
+            const rects = Array.from(el.parentElement.querySelectorAll('.element')).filter(e => e !== el && !e.classList.contains('handle'));
+            
+            for (let other of rects) {
+                const oLeft = parseFloat(other.style.left) || 0;
+                const oTop = parseFloat(other.style.top) || 0;
+                const oWidth = other.offsetWidth;
+                const oHeight = other.offsetHeight;
+                const oRight = oLeft + oWidth;
+                const oBottom = oTop + oHeight;
+                const oCenterX = oLeft + oWidth / 2;
+                const oCenterY = oTop + oHeight / 2;
+
+                const cLeft = newLeft;
+                const cRight = newLeft + newWidth;
+                const cCenterX = newLeft + newWidth / 2;
+                const cTop = newTop;
+                const cBottom = newTop + newHeight;
+                const cCenterY = newTop + newHeight / 2;
+
+                // X-Axis Snapping
+                if (!snappedX) {
+                    if (Math.abs(cLeft - oLeft) < threshold) { newLeft = oLeft; guideX = oLeft; snappedX = true; }
+                    else if (Math.abs(cRight - oRight) < threshold) { newLeft = oRight - newWidth; guideX = oRight; snappedX = true; }
+                    else if (Math.abs(cCenterX - oCenterX) < threshold) { newLeft = oCenterX - newWidth / 2; guideX = oCenterX; snappedX = true; }
+                    else if (Math.abs(cLeft - oRight) < threshold) { newLeft = oRight; guideX = oRight; snappedX = true; }
+                    else if (Math.abs(cRight - oLeft) < threshold) { newLeft = oLeft - newWidth; guideX = oLeft; snappedX = true; }
+                }
+
+                // Y-Axis Snapping
+                if (!snappedY) {
+                    if (Math.abs(cTop - oTop) < threshold) { newTop = oTop; guideY = oTop; snappedY = true; }
+                    else if (Math.abs(cBottom - oBottom) < threshold) { newTop = oBottom - newHeight; guideY = oBottom; snappedY = true; }
+                    else if (Math.abs(cCenterY - oCenterY) < threshold) { newTop = oCenterY - newHeight / 2; guideY = oCenterY; snappedY = true; }
+                    else if (Math.abs(cTop - oBottom) < threshold) { newTop = oBottom; guideY = oBottom; snappedY = true; }
+                    else if (Math.abs(cBottom - oTop) < threshold) { newTop = oTop - newHeight; guideY = oTop; snappedY = true; }
+                }
+            }
+
+            return { newLeft, newTop, snappedX, snappedY, guideX, guideY };
+        }
+
+        function updateGuides(el, sx, sy, gx, gy) {
+            let gV = document.getElementById('smart-guide-v');
+            let gH = document.getElementById('smart-guide-h');
+            
+            if (!gV) {
+                gV = document.createElement('div');
+                gV.id = 'smart-guide-v';
+                gV.className = 'smart-guide smart-guide-v';
+                gH = document.createElement('div');
+                gH.id = 'smart-guide-h';
+                gH.className = 'smart-guide smart-guide-h';
+            }
+            
+            if (gV.parentElement !== el.parentElement) el.parentElement.appendChild(gV);
+            if (gH.parentElement !== el.parentElement) el.parentElement.appendChild(gH);
+
+            if (sx) { gV.style.display = 'block'; gV.style.left = gx + 'px'; } else { gV.style.display = 'none'; }
+            if (sy) { gH.style.display = 'block'; gH.style.top = gy + 'px'; } else { gH.style.display = 'none'; }
+        }
+
+        function hideGuides() {
+            const gV = document.getElementById('smart-guide-v');
+            const gH = document.getElementById('smart-guide-h');
+            if (gV) gV.style.display = 'none';
+            if (gH) gH.style.display = 'none';
+        }
+
+        // 🚨 ZOOM SCALED DRAGGING ENGINE + SMART GUIDES 🚨
+        function makeDraggable(el) {
+            el.onmousedown = (e) => {
+                if (e.target.classList.contains('handle')) return;
+                if (el.classList.contains('editing')) {
+                    e.stopPropagation(); 
+                    return; 
+                }
+
+                e.preventDefault(); 
+                e.stopPropagation(); 
+                
+                if (selectedElement !== el) {
+                    selectElement(el);
+                }
+
+                let startX = e.clientX;
+                let startY = e.clientY;
+                let startLeft = el.offsetLeft;
+                let startTop = el.offsetTop;
+                let dragged = false;
+
+                document.onmouseup = () => { 
+                    document.onmouseup = null; 
+                    document.onmousemove = null; 
+                    hideGuides(); 
+                    checkPageSwitch(el); 
+                    if(dragged) saveState();
+                };
+                
+                document.onmousemove = (e) => {
+                    e.preventDefault(); 
+                    dragged = true;
+                    
+                    // DIVIDE MOVEMENT BY ZOOM LEVEL TO KEEP MOUSE SYNCHRONIZED
+                    let dx = (e.clientX - startX) / zoomLevel;
+                    let dy = (e.clientY - startY) / zoomLevel;
+                    
+                    let rawLeft = Math.round((startLeft + dx) / SNAP_GRID) * SNAP_GRID;
+                    let rawTop = Math.round((startTop + dy) / SNAP_GRID) * SNAP_GRID;
+                    
+                    const w = el.offsetWidth;
+                    const h = el.offsetHeight;
+
+                    const snap = calculateSnap(el, rawLeft, rawTop, w, h);
+                    
+                    el.style.left = snap.newLeft + "px";
+                    el.style.top = snap.newTop + "px";
+
+                    updateGuides(el, snap.snappedX, snap.snappedY, snap.guideX, snap.guideY);
+                };
+            };
+        }
+
+        function checkPageSwitch(el) {
+            const pages = document.querySelectorAll('.resume-page');
+            const elRect = el.getBoundingClientRect();
+            pages.forEach(page => {
+                const pageRect = page.getBoundingClientRect();
+                if (elRect.top > pageRect.top && elRect.top < pageRect.bottom) {
+                    if (el.parentElement !== page) {
+                        page.appendChild(el);
+                        // Adjust Y placement to fix zoom offset scaling bugs
+                        el.style.top = ((elRect.top - pageRect.top) / zoomLevel) + "px";
+                    }
+                }
+            });
+        }
+
+        // 🚨 ZOOM SCALED RESIZING ENGINE 🚨
+        function makeResizable(el) {
+            const handles = el.querySelectorAll('.handle');
+            handles.forEach(handle => {
+                handle.onmousedown = (e) => {
+                    e.preventDefault(); e.stopPropagation();
+                    const dir = handle.className.split('handle-')[1];
+                    
+                    const startW = el.offsetWidth; const startH = el.offsetHeight;
+                    const startX = e.clientX; const startY = e.clientY;
+                    const startLeft = el.offsetLeft; const startTop = el.offsetTop;
+
+                    const onMove = (moveEvent) => {
+                        // DIVIDE MOVEMENT BY ZOOM LEVEL
+                        const dx = (moveEvent.clientX - startX) / zoomLevel;
+                        const dy = (moveEvent.clientY - startY) / zoomLevel;
+
+                        if (dir.includes('e')) {
+                            const newW = Math.max(1, startW + dx);
+                            el.style.width = newW + 'px'; 
+                            if(selectedElement === el) document.getElementById('elem-width').value = Math.round(newW);
+                        }
+                        if (dir.includes('s')) {
+                            const newH = Math.max(1, startH + dy);
+                            el.style.height = newH + 'px'; 
+                            if(selectedElement === el) document.getElementById('elem-height').value = Math.round(newH);
+                        }
+                        
+                        if (dir.includes('w')) {
+                            const newW = startW - dx;
+                            if (newW >= 1) { 
+                                el.style.width = newW + 'px'; 
+                                el.style.left = startLeft + dx + 'px'; 
+                                if(selectedElement === el) document.getElementById('elem-width').value = Math.round(newW);
+                            }
+                        }
+                        if (dir.includes('n')) {
+                            const newH = startH - dy;
+                            if (newH >= 1) { 
+                                el.style.height = newH + 'px'; 
+                                el.style.top = startTop + dy + 'px'; 
+                                if(selectedElement === el) document.getElementById('elem-height').value = Math.round(newH);
+                            }
+                        }
+                    };
+
+                    const onUp = () => { 
+                        window.removeEventListener('mousemove', onMove); 
+                        window.removeEventListener('mouseup', onUp); 
+                        saveState();
+                    };
+                    window.addEventListener('mousemove', onMove); 
+                    window.addEventListener('mouseup', onUp);
+                };
+            });
+        }
+
+        let arrowMoved = false;
+        document.addEventListener('keydown', (e) => {
+            const cmdKey = e.ctrlKey || e.metaKey;
+            const isTyping = selectedElement && selectedElement.classList.contains('editing');
+            
+            if (cmdKey && e.key.toLowerCase() === 'z' && !isTyping) {
+                e.preventDefault();
+                if (e.shiftKey) redo(); else undo();
+                return;
+            }
+            if (cmdKey && e.key.toLowerCase() === 'y' && !isTyping) {
+                e.preventDefault();
+                redo();
+                return;
+            }
+
+            if (cmdKey && e.key.toLowerCase() === 'a' && !isTyping) e.preventDefault(); 
+            if (cmdKey && e.key.toLowerCase() === 'c' && !isTyping) { 
+                if (selectedElement) { 
+                    e.preventDefault(); 
+                    clipboardElement = selectedElement.cloneNode(true); 
+                    clipboardElement.classList.remove('selected', 'editing'); 
+                    clipboardElement.contentEditable = "false";
+                } 
+            }
+            if (cmdKey && e.key.toLowerCase() === 'v' && !isTyping) { 
+                if (clipboardElement) { 
+                    e.preventDefault(); 
+                    const newEl = clipboardElement.cloneNode(true); 
+                    
+                    newEl.style.left = (parseInt(newEl.style.left) + 20) + 'px'; 
+                    newEl.style.top = (parseInt(newEl.style.top) + 20) + 'px'; 
+                    
+                    // 🚨 FEATURE 2: PASTES TO ACTIVE PAGE
+                    const targetPage = getActivePage(); 
+                    targetPage.appendChild(newEl); 
+                    
+                    bringToFront(newEl); bindElementEvents(newEl); selectElement(newEl); 
+                    clipboardElement = newEl.cloneNode(true); 
+                    clipboardElement.classList.remove('selected', 'editing'); 
+                    saveState();
+                } 
+            }
+            if ((e.key === 'Delete' || e.key === 'Backspace') && selectedElement && !isTyping) { 
+                e.preventDefault(); deleteSelected(); 
+            }
+
+            if (selectedElement && !isTyping && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+                let left = parseFloat(selectedElement.style.left) || 0;
+                let top = parseFloat(selectedElement.style.top) || 0;
+                const step = e.shiftKey ? 10 : 1;
+                
+                if (e.key === 'ArrowUp') top -= step;
+                if (e.key === 'ArrowDown') top += step;
+                if (e.key === 'ArrowLeft') left -= step;
+                if (e.key === 'ArrowRight') left += step;
+                
+                selectedElement.style.left = left + 'px';
+                selectedElement.style.top = top + 'px';
+                arrowMoved = true;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) && arrowMoved) {
+                saveState();
+                arrowMoved = false;
+            }
+        });
+
+        function triggerImageUpload(target) { imageUploadTarget = target; document.getElementById('image-input').click(); }
+
+        function handleImage(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                if (imageUploadTarget === 'global') {
+                    const el = document.createElement('div');
+                    el.className = 'element image-element';
+                    el.style.backgroundImage = `url(${event.target.result})`;
+                    el.style.width = '150px'; el.style.height = '150px';
+                    el.style.left = '50px'; el.style.top = '50px';
+                    
+                    addResizeHandles(el);
+                    
+                    // 🚨 FEATURE 2: ADDS IMAGE TO ACTIVE PAGE
+                    getActivePage().appendChild(el);
+                    
+                    bringToFront(el); bindElementEvents(el); selectElement(el);
+                    saveState();
+                } 
+                else if (imageUploadTarget === 'shape' && selectedElement && selectedElement.classList.contains('shape-element')) {
+                    selectedElement.style.backgroundImage = `url(${event.target.result})`;
+                    document.getElementById('color-controls').style.display = 'none';
+                    saveState();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeShapeImage() {
+            if (selectedElement && selectedElement.classList.contains('shape-element')) {
+                selectedElement.style.backgroundImage = 'none';
+                document.getElementById('color-controls').style.display = 'block';
+                document.getElementById('color-picker').value = rgbToHex(window.getComputedStyle(selectedElement).backgroundColor);
+                saveState();
+            }
+        }
+
+        // 🚨 PREVENTS PDF BLUR BY RESETTING ZOOM 🚨
+        function downloadPDF() {
+            if (selectedElement) {
+                selectedElement.classList.remove('selected', 'editing');
+                if (selectedElement.classList.contains('text-element')) selectedElement.contentEditable = "false";
+            }
+            
+            const element = document.getElementById('page-1');
+            const originalTransform = element.style.transform;
+            
+            // Snap back to exactly 100% for perfect 4K render quality
+            element.style.transform = 'scale(1)';
+            
+            const opt = { 
+                margin: 0, 
+                filename: 'custom-resume.pdf', 
+                image: { type: 'jpeg', quality: 1 }, 
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true,
+                    backgroundColor: '#ffffff' 
+                }, 
+                jsPDF: { 
+                    unit: 'px', 
+                    format: [794, parseInt(element.style.height || 1123)], 
+                    orientation: 'portrait' 
+                } 
+            };
+            
+            const originalShadow = element.style.boxShadow;
+            element.style.boxShadow = 'none';
+            
+            setTimeout(() => {
+                html2pdf().set(opt).from(element).save().then(() => {
+                    element.style.boxShadow = originalShadow;
+                    // Reset user's selected zoom
+                    element.style.transform = originalTransform;
+                });
+            }, 150); // Pause briefly to let DOM paint the un-zoomed format
+        }
+
+        async function saveToArchives() {
+            const userId = localStorage.getItem('userId');
+            if(!userId) return alert("Log in to save!");
+
+            if (selectedElement) {
+                selectedElement.classList.remove('selected', 'editing');
+                if (selectedElement.classList.contains('text-element')) selectedElement.contentEditable = "false";
+            }
+            
+            const docName = document.getElementById('doc-name-input').value.trim() || "Untitled Design";
+            const urlParams = new URLSearchParams(window.location.search);
+            const existingId = urlParams.get("id");
+
+            const payload = {
+                userId: userId, 
+                resumeId: existingId,
+                personalInfo: { 
+                    name: docName, 
+                    email: "custom@solaristools.com" 
+                },
+                templateType: "custom", 
+                templateSpecificInputs: { 
+                    htmlContent: document.getElementById('page-1').innerHTML, 
+                    isCustom: true,
+                    canvasHeight: document.getElementById('canvas-height-input').value
+                }
+            };
+
+            try {
+                const response = await fetch("http://localhost:5000/api/resume", { 
+                    method: "POST", 
+                    headers: { "Content-Type": "application/json" }, 
+                    body: JSON.stringify(payload) 
+                });
+                
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("Masterpiece saved to archives!");
+                    if (!existingId && result.data?._id) {
+                        window.history.replaceState(null, "", `/customize.html?id=${result.data._id}`);
+                    }
+                } else {
+                    alert("Server Error: " + result.error);
+                }
+            } catch(e) { 
+                alert("Error connecting to server. Is your backend running?"); 
+            }
+        }
+
+        function rgbToHex(rgb) {
+            if(!rgb || rgb.includes('rgba(0,0,0,0)')) return '#000000';
+            const res = rgb.match(/\d+/g);
+            if(!res) return '#000000';
+            return "#" + ((1 << 24) + (+res[0] << 16) + (+res[1] << 8) + +res[2]).toString(16).slice(1);
+        }
+
+        function initElement(el) {
+            if(el.classList.contains('text-element')) {
+                el.contentEditable = "false";
+                el.classList.remove('editing');
+            }
+            addResizeHandles(el);
+            bindElementEvents(el);
+            
+            const z = parseInt(window.getComputedStyle(el).zIndex);
+            if (!isNaN(z) && z > highestZIndex) highestZIndex = z;
+        }
+
+       window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get("id");
+            const mode = urlParams.get("mode"); 
+            
+            if (id) {
+                loadResume(id).then(() => saveState());
+            } else if (mode === 'temp') {
+                const tempHtml = localStorage.getItem("tempStudioHtml");
+                const tempHeight = localStorage.getItem("tempStudioHeight");
+                
+                if (tempHtml) {
+                    document.getElementById('page-1').innerHTML = tempHtml;
+                    
+                    if (tempHeight) {
+                        document.getElementById('canvas-height-input').value = tempHeight;
+                        updateCanvasHeight(tempHeight);
+                    }
+
+                    const loadedElements = document.getElementById('page-1').querySelectorAll('.element');
+                    loadedElements.forEach(el => initElement(el));
+                    
+                    localStorage.removeItem("tempStudioHtml");
+                    localStorage.removeItem("tempStudioHeight");
+                    
+                    saveState();
+                }
+            } else {
+                document.querySelectorAll('.element').forEach(el => initElement(el));
+                updateCanvasHeight(1123);
+                const sidebarBg = document.querySelector('.shape-element[style*="left: 0px"]');
+                if(sidebarBg) sidebarBg.style.height = '100%';
+                saveState();
+            }
+        });
+
+        async function loadResume(id) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/resume/${id}`);
+                const data = await response.json();
+
+                if (data && data.templateSpecificInputs?.htmlContent) {
+                    const page = document.getElementById('page-1');
+                    
+                    page.innerHTML = data.templateSpecificInputs.htmlContent;
+                    
+                    if (data.personalInfo && data.personalInfo.name) {
+                        document.getElementById('doc-name-input').value = data.personalInfo.name;
+                    }
+                    
+                    if(data.templateSpecificInputs.canvasHeight) {
+                        document.getElementById('canvas-height-input').value = data.templateSpecificInputs.canvasHeight;
+                        updateCanvasHeight(data.templateSpecificInputs.canvasHeight);
+                    }
+
+                    const loadedElements = page.querySelectorAll('.element');
+                    loadedElements.forEach(el => initElement(el));
+                }
+            } catch (error) {
+                console.error("Load error:", error);
+                alert("Failed to load saved data.");
+            }
+        }
+    </script>
+</body>
+</html>
