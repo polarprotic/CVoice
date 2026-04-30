@@ -1,113 +1,192 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
-  const container = document.getElementById("saved-resumes-container");
+/**
+ * dashboard.js
+ * 
+ * Handles saved resume fetching and deletion.
+ * This file runs AFTER the inline script in dashboard.html,
+ * so it overrides fetchSavedResumes with a fully compatible version.
+ */
 
-  // 1. Security Check
-  if (!token || !userId) {
-    window.location.href = "/auth.html";
-    return;
-  }
+const TEMPLATE_DISPLAY_NAMES = {
+    'academic':   'Technical Executive',
+    'minimal':    'Sleek Minimalist',
+    'modern':     'Contemporary Creative',
+    'attorney':   'Traditional Corporate',
+    'innovative': 'Executive Innovative',
+    'custom':     'Customised Layout'
+};
 
-  try {
-    const response = await fetch(`http://localhost:5000/api/resume?userId=${userId}`);
-    
-    if (!response.ok) {
-        throw new Error("Network response was not ok");
+/**
+ * Build skeleton loading cards that look like mini resume documents.
+ */
+function buildSkeletonLoader(count = 2) {
+    const lines = [
+        ['thick w55'],
+        ['spacer'],
+        ['w90'],['w70'],['w80'],
+        ['spacer'],
+        ['w65'],['w45'],['w80'],['w55'],
+        ['spacer'],
+        ['w40'],['w70']
+    ];
+    const docInner = lines.map(([cls]) =>
+        cls === 'spacer'
+            ? '<div class="sk-doc-spacer"></div>'
+            : `<div class="sk-doc-line ${cls}"></div>`
+    ).join('');
+
+    const card = () => `
+        <div class="skeleton-card">
+            <div class="sk-doc-wrap">
+                <div class="sk-doc">
+                    <div class="sk-doc-inner">${docInner}</div>
+                </div>
+            </div>
+            <div class="sk-bar title"></div>
+            <div class="sk-bar meta"></div>
+            <div class="sk-bar date"></div>
+            <div class="sk-bar btn"></div>
+        </div>`;
+    return Array.from({ length: count }, card).join('');
+}
+
+/**
+ * Fetch and render saved resumes.
+ * Handles both API response shapes:
+ *   - { data: [...] }   (original /api/resume/user/:id endpoint)
+ *   - [...] plain array (query-param endpoint /api/resume?userId=...)
+ */
+async function fetchSavedResumes() {
+    const userId = localStorage.getItem('userId');
+    const token  = localStorage.getItem('token');
+    const container = document.getElementById('saved-container');
+    if (!container) return;
+
+    if (!token || !userId) {
+        container.innerHTML = buildEmptyState('Not signed in', 'Please log in to view your saved resumes.');
+        return;
     }
-    
-    const resumes = await response.json();
 
-    // Clear the "loading" text
-    container.innerHTML = "";
+    container.innerHTML = buildSkeletonLoader(2);
 
-    if (resumes.length === 0) {
-      container.innerHTML = '<p style="color: #64748b;">You haven\'t created any resumes yet. Start by picking a template above!</p>';
-      return;
+    try {
+        // Try the primary endpoint first
+        let res = await fetch(`http://localhost:5000/api/resume/user/${userId}`);
+
+        // Fallback to query-param style endpoint
+        if (!res.ok) {
+            res = await fetch(`http://localhost:5000/api/resume?userId=${userId}`);
+        }
+
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
+        const payload = await res.json();
+
+        // Normalise to array regardless of response shape
+        const resumes = Array.isArray(payload)
+            ? payload
+            : (Array.isArray(payload.data) ? payload.data : []);
+
+        container.innerHTML = '';
+
+        if (resumes.length === 0) {
+            container.innerHTML = buildEmptyState(
+                'No saved resumes yet',
+                'Create one from the Templates tab and save it from the editor.'
+            );
+            return;
+        }
+
+        resumes.forEach((resume, i) => {
+            const tpl  = document.getElementById('saved-tpl').content.cloneNode(true);
+            const card = tpl.querySelector('.saved-card');
+
+            card.id = `resume-card-${resume._id}`;
+            card.style.animationDelay = `${i * 0.08}s`;
+
+            // Name
+            tpl.querySelector('.js-title').textContent =
+                resume.personalInfo?.name || 'Untitled Resume';
+
+            // Template type label
+            const tplType = resume.templateType
+                || resume.templateSpecificInputs?.templateType
+                || 'standard';
+            const metaEl = tpl.querySelector('.js-meta');
+            if (metaEl) {
+                metaEl.textContent = (TEMPLATE_DISPLAY_NAMES[tplType] || tplType) + ' Engine';
+            }
+
+            // Date
+            const d = new Date(resume.updatedAt || resume.createdAt);
+            tpl.querySelector('.js-date').textContent =
+                'Updated ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+            // Smart routing
+            const isCustom = tplType === 'custom' || resume.templateSpecificInputs?.isCustom;
+            tpl.querySelector('.js-open').onclick = () => {
+                window.location.href = isCustom
+                    ? `customize.html?id=${resume._id}`
+                    : `editor.html?id=${resume._id}`;
+            };
+
+            // Delete
+            tpl.querySelector('.js-del').onclick = (e) => {
+                e.stopPropagation();
+                deleteResume(resume._id);
+            };
+
+            container.appendChild(tpl);
+        });
+
+    } catch (err) {
+        console.error('fetchSavedResumes error:', err);
+        container.innerHTML = '<p class="error-state">Connection error — is your server running?</p>';
     }
+}
 
-    // --- ADDED 'custom' TO THE DICTIONARY ---
-    const templateNames = {
-        'academic': 'Technical Executive',
-        'minimal': 'Sleek Minimalist',
-        'modern': 'Contemporary Creative',
-        'attorney': 'Traditional Corporate',
-        'custom': 'Customised Layout' // 🚨 This is your new category!
-    };
-
-    // Create a card for each saved resume
-    resumes.forEach((resume, index) => {
-      const card = document.createElement('div');
-      card.className = 'saved-card stagger';
-      card.style.animationDelay = `${(index * 0.1) + 0.9}s`;
-      
-      // Give the card a specific ID so we can find it later to delete it
-      card.id = `resume-card-${resume._id}`;
-
-      // Use the dictionary to get the pretty name!
-      const displayName = templateNames[resume.templateType] || resume.templateType || 'Standard';
-
-      // 🚨 DYNAMIC ROUTING LOGIC 🚨
-      // If it's a custom template, route to Solaris Studio. Otherwise, route to standard Editor.
-      const targetUrl = resume.templateType === 'custom' ? '/customize.html' : '/editor.html';
-
-      card.innerHTML = `
-        <div class="delete-btn" onclick="deleteResume('${resume._id}')">
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-        </div>
-
-        <div class="resume-icon-badge">
-            <svg width="24" height="24" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-        </div>
-
-        <div class="card-title">${resume.personalInfo?.name || 'Untitled Resume'}</div>
-        <div style="color: var(--primary); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
-            ${displayName} Engine
-        </div>
-        <div style="color: var(--text-dim); font-size: 0.8rem; margin-top: 8px;">
-            Sync Date: ${new Date(resume.updatedAt).toLocaleDateString()}
-        </div>
-
-        <button class="btn-workspace" onclick="window.location.href='${targetUrl}?id=${resume._id}'">
-            Open Workspace
-        </button>
-      `;
-      container.appendChild(card);
-    });
-  } catch (error) {
-    console.error("Error fetching resumes:", error);
-    container.innerHTML = '<p style="color: #ef4444;">Error loading resumes. Please ensure your backend is running.</p>';
-  }
-});
-
+/**
+ * Delete a resume by ID, then remove its card from the DOM.
+ */
 async function deleteResume(id) {
-  if (!confirm("Do you want to delete it?")) {
-    return;
-  }
+    if (!confirm('Delete this resume? This cannot be undone.')) return;
 
-  try {
-    const response = await fetch(`http://localhost:5000/api/resume/${id}`, {
-      method: "DELETE",
-    });
+    try {
+        const res = await fetch(`http://localhost:5000/api/resume/${id}`, { method: 'DELETE' });
 
-    if (response.ok) {
-      // Find the exact card on the screen and remove it instantly
-      const cardToRemove = document.getElementById(`resume-card-${id}`);
-      if (cardToRemove) {
-          cardToRemove.remove();
-      }
+        if (res.ok) {
+            const card = document.getElementById(`resume-card-${id}`);
+            if (card) card.remove();
 
-      // If that was the last resume, show the empty message
-      const container = document.getElementById("saved-resumes-container");
-      if (container.children.length === 0) {
-          container.innerHTML = '<p style="color: #64748b;">You haven\'t created any resumes yet. Start by picking a template above!</p>';
-      }
-
-    } else {
-      alert("❌ Failed to delete resume.");
+            // Show empty state if no cards remain
+            const container = document.getElementById('saved-container');
+            if (container && container.querySelectorAll('.saved-card').length === 0) {
+                container.innerHTML = buildEmptyState(
+                    'No saved resumes yet',
+                    'Create one from the Templates tab and save it from the editor.'
+                );
+            }
+        } else {
+            alert('Failed to delete resume. Please try again.');
+        }
+    } catch (err) {
+        console.error('deleteResume error:', err);
+        alert('Error connecting to server.');
     }
-  } catch (error) {
-    console.error("Delete error:", error);
-    alert("Error connecting to server.");
-  }
+}
+
+/**
+ * Build the empty-state HTML block.
+ */
+function buildEmptyState(title, sub) {
+    return `
+        <div class="empty-state">
+            <div class="empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+            </div>
+            <div class="empty-title">${title}</div>
+            <div class="empty-sub">${sub}</div>
+        </div>`;
 }

@@ -71,4 +71,50 @@ router.post('/analyze', async (req, res) => {
     });
 });
 
+// --- NEW REWRITE ENDPOINT ---
+router.post('/rewrite', async (req, res) => {
+    const { text, context } = req.body;
+
+    if (!text) {
+        return res.status(400).json({ error: "No text provided to enhance." });
+    }
+
+    const prompt = `You are an expert resume writer and career coach. Improve the following text for a resume's "${context}" section. 
+    Make it professional, action-oriented, concise, and impactful. 
+    
+    Rules:
+    - Return ONLY the improved text.
+    - Do not include conversational filler (e.g., "Here is the improved text:").
+    - If the original text uses bullet points, format your response using bullet points with no bullet or numbers symbol.
+    - For the important keywords in the text, use **bolding** to make them stand out.
+    - Do not make the bold thing in the summary section but do for the rest.
+    
+    
+    Original Text:
+    ${text}`;
+
+    // Loop through the models using the exact same fallback system as /analyze
+    for (const modelName of MODELS) {
+        try {
+            console.log(`\n⏳ Attempting rewrite with model: [${modelName}]...`);
+            const model = genAI.getGenerativeModel({ model: modelName });
+            
+            const result = await model.generateContent(prompt);
+            const enhancedText = result.response.text();
+            
+            console.log(`✅ Rewrite success using [${modelName}]!`);
+            
+            // Send the enhanced text back to the frontend and exit the loop
+            return res.json({ enhancedText: enhancedText.trim() });
+
+        } catch (error) {
+            console.error(`⚠️ Rewrite Model [${modelName}] failed: ${error.message}`);
+        }
+    }
+
+    // If all models fail
+    console.error("❌ ALL REWRITE FALLBACK MODELS FAILED.");
+    res.status(500).json({ error: "AI Connection Failed: Please try again in 60 seconds." });
+});
+
 module.exports = router;
