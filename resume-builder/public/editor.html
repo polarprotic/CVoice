@@ -780,15 +780,17 @@
         flex-wrap: wrap;
       }
       .tmpl-minimal .resume-contact-links svg {
-        position: relative !important;
-        top: 2px !important;
-        margin-right: 0 !important; 
-        width: 14px !important;
-        height: 14px !important;
+        display: block !important;
+        position: static !important;
+        top: 0 !important;
+        margin-right: 0 !important;
+        width: 12px !important;
+        height: 12px !important;
+        flex-shrink: 0;
       }
       .tmpl-minimal .contact-phone {
-        position: relative;
-        top: 4.5px;
+        position: static;
+        top: 0;
       }
       
       .tmpl-minimal .section-title {
@@ -1796,7 +1798,7 @@
         </div>
         <div
           class="full-width"
-          data-show="modern,attorney,academic,innovative"
+          data-show="modern,academic,innovative"
         >
           <label>Job Title</label>
           <input
@@ -1827,21 +1829,17 @@
 
         <div data-show="academic,minimal,modern,attorney,innovative">
           <label>LinkedIn</label>
-          <input
-            type="text"
-            id="in-linkedin"
-            oninput="update('linkedin', this.value)"
-            placeholder="linkedin.com/in/..."
-          />
+          <div style="display:flex; gap:6px; align-items:stretch;">
+            <input type="text" id="in-linkedin" oninput="update('linkedin', this.value)" placeholder="linkedin.com/in/..." style="flex:1; min-width:0;">
+            <button class="btn-add" id="linkedin-display-btn" onclick="toggleLinkDisplay('linkedin')" title="Toggle between showing 'LinkedIn' label or the raw URL" style="padding:0 12px; border-radius:6px; white-space:nowrap; flex-shrink:0; height:auto;">Label</button>
+          </div>
         </div>
         <div data-show="minimal,modern,attorney,innovative">
           <label>Website / GitHub</label>
-          <input
-            type="text"
-            id="in-github"
-            oninput="update('github', this.value)"
-            placeholder="github.com/..."
-          />
+          <div style="display:flex; gap:6px; align-items:stretch;">
+            <input type="text" id="in-github" oninput="update('github', this.value)" placeholder="github.com/..." style="flex:1; min-width:0;">
+            <button class="btn-add" id="github-display-btn" onclick="toggleLinkDisplay('github')" title="Toggle between showing 'GitHub' label or the raw URL" style="padding:0 12px; border-radius:6px; white-space:nowrap; flex-shrink:0; height:auto;">Label</button>
+          </div>
         </div>
 
         <div
@@ -2027,48 +2025,62 @@
     <div id="preview-wrap">
       <div id="preview" class="resume-page tmpl-academic"></div>
       
-      <div id="ai-result-area" class="stagger" style="width: 100%; max-width: 680px; margin-top: -30px; margin-bottom: 100px; display: none;">
-        <div style="background: rgba(20, 13, 16, 0.95); border: 1px solid var(--border); padding: 35px 45px; border-radius: 12px; backdrop-filter: blur(20px); box-shadow: var(--shadow-lg);">
-          
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
-            <h3 style="color: var(--rose-light); font-size: 1.25rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; margin: 0;">AI Audit Results</h3>
-            
-            <div style="display: flex; gap: 50px; justify-content: center;">
-                <div style="text-align: center;">
-                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">ATS Score</div>
-                    <div style="position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(0,0,0,0.2); border-radius: 50%; box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);">
-                        <svg width="140" height="140" viewBox="0 0 140 140" style="position: absolute; top: 0; left: 0; transform: rotate(-90deg); overflow: visible;">
-                            <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8" />
-                            <circle id="ai-ats-ring" cx="70" cy="70" r="60" fill="none" stroke="#38bdf8" stroke-width="8" stroke-dasharray="377" stroke-dashoffset="377" stroke-linecap="round" style="filter: drop-shadow(0 0 4px rgba(0,0,0,0.5)); transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), stroke 1.5s ease;" />
-                        </svg>
-                        <div style="z-index: 2; display: flex; align-items: baseline; font-family: 'Inter', sans-serif;">
-                            <span id="ai-ats-number" style="font-size: 2.5rem; font-weight: 900; color: #fff;">0</span>
-                            <span style="font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.5); margin-left: 2px;">/100</span>
-                        </div>
-                    </div>
-                </div>
+   <div id="ai-result-area" style="width: 100%; max-width: 760px; margin-top: -20px; margin-bottom: 100px; display: none;">
 
-                <div style="text-align: center;">
-                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">Job Match</div>
-                    <div style="position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(0,0,0,0.2); border-radius: 50%; box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);">
-                        <svg width="140" height="140" viewBox="0 0 140 140" style="position: absolute; top: 0; left: 0; transform: rotate(-90deg); overflow: visible;">
-                            <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8" />
-                            <circle id="ai-score-ring" cx="70" cy="70" r="60" fill="none" stroke="#ef4444" stroke-width="8" stroke-dasharray="377" stroke-dashoffset="377" stroke-linecap="round" style="filter: drop-shadow(0 0 4px rgba(0,0,0,0.5)); transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), stroke 1.5s ease;" />
-                        </svg>
-                        <div style="z-index: 2; display: flex; align-items: baseline; font-family: 'Inter', sans-serif;">
-                            <span id="ai-score-number" style="font-size: 2.5rem; font-weight: 900; color: #fff;">0</span>
-                            <span style="font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.5); margin-left: 2px;">/100</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Header bar -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:3px; height:20px; background:var(--rose-light); border-radius:2px;"></div>
+            <span style="font-size:0.78rem; font-weight:800; color:var(--rose-light); letter-spacing:2px; text-transform:uppercase;">AI Audit Results</span>
           </div>
-          
-          <div id="ai-suggestions" style="color: rgba(255, 255, 255, 0.85); line-height: 1.8; font-size: 0.95rem; text-align: left; letter-spacing: 0.3px;">
-          </div>
-          
+          <button onclick="document.getElementById('ai-result-area').style.display='none'" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(240,234,240,0.45); border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; font-family:inherit;">✕ Close</button>
         </div>
+
+        <!-- Score cards row -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+
+          <!-- ATS Score card -->
+          <div style="background:rgba(20,13,16,0.95); border:1px solid rgba(196,85,118,0.18); border-radius:12px; padding:22px 24px; backdrop-filter:blur(20px); position:relative; overflow:hidden;">
+            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(to right, var(--rose), var(--rose-light));"></div>
+            <div style="font-size:0.65rem; font-weight:800; color:var(--text-muted); letter-spacing:1.8px; text-transform:uppercase; margin-bottom:12px;">ATS Score</div>
+            <div style="display:flex; align-items:flex-end; gap:4px; margin-bottom:16px;">
+              <span id="ai-ats-number" style="font-size:3rem; font-weight:900; color:#fff; font-family:'Inter',sans-serif; line-height:1; transition:color 0.6s ease;">0</span>
+              <span style="font-size:1rem; font-weight:600; color:rgba(255,255,255,0.25); margin-bottom:6px;">/100</span>
+            </div>
+            <div style="position:relative; height:6px; border-radius:99px; background:rgba(255,255,255,0.08); overflow:hidden;">
+              <div id="ai-ats-bar" style="position:absolute; left:0; top:0; height:100%; width:0%; border-radius:99px; background:linear-gradient(to right,#ef4444,#f97316,#eab308,#22c55e); transition:width 1.5s cubic-bezier(0.4,0,0.2,1);"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:6px;">
+              <span style="font-size:0.6rem; color:rgba(255,255,255,0.25); font-weight:600;">Poor</span>
+              <span style="font-size:0.6rem; color:rgba(255,255,255,0.25); font-weight:600;">Excellent</span>
+            </div>
+          </div>
+
+          <!-- Job Match card -->
+          <div style="background:rgba(20,13,16,0.95); border:1px solid rgba(196,85,118,0.18); border-radius:12px; padding:22px 24px; backdrop-filter:blur(20px); position:relative; overflow:hidden;">
+            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(to right, var(--rose), var(--rose-light));"></div>
+            <div style="font-size:0.65rem; font-weight:800; color:var(--text-muted); letter-spacing:1.8px; text-transform:uppercase; margin-bottom:12px;">Job Match</div>
+            <div style="display:flex; align-items:flex-end; gap:4px; margin-bottom:16px;">
+              <span id="ai-score-number" style="font-size:3rem; font-weight:900; color:#fff; font-family:'Inter',sans-serif; line-height:1; transition:color 0.6s ease;">0</span>
+              <span style="font-size:1rem; font-weight:600; color:rgba(255,255,255,0.25); margin-bottom:6px;">/100</span>
+            </div>
+            <div style="position:relative; height:6px; border-radius:99px; background:rgba(255,255,255,0.08); overflow:hidden;">
+              <div id="ai-score-bar" style="position:absolute; left:0; top:0; height:100%; width:0%; border-radius:99px; background:linear-gradient(to right,#ef4444,#f97316,#eab308,#22c55e); transition:width 1.5s cubic-bezier(0.4,0,0.2,1);"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:6px;">
+              <span style="font-size:0.6rem; color:rgba(255,255,255,0.25); font-weight:600;">Poor</span>
+              <span style="font-size:0.6rem; color:rgba(255,255,255,0.25); font-weight:600;">Excellent</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Suggestions panel -->
+        <div style="background:rgba(20,13,16,0.95); border:1px solid rgba(196,85,118,0.18); border-radius:12px; padding:24px 28px; backdrop-filter:blur(20px);">
+          <div style="font-size:0.65rem; font-weight:800; color:var(--text-muted); letter-spacing:1.8px; text-transform:uppercase; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.06);">Recommendations</div>
+          <div id="ai-suggestions"></div>
+        </div>
+
       </div>
     </div>
     
@@ -2114,6 +2126,16 @@
     document.getElementById('confirm-overlay').addEventListener('click', function(e) {
       if (e.target === this) resolveConfirm(false);
     });
+
+    /* ── Link display toggle (label vs url) ── */
+    function toggleLinkDisplay(type) {
+      const cur = state[type + 'Display'] || 'label';
+      state[type + 'Display'] = cur === 'label' ? 'url' : 'label';
+      state._touched[type + 'Display'] = true;
+      const btn = document.getElementById(type + '-display-btn');
+      if (btn) btn.textContent = state[type + 'Display'] === 'url' ? 'URL' : 'Label';
+      render();
+    }
 
     /* ── Custom select ── */
     function toggleCustomSelect() {
@@ -2188,9 +2210,7 @@
       const resultArea = document.getElementById("ai-result-area");
       
       const scoreNumber = document.getElementById("ai-score-number");
-      const scoreRing = document.getElementById("ai-score-ring");
-      const atsNumber = document.getElementById("ai-ats-number");
-      const atsRing = document.getElementById("ai-ats-ring");
+          const atsNumber = document.getElementById("ai-ats-number");
       
       const suggestionsDiv = document.getElementById("ai-suggestions");
 
@@ -2215,51 +2235,68 @@
 
           if (resultArea) resultArea.style.display = "block";
 
-          const circumference = 377;
+        
+
+        function animateBar(numEl, barEl, target) {
+            if (!numEl || !barEl) return;
+            const hue = (target / 100) * 120;
+            const color = `hsl(${hue}, 88%, 55%)`;
+            numEl.innerText = '0';
+            barEl.style.transition = 'none';
+            barEl.style.width = '0%';
+            void barEl.offsetWidth;
+            setTimeout(() => {
+              barEl.style.transition = 'width 1.5s cubic-bezier(0.4,0,0.2,1)';
+              barEl.style.width = target + '%';
+              numEl.style.color = color;
+              let cur = 0, step = target / 90;
+              const t = setInterval(() => {
+                cur = Math.min(cur + step, target);
+                numEl.innerText = Math.round(cur);
+                if (cur >= target) clearInterval(t);
+              }, 16);
+            }, 60);
+          }
 
           const rawScore = parseInt(data.score || data.jobScore || 0);
-          if (scoreNumber && scoreRing) {
-            scoreNumber.innerText = rawScore;
-            const hue = (rawScore / 100) * 120;
-            const color = `hsl(${hue}, 85%, 50%)`;
-            scoreRing.style.stroke = color;
-            scoreNumber.style.color = color;
-            scoreNumber.style.textShadow = `0 0 10px ${color}`;
-            const offset = circumference - (rawScore / 100) * circumference;
-            scoreRing.style.transition = "none";
-            scoreRing.style.strokeDashoffset = circumference;
-            void scoreRing.offsetWidth;
-            setTimeout(() => {
-              scoreRing.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), stroke 1.5s ease";
-              scoreRing.style.strokeDashoffset = offset;
-            }, 50);
-          }
+          animateBar(scoreNumber, document.getElementById('ai-score-bar'), rawScore);
 
           const rawAts = parseInt(data.atsScore || data.ats_score || data.ATS || 0);
-          if (atsNumber && atsRing) {
-            atsNumber.innerText = rawAts;
-            const atsHue = (rawAts / 100) * 120;
-            const atsColor = `hsl(${atsHue}, 85%, 50%)`;
-            atsRing.style.stroke = atsColor;
-            atsNumber.style.color = atsColor;
-            atsNumber.style.textShadow = `0 0 10px ${atsColor}`;
-            const atsOffset = circumference - (rawAts / 100) * circumference;
-            atsRing.style.transition = "none";
-            atsRing.style.strokeDashoffset = circumference;
-            void atsRing.offsetWidth;
-            setTimeout(() => {
-              atsRing.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), stroke 1.5s ease";
-              atsRing.style.strokeDashoffset = atsOffset;
-            }, 50);
-          }
+          animateBar(atsNumber, document.getElementById('ai-ats-bar'), rawAts);
 
-          if (suggestionsDiv) {
+         if (suggestionsDiv) {
             if (data.suggestions) {
-              suggestionsDiv.innerHTML = data.suggestions
-                .replace(/\n/g, "<br>")
-                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+              const raw = data.suggestions
+                .replace(/\*\*(.*?)\*\*/g, '$1')  // strip bold markers
+                .replace(/\*/g, '')                 // strip stray asterisks
+                .replace(/#+\s*/g, '')              // strip markdown headers
+                .trim();
+
+              // Split into points: by newline OR by sentence endings followed by capital
+              const points = raw
+                .split(/\n+/)
+                .flatMap(line => line.split(/(?<=[.!?])\s+(?=[A-Z])/))
+                .map(p => p.replace(/^[-•▸*\d.]+\s*/, '').trim())
+                .filter(p => p.length > 8);
+
+              let html = '';
+              points.forEach(point => {
+                // Detect if it looks like a section label (short, no period)
+                if (point.length < 40 && !point.includes('.') && point === point.toUpperCase()) {
+                  html += `<div style="margin: 20px 0 8px 0; padding-bottom: 6px; border-bottom: 1px solid rgba(196,85,118,0.25);">
+                    <span style="font-size: 0.7rem; font-weight: 800; color: var(--rose-light); letter-spacing: 1.5px;">${point}</span>
+                  </div>`;
+                } else {
+                  html += `<div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; padding:11px 14px; background:rgba(255,255,255,0.03); border-radius:8px; border-left:2px solid rgba(196,85,118,0.3);">
+                    <span style="color:var(--rose-light); flex-shrink:0; margin-top:3px; font-size:0.7rem;">▸</span>
+                    <span style="font-size:0.875rem; color:rgba(240,234,240,0.88); line-height:1.65;">${point}</span>
+                  </div>`;
+                }
+              });
+
+              suggestionsDiv.innerHTML = html || `<p style="color:rgba(240,234,240,0.5); font-style:italic;">No suggestions found.</p>`;
             } else {
-              suggestionsDiv.innerHTML = "No specific suggestions found.";
+              suggestionsDiv.innerHTML = `<p style="color:rgba(240,234,240,0.5); font-style:italic;">No specific suggestions found.</p>`;
             }
           }
 
@@ -2356,6 +2393,8 @@
       skills: "C, C++, Python, Java, React.js, Tailwind, Bootstrap, Node.js, Express.js, MongoDB",
       languages: "English, Hindi",
       hobbies: "Coding, Open Source Contribution",
+      linkedinDisplay: "label",
+      githubDisplay: "label",
       coursework: "Data Structures, Algorithms, Operating Systems, Database Management Systems, Computer Networks",
       extracurricular: [],
       skillLevels: [],
@@ -2368,6 +2407,7 @@
       return {
         photo: "", name: "", role: "", email: "", phone: "", address: "",
         linkedin: "", github: "", summary: "", refs: "",
+        linkedinDisplay: "label", githubDisplay: "label",
         education: [], experience: [], projects: [], techSkills: [],
         achievements: [], skills: "", languages: "", hobbies: "",
         coursework: "", certifications: [], extracurricular: [],
@@ -2798,6 +2838,12 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
     `).join("");
   }
  
+  // Sync link-display toggle buttons
+  const liBtn = document.getElementById('linkedin-display-btn');
+  if (liBtn) liBtn.textContent = (state.linkedinDisplay === 'url') ? 'URL' : 'Label';
+  const ghBtn = document.getElementById('github-display-btn');
+  if (ghBtn) ghBtn.textContent = (state.githubDisplay === 'url') ? 'URL' : 'Label';
+
   if (document.getElementById("reference-fields")) {
     document.getElementById("reference-fields").innerHTML = state.references.map((item, i) => `
       <div class="dynamic-item">
@@ -2849,6 +2895,9 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
             const hobArr = state.hobbies ? state.hobbies.split(",").map((s) => s.trim()).filter(Boolean) : [];
             const cwArr = state.coursework ? state.coursework.split(",").map((s) => s.trim()).filter(Boolean) : [];
 
+            const linkedinLabel = (state.linkedinDisplay === 'url' && state.linkedin) ? esc(state.linkedin) : 'LinkedIn';
+            const githubLabel   = (state.githubDisplay  === 'url' && state.github)   ? esc(state.github)   : 'GitHub';
+
             const education = state.education;
             const experience = state.experience;
             const projects = state.projects;
@@ -2869,7 +2918,7 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
               ${(state.phone || state.email || state.linkedin) ? `
               <div class="contact-area">
                  ${[
-                   state.linkedin ? `<div style="display:flex; align-items:center; gap:4px;">${icons.linkedin} <a href="${getUrl(state.linkedin)}" class="pdf-link" target="_blank">LinkedIn</a></div>` : "",
+                  state.linkedin ? `<div style="display:flex; align-items:center; gap:4px;">${icons.linkedin} <a href="${getUrl(state.linkedin)}" class="pdf-link" target="_blank">${linkedinLabel}</a></div>` : "",
                    state.email ? `<div style="display:flex; align-items:center; gap:4px;">${icons.email} <a href="mailto:${esc(state.email)}" class="pdf-link">${esc(state.email)}</a></div>` : "",
                    state.phone ? `<div style="display:flex; align-items:center; gap:4px;">${icons.phone} ${esc(state.phone)}</div>` : ""
                  ].filter(Boolean).join("")}
@@ -3026,8 +3075,8 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
                 <div class="resume-contact-links" style="font-size: 10.5pt; display: flex; justify-content: center; align-items: center; gap: 14pt; flex-wrap: wrap; color: #000; margin: 0; line-height: 1;">
                   ${state.phone ? `<span style="display:flex; align-items:center; gap:4px;">${icons.phone} <span class="contact-phone" style="position: relative; top: 1px;">${esc(state.phone)}</span></span>` : ""}
                   ${state.email ? `<span style="display:flex; align-items:center; gap:4px;">${icons.email} <a href="mailto:${esc(state.email)}" class="pdf-link" style="color:#000; text-decoration:underline; text-underline-offset: 3px;">${esc(state.email)}</a></span>` : ""}
-                  ${state.linkedin ? `<span style="display:flex; align-items:center; gap:4px;">${icons.linkedin} <a href="${getUrl(state.linkedin)}" class="pdf-link" style="color:#000; text-decoration:underline; text-underline-offset: 3px;" target="_blank">LinkedIn</a></span>` : ""}
-                  ${state.github ? `<span style="display:flex; align-items:center; gap:4px;">${icons.github} <a href="${getUrl(state.github)}" class="pdf-link" style="color:#000; text-decoration:underline; text-underline-offset: 3px;" target="_blank">GitHub</a></span>` : ""}
+                  ${state.linkedin ? `<span style="display:flex; align-items:center; gap:4px;">${icons.linkedin} <a href="${getUrl(state.linkedin)}" class="pdf-link" style="color:#000; text-decoration:underline; text-underline-offset: 3px;" target="_blank">${linkedinLabel}</a></span>` : ""}
+${state.github ? `<span style="display:flex; align-items:center; gap:4px;">${icons.github} <a href="${getUrl(state.github)}" class="pdf-link" style="color:#000; text-decoration:underline; text-underline-offset: 3px;" target="_blank">${githubLabel}</a></span>` : ""}
                 </div>
                 ` : ""}
             </div>
@@ -3083,15 +3132,12 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
             <div class="section-title">Projects</div>
             ${projects.map(proj => `
               <div style="margin-bottom: 4pt;">
-                <div class="flex-between" style="margin-bottom: 1pt;">
-                  <div style="flex: 1; min-width: 0; max-width: 78%; padding-right: 15px;">
-                    <strong>${esc(proj.title)}</strong>
-                    ${proj.tech ? `<span style="margin: 0 4px;">|</span><strong><em>${esc(proj.tech)}</em></strong>` : ''}
-                    ${proj.link ? `<span style="margin: 0 4px;">|</span><a href="${getUrl(proj.link)}" class="pdf-link" target="_blank" style="color:#000; text-decoration:underline; text-underline-offset: 3px;">GitHub</a>` : ''}
-                    ${proj.liveLink ? `<span style="margin: 0 4px;">|</span><a href="${getUrl(proj.liveLink)}" class="pdf-link" target="_blank" style="color:#000; text-decoration:underline; text-underline-offset: 3px;">Live</a>` : ''}
-                  </div>
-                  <div style="white-space: nowrap; flex-shrink: 0; text-align: right;">${esc(proj.date || '')}</div>
-                </div>
+                <div class="flex-between" style="margin-bottom: 0pt;">
+  <div style="flex: 1; min-width: 0; padding-right: 15px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 4px;">
+    <span style="display:inline; overflow-wrap:break-word; word-break:break-word;"><strong>${esc(proj.title)}</strong>${proj.tech ? `<span style="margin: 0 4px;">|</span><strong><em style="font-weight:700;">${esc(proj.tech)}</em></strong>` : ''}${proj.link ? `<span style="margin: 0 4px;">|</span><a href="${getUrl(proj.link)}" class="pdf-link" target="_blank" style="color:#000; text-decoration:underline; text-underline-offset: 3px;">GitHub</a>` : ''}${proj.liveLink ? `<span style="margin: 0 4px;">|</span><a href="${getUrl(proj.liveLink)}" class="pdf-link" target="_blank" style="color:#000; text-decoration:underline; text-underline-offset: 3px;">Live</a>` : ''}</span>
+  </div>
+  <div style="white-space: nowrap; flex-shrink: 0; text-align: right;">${esc(proj.date || '')}</div>
+</div>
                 <ul style="margin-top: 2pt;">${formatDescToLi(proj.desc)}</ul>
               </div>
             `).join('')}
@@ -3252,8 +3298,8 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
                 </div>
                 <div style="text-align: right;">
                   ${state.address ? `<div style="margin-bottom: 6pt;"><strong>A:</strong> ${esc(state.address)}</div>` : ""}
-                  ${state.linkedin ? `<div style="margin-bottom: 6pt;"><strong>IN:</strong> <a href="${getUrl(state.linkedin)}" class="pdf-link" target="_blank" style="color:inherit; text-decoration:none;">LinkedIn</a></div>` : ""}
-                  ${state.github ? `<div><strong>GH:</strong> <a href="${getUrl(state.github)}" class="pdf-link" target="_blank" style="color:inherit; text-decoration:none;">GitHub</a></div>` : ""}
+                 ${state.linkedin ? `<div style="margin-bottom: 6pt;"><strong>IN:</strong> <a href="${getUrl(state.linkedin)}" class="pdf-link" target="_blank" style="color:inherit; text-decoration:none;">${linkedinLabel}</a></div>` : ""}
+${state.github ? `<div><strong>GH:</strong> <a href="${getUrl(state.github)}" class="pdf-link" target="_blank" style="color:inherit; text-decoration:none;">${githubLabel}</a></div>` : ""}
                 </div>
               </div>
               ` : ""}
@@ -3319,8 +3365,8 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
               ${[
                 state.phone ? esc(state.phone) : '',
                 state.email ? `<a href="mailto:${esc(state.email)}" class="pdf-link">${esc(state.email)}</a>` : '',
-                state.linkedin ? `<a href="${getUrl(state.linkedin)}" class="pdf-link" target="_blank">LinkedIn</a>` : '',
-                state.github ? `<a href="${getUrl(state.github)}" class="pdf-link" target="_blank">GitHub</a>` : ''
+              state.linkedin ? `<a href="${getUrl(state.linkedin)}" class="pdf-link" target="_blank">${linkedinLabel}</a>` : '',
+state.github ? `<a href="${getUrl(state.github)}" class="pdf-link" target="_blank">${githubLabel}</a>` : ''
               ].filter(Boolean).join(" | ")}
             </div>
             ` : ""}
@@ -3495,8 +3541,8 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
                 <div class="contact-info" style="display: flex; gap: 10pt; font-size: 8pt; color: #555; flex-wrap: wrap;">
                   ${state.email ? '<span style="display: flex; align-items: center; gap: 4px;">' + icons.email + '<a href="mailto:' + esc(state.email) + '" class="pdf-link" style="color:inherit;text-decoration:none;">' + esc(state.email) + '</a></span>' : ''}
                   ${state.phone ? '<span style="display: flex; align-items: center; gap: 4px;">' + icons.phone + esc(state.phone) + '</span>' : ''}
-                  ${state.linkedin ? '<span style="display: flex; align-items: center; gap: 4px;">' + icons.linkedin + '<a href="' + getUrl(state.linkedin) + '" class="pdf-link" target="_blank" style="color:inherit;text-decoration:none;">LinkedIn</a></span>' : ''}
-                  ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' + icons.github + '<a href="' + getUrl(state.github) + '" class="pdf-link" target="_blank" style="color:inherit;text-decoration:none;">GitHub</a></span>' : ''}
+                 ${state.linkedin ? '<span style="display: flex; align-items: center; gap: 4px;">' + icons.linkedin + '<a href="' + getUrl(state.linkedin) + '" class="pdf-link" target="_blank" style="color:inherit;text-decoration:none;">' + linkedinLabel + '</a></span>' : ''}
+${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' + icons.github + '<a href="' + getUrl(state.github) + '" class="pdf-link" target="_blank" style="color:inherit;text-decoration:none;">' + githubLabel + '</a></span>' : ''}
                   ${state.address ? '<span style="display: flex; align-items: center; gap: 4px;">' + icons.pin + esc(state.address) + '</span>' : ''}
                 </div>
               </div>

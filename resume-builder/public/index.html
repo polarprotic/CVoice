@@ -424,9 +424,33 @@
         .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
-        footer { position: relative; z-index: 10; border-top: 1px solid var(--border); padding: 32px 7%; display: flex; align-items: center; justify-content: space-between; background: rgba(10,6,8,0.8); backdrop-filter: blur(12px); }
+        footer { position: relative; z-index: 10; border-top: 1px solid var(--border); padding: 32px 7%; display: flex; align-items: center; justify-content: space-between; background: rgba(10,6,8,0.8); backdrop-filter: blur(12px); padding-bottom: 80px; /* added space for mobile banner */ }
         .footer-logo { font-size: 1.1rem; font-weight: 700; color: var(--text); }
         .footer-copy { font-size: .8rem; color: var(--text-3); font-weight: 500; }
+
+        /* ── NEW: GENTLE MOBILE TEASER BANNER ── */
+        .mobile-teaser {
+            display: none; /* hidden on desktop */
+            position: fixed;
+            bottom: 0; 
+            left: 0; 
+            right: 0;
+            background: rgba(20, 13, 16, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-top: 1px solid var(--border);
+            color: var(--text);
+            text-align: center;
+            padding: 16px 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 9999;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+        }
+        .mobile-teaser span {
+            color: var(--rose-light);
+            font-weight: 800;
+        }
 
         @media (max-width: 900px) {
             .hero { grid-template-columns: 1fr; padding-top: 120px; gap: 50px; text-align: center; perspective: none;}
@@ -450,10 +474,26 @@
             
             .f-card { animation: none !important; transform: none !important;} 
             #mouse-glow { display: none; } 
+
+            /* ── MOBILE READ-ONLY MODIFICATIONS ── */
+            /* Hide the main action buttons */
+            .nav-actions { display: none !important; }
+            .hero-actions { display: none !important; }
+            
+            /* Show the bottom sticky teaser */
+            .mobile-teaser { display: block; }
+            
+            /* Disable pointer events on the interactive tutorial so it acts as pure display on mobile */
+            .tutorial-section { pointer-events: none; }
         }
     </style>
 </head>
 <body>
+
+<!-- Read-Only Mobile Banner -->
+<div class="mobile-teaser">
+    ✨ Viewing on mobile. <span>Open on a desktop</span> to start building.
+</div>
 
 <div class="premium-bg">
     <div class="bg-grid-layer"></div>

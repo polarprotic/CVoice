@@ -13,7 +13,6 @@
     
     <style>
         :root {
-            /* ── EYE-FRIENDLY MATTE DARK THEME ── */
             --rose:       #9E3B56; 
             --rose-light: #C45576;
             --rose-pale:  #2D1822; 
@@ -24,6 +23,7 @@
             --text:       #EAE1E4; 
             --text-2:     #A58A94; 
             --text-3:     #705460;
+            --ease:       cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,31 +38,16 @@
             background-color: var(--bg);
         }
 
-        /* ── Noise Texture Overlay ── */
         body::before {
             content: ''; position: fixed; inset: 0;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
             pointer-events: none; z-index: 1;
         }
 
-        /* ── PREMIUM AMBIENT BACKGROUND ── */
         .premium-bg {
             position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
         }
-        .bg-grid-layer {
-            position: absolute; inset: 0;
-            background-image: 
-                linear-gradient(rgba(196, 85, 118, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(196, 85, 118, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-            animation: panGrid 40s linear infinite;
-        }
-        @keyframes panGrid {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(40px); }
-        }
+        
         .light-1 {
             position: absolute; top: -10%; left: -10%; width: 60vw; height: 60vw;
             background: radial-gradient(circle, rgba(158, 59, 86, 0.08) 0%, transparent 60%);
@@ -73,12 +58,39 @@
             background: radial-gradient(circle, rgba(196, 85, 118, 0.05) 0%, transparent 60%);
             animation: floatLight 30s infinite alternate-reverse ease-in-out;
         }
+        
         @keyframes floatLight {
             0% { transform: translate(0, 0) scale(1); }
             100% { transform: translate(5%, 5%) scale(1.1); }
         }
 
-        /* Soft Mouse Glow */
+        /* --- Warp Speed Grid Changes --- */
+        .grid-perspective {
+            position: absolute; inset: 0; perspective: 1000px;
+            mask-image: radial-gradient(ellipse at 50% 30%, black 10%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 10%, transparent 70%);
+            transition: perspective 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        body.signup-mode .grid-perspective {
+            /* Pulling perspective close simulates moving much faster! */
+            perspective: 250px; 
+        }
+
+        .grid-plane {
+            position: absolute; width: 200vw; height: 200vh; left: -50vw; top: -50vh;
+            background-image: 
+                linear-gradient(rgba(196, 85, 118, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(196, 85, 118, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: rotateX(65deg); transform-origin: center center;
+            animation: gridMove 15s linear infinite;
+        }
+        @keyframes gridMove {
+            0% { transform: rotateX(65deg) translateY(0); }
+            100% { transform: rotateX(65deg) translateY(50px); }
+        }
+
         #mouse-glow {
             position: fixed; width: 500px; height: 500px;
             background: radial-gradient(circle, rgba(196, 85, 118, 0.06) 0%, transparent 60%);
@@ -87,7 +99,7 @@
             will-change: transform;
         }
 
-        /* Ensure content stays above background */
+        nav, section, .metrics, footer { position: relative; z-index: 10; }
         .left-panel, .right-panel { position: relative; z-index: 10; }
 
         /* =====================
@@ -103,36 +115,30 @@
             background-color: transparent;
         }
 
-        /* Floating decorative cards (Dark Mode styling) */
-        .float-card {
+        /* --- Warp Speed Particles Changes --- */
+        #network-canvas {
             position: absolute;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-            z-index: 1; pointer-events: none;
-            transition: opacity 0.8s ease, filter 0.8s ease;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.8;
+            transform: scale(1) rotate(0deg);
+            filter: blur(0px);
+            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s ease, filter 1.5s ease;
         }
-        body.login-mode .float-card { opacity: 0.12; filter: blur(6px); }
 
-        .fc-1 { width:120px; height:120px; top:12%; left:7%; border-radius:50%; display:flex; align-items:center; justify-content:center; animation:float1 8s infinite alternate ease-in-out; }
-        .fc-2 { width:175px; height:68px; bottom:14%; right:6%; display:flex; flex-direction:column; justify-content:center; padding:0 18px; animation:float2 10s infinite alternate ease-in-out; }
-        .fc-3 { width:78px; height:78px; top:22%; right:11%; border-radius:20px; transform:rotate(15deg); display:flex; align-items:center; justify-content:center; animation:float3 9s infinite alternate ease-in-out; }
-        .fc-4 { width:108px; height:34px; bottom:25%; left:6%; border-radius:20px; display:flex; align-items:center; justify-content:center; animation:float1 7s infinite alternate-reverse ease-in-out; }
+        body.signup-mode #network-canvas {
+            /* Scale up and tilt to simulate camera flying into space */
+            transform: scale(2.5) rotate(12deg); 
+            opacity: 0.35;
+            filter: blur(1.5px);
+        }
 
-        @keyframes float1 { 0% { transform:translateY(0) scale(1); } 100% { transform:translateY(-28px) scale(1.04); } }
-        @keyframes float2 { 0% { transform:translateY(0) rotate(-3deg); } 100% { transform:translateY(18px) rotate(2deg); } }
-        @keyframes float3 { 0% { transform:translateY(0) rotate(15deg); } 100% { transform:translateY(-22px) rotate(5deg); } }
-
-        /* Backdrop blur dims on login */
-        .focus-overlay {
+       .focus-overlay {
             position:absolute; inset:0; z-index:5; pointer-events:none;
             background:rgba(10,6,8,0); backdrop-filter:blur(0px); -webkit-backdrop-filter:blur(0px);
-            transition: all 0.8s cubic-bezier(0.4,0,0.2,1) 0s;
-        }
-        body.login-mode .focus-overlay {
-            background:rgba(10,6,8,0.5); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-            transition: all 0.8s cubic-bezier(0.4,0,0.2,1) 0.65s;
         }
 
         /* =====================
@@ -144,42 +150,23 @@
             z-index:10;
         }
 
-        /* Welcome text */
-        .welcome-hero {
-            position:absolute; left:7%; top:50%; transform:translateY(-50%);
-            max-width:320px; opacity:1;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            z-index:20;
-        }
-        body.login-mode .welcome-hero { opacity:0; transform:translate(-60px,-50%); pointer-events:none; }
-
-        .welcome-hero h1 { font-size:3.5rem; font-weight:800; margin:0; letter-spacing:-2px; line-height:1.05; color: var(--text); }
-        .welcome-divider { width:46px; height:5px; background:linear-gradient(90deg,var(--rose),var(--rose-light)); margin:14px 0; border-radius:4px; box-shadow:0 4px 10px rgba(196,85,118,0.3); }
-        .welcome-hero p { color:var(--text-2); font-size:0.98rem; line-height:1.65; font-weight:500; margin:0; }
-
-        /* Ambient glow tracks the stage */
         .iso-glow {
-            position:absolute; left:65%; top:50%;
+            position:absolute; left:50%; top:50%;
             width:400px; height:400px;
             transform:translate(-50%,-50%);
             background:radial-gradient(circle,rgba(196,85,118,0.2) 0%,transparent 65%);
             border-radius:50%; filter:blur(40px);
             z-index:5; pointer-events:none;
             animation:pulseGlow 4s infinite alternate;
-            transition: left 0.7s cubic-bezier(0.4,0,0.2,1) 0.6s;
         }
-        body.login-mode .iso-glow { left:50%; }
         @keyframes pulseGlow { 0% { opacity:0.6; } 100% { opacity:1; } }
 
-        /* Master Stage */
         .workspace-stage {
-            position:absolute; left:65%; top:50%;
-            width:600px; height:400px;
+            position:absolute; left:50%; top:50%;
+            width:300px; height:380px;
             transform:translate(-50%,-50%);
-            transition: left 0.7s cubic-bezier(0.4,0,0.2,1) 0.6s;
             z-index:30; pointer-events:none;
         }
-        body.login-mode .workspace-stage { left:50%; }
 
         .levitator {
             width:100%; height:100%; position:relative;
@@ -187,88 +174,58 @@
         }
         @keyframes stageFloat { 0% { transform:translateY(-10px); } 100% { transform:translateY(10px); } }
 
-        /* Editor Panel (Premium Dark SaaS Styling) */
-        .editor-part {
-            position:absolute; left:150px; top:10px;
-            width:300px; height:380px;
-            background:var(--bg);
-            border-radius:16px 0 0 16px;
-            border:1px solid var(--border); border-right:1px solid rgba(255,255,255,0.05);
-            box-shadow:-20px 30px 50px rgba(0,0,0,0.5);
-            padding:28px 22px; overflow:hidden;
-            opacity:0;
-            transition: left 0.5s cubic-bezier(0.4,0,0.2,1) 0s, opacity 0.25s ease 0s;
-            z-index:1; pointer-events:none;
-        }
-        body.login-mode .editor-part {
-            left:0; opacity:1; pointer-events:auto;
-            transition: left 0.55s cubic-bezier(0.34,1.56,0.64,1) 0.6s, opacity 0.35s ease 0.6s;
-        }
-
-        .editor-part h3 { margin:0 0 16px 0; font-size:0.92rem; font-weight:800; display:flex; align-items:center; gap:8px; color: var(--text);}
-        .editor-part h3 svg { stroke:var(--rose-light); flex-shrink:0; }
-        .editor-inputs { display:flex; flex-direction:column; gap:13px; }
-        .editor-inputs input {
-            width:100%; padding:11px 13px;
-            background:var(--surface); border:1px solid var(--border); border-radius:10px;
-            font-family:'Plus Jakarta Sans',sans-serif;
-            font-size:0.83rem; font-weight:600; color:var(--text); outline:none;
-            transition:0.3s; box-shadow:inset 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .editor-inputs input::placeholder { color:var(--text-3); font-weight:400; }
-        .editor-inputs input:focus { border-color:var(--rose); background:var(--bg); box-shadow:0 0 0 3px var(--rose-glow); }
-
-        /* Resume Panel (Crisp White Document) */
+        /* =====================
+           RESUME PANEL
+        ===================== */
         .resume-part {
-            position:absolute; left:150px; top:10px;
-            width:300px; height:380px;
+            position:absolute; left:0; top:0;
+            width:100%; height:100%;
             perspective:1200px; z-index:10;
-            transition: left 0.6s cubic-bezier(0.4,0,0.2,1) 0.55s;
-        }
-        body.login-mode .resume-part {
-            left:300px;
-            transition: left 0.6s cubic-bezier(0.4,0,0.2,1) 0.6s;
         }
 
         .resume-card {
             width:100%; height:100%;
-            background:#ffffff; /* High contrast paper */
+            background:#ffffff; 
             transform-style:preserve-3d;
             transform:rotateX(55deg) rotateZ(-35deg) scale(0.9);
             border-radius:16px;
-            box-shadow:-20px 30px 50px rgba(0,0,0,0.5), inset 0 2px 2px rgba(255,255,255,1);
-            transition: transform 0.6s cubic-bezier(0.4,0,0.2,1) 0.55s, border-radius 0.6s, box-shadow 0.6s;
-        }
-        body.login-mode .resume-card {
-            transform:rotateX(0deg) rotateZ(0deg) scale(1);
-            border-radius:0 16px 16px 0;
-            border:1px solid var(--border); border-left:none;
-            box-shadow:15px 15px 40px rgba(0,0,0,0.4), inset -1px 1px 1px rgba(255,255,255,0.5);
-            transition: transform 0.6s cubic-bezier(0.4,0,0.2,1) 0s, border-radius 0.6s, box-shadow 0.6s;
+            box-shadow: -30px 40px 70px rgba(0,0,0,0.7), inset 0 2px 2px rgba(255,255,255,1);
+            transition: transform 0.6s cubic-bezier(0.4,0,0.2,1) 0s, box-shadow 0.6s;
         }
 
-        /* Paper thickness illusion */
+        body.signup-mode .resume-card {
+            transform:rotateX(0deg) rotateZ(0deg) scale(1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 0 1px var(--border);
+        }
+
         .resume-card::before {
             content:''; position:absolute; inset:0;
-            background:#e2e8f0;
+            background:#cbd5e1;
             transform:translateZ(-14px); border-radius:inherit;
-            box-shadow:-10px 20px 30px rgba(0,0,0,0.3);
-            transition:opacity 0.5s ease; pointer-events:none;
+            box-shadow:-10px 20px 30px rgba(0,0,0,0.5);
+            pointer-events:none;
+            transition: opacity 0.5s ease;
         }
-        body.login-mode .resume-card::before { opacity:0; }
 
-        /* Skeleton elements inside resume */
+        body.signup-mode .resume-card::before { 
+            opacity: 0; 
+        }
+
         .iso-el {
             position:absolute; border-radius:4px;
             transform:translateZ(14px);
             box-shadow:-5px 8px 12px rgba(0,0,0,0.1);
-            transition:transform 0.6s ease, box-shadow 0.5s ease, opacity 0.3s ease;
+            transition: transform 0.6s ease, box-shadow 0.5s ease;
         }
-        body.login-mode .iso-el { transform:translateZ(0); box-shadow:none; }
 
-        .el-header  { top:35px;  left:30px;  width:118px; height:13px; background:var(--rose); }
+        body.signup-mode .iso-el { 
+            transform:translateZ(0); 
+            box-shadow:none; 
+        }
+
+        .el-header  { top:35px;  left:30px;  width:118px; height:13px; background:linear-gradient(90deg, var(--rose), var(--rose-light)); }
         .el-sub     { top:55px;  left:30px;  width:74px;  height:7px;  background:var(--rose-light); }
-        .el-avatar  { top:30px;  right:30px; width:53px;  height:53px; border-radius:50%; background:var(--rose); border:3px solid #fff; }
+        .el-avatar  { top:30px;  right:30px; width:53px;  height:53px; border-radius:50%; background:linear-gradient(135deg, var(--rose-light), var(--rose)); border:3px solid #fff; }
         .el-line-1  { top:118px; left:30px;  width:218px; height:6px;  background:#e5e7eb; }
         .el-line-2  { top:138px; left:30px;  width:158px; height:6px;  background:#e5e7eb; }
         .el-box-1   { top:178px; left:30px;  width:104px; height:88px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; }
@@ -276,25 +233,23 @@
         .el-badge-1 { bottom:38px; left:30px;  width:43px; height:12px; border-radius:10px; background:rgba(196, 85, 118, 0.15); border: 1px solid rgba(196, 85, 118, 0.2); }
         .el-badge-2 { bottom:38px; left:83px;  width:53px; height:12px; border-radius:10px; background:rgba(196, 85, 118, 0.15); border: 1px solid rgba(196, 85, 118, 0.2); }
         .el-badge-3 { bottom:38px; left:146px; width:39px; height:12px; border-radius:10px; background:rgba(196, 85, 118, 0.15); border: 1px solid rgba(196, 85, 118, 0.2); }
-
-        /* Live text overlays */
+        
         .preview-text {
             position:absolute; font-family:'Plus Jakarta Sans',sans-serif;
-            color:#111111; /* Dark text for white paper */
+            color:#111111;
             opacity:0; transition:opacity 0.3s ease;
             white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
             transform:translateZ(1px); z-index:20; pointer-events:none;
         }
-        .pt-name    { top:28px;  left:28px; font-size:18px; font-weight:800; max-width:180px; }
-        .pt-role    { top:51px;  left:28px; font-size:12px; font-weight:700; color:var(--rose); max-width:150px; }
-        .pt-company { top:112px; left:28px; font-size:11px; font-weight:600; color:#666666; max-width:200px; }
+        .pt-name  { top:28px; left:28px; font-size:18px; font-weight:800; max-width:180px; }
+        .pt-email { top:51px; left:28px; font-size:11px; font-weight:700; color:var(--rose); max-width:150px; }
 
         /* =====================
-           RIGHT PANEL (Auth Form)
+           RIGHT PANEL
         ===================== */
         .right-panel {
             flex: 1;
-            background: var(--surface); /* Matte dark panel */
+            background: var(--surface);
             border-left: 1px solid var(--border);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 100; padding: 0 5%;
@@ -336,6 +291,10 @@
         input::placeholder { color:var(--text-3); font-weight:400; }
         input:focus { border-color:var(--rose); background:var(--bg); box-shadow:inset 0 1px 3px rgba(0,0,0,0.2), 0 0 0 3px var(--rose-glow); transform:translateY(-1px); }
 
+        .pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-3); display: flex; align-items: center; justify-content: center; transition: color 0.2s; }
+        .pw-toggle:hover { color: var(--rose-light); }
+        .input-icon-wrap { position: relative; width: 100%; }
+
         .btn { width:100%; padding:10px; background:var(--rose); color:#fff; border:none; border-radius:24px; font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; transition:0.3s; font-size:0.9rem; margin-top:6px; cursor:pointer; box-shadow:0 4px 15px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1); text-shadow:0 1px 2px rgba(0,0,0,0.2); }
         .btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(158, 59, 86, 0.4), inset 0 1px 1px rgba(255,255,255,0.15); }
         .btn:active { transform:scale(0.98); }
@@ -367,7 +326,6 @@
         @keyframes floatDoc { 0% { transform:translateY(0); } 100% { transform:translateY(-8px); box-shadow:0 20px 50px rgba(0,0,0,0.7); } }
         .loader-text { font-weight:700; color:var(--text); letter-spacing:1px; font-size:1.1rem; }
 
-        /* Mobile */
         @media (max-width:900px) {
             body { flex-direction:column; }
             .left-panel { display:none; }
@@ -377,6 +335,7 @@
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
+
 <body>
 
     <div class="premium-bg">
@@ -397,66 +356,32 @@
         <div class="loader-text" id="loader-text">Authenticating...</div>
     </div>
 
-    <div class="left-panel">
+    <div class="left-panel" id="left-panel">
+        <canvas id="network-canvas"></canvas>
         <div class="focus-overlay"></div>
 
-        <div class="float-card fc-1">
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-        </div>
-        <div class="float-card fc-2">
-            <div style="width:80%;height:5px;background:var(--border);border-radius:4px;margin-bottom:9px;"></div>
-            <div style="width:50%;height:5px;background:var(--border);border-radius:4px;"></div>
-        </div>
-        <div class="float-card fc-3">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--rose-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </div>
-        <div class="float-card fc-4">
-            <div style="width:50%;height:5px;background:var(--rose);border-radius:4px;"></div>
-        </div>
-
         <div class="showcase-area">
-
-            <div class="welcome-hero">
-                <h1>Craft Your<br>Legacy</h1>
-                <div class="welcome-divider"></div>
-                <p>Join ProResume to start building your career journey. The most advanced ATS-optimised builder.</p>
-            </div>
-
             <div class="iso-glow"></div>
-
             <div class="workspace-stage">
                 <div class="levitator">
-
-                    <div class="editor-part">
-                        <h3>
-                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                            Interactive Preview
-                        </h3>
-                        <div class="editor-inputs">
-                            <input type="text" id="live-name"    placeholder="Type your Name..."  autocomplete="off" maxlength="15">
-                            <input type="text" id="live-role"    placeholder="Type your Role..."  autocomplete="off" maxlength="20">
-                            <input type="text" id="live-company" placeholder="Current Company..." autocomplete="off" maxlength="25">
-                        </div>
-                    </div>
-
                     <div class="resume-part">
                         <div class="resume-card">
-                            <div class="iso-el el-header"  id="orig-name"></div>
-                            <div class="iso-el el-sub"     id="orig-role"></div>
+                            <div class="iso-el el-header" id="orig-name"></div>
+                            <div class="iso-el el-sub" id="orig-email"></div>
                             <div class="iso-el el-avatar"></div>
-                            <div class="iso-el el-line-1"  id="orig-company"></div>
+                            <div class="iso-el el-line-1"></div>
                             <div class="iso-el el-line-2"></div>
                             <div class="iso-el el-box-1"></div>
                             <div class="iso-el el-box-2"></div>
                             <div class="iso-el el-badge-1"></div>
                             <div class="iso-el el-badge-2"></div>
                             <div class="iso-el el-badge-3"></div>
-                            <span class="preview-text pt-name"    id="text-name"></span>
-                            <span class="preview-text pt-role"    id="text-role"></span>
-                            <span class="preview-text pt-company" id="text-company"></span>
+                            
+                            <!-- Spans for real-time syncing -->
+                            <span class="preview-text pt-name" id="text-name"></span>
+                            <span class="preview-text pt-email" id="text-email"></span>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -466,23 +391,23 @@
         <div class="auth-wrapper">
             <div class="auth-nav-container">
                 <div class="auth-nav">
-                    <span id="toggle-text-main">Already have an account?</span>
+                    <span id="toggle-text-main">Don't have an account?</span>
                     <div id="toggle-mode" class="auth-link">
-                        <span id="toggle-action-text">Log in</span>
+                        <span id="toggle-action-text">Sign up</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                     </div>
                 </div>
             </div>
 
             <div class="form-header">
-                <h2 id="form-title">Create Account</h2>
-                <p id="form-subtitle">Start building your professional legacy.</p>
+                <h2 id="form-title">Welcome Back</h2>
+                <p id="form-subtitle">Log in to continue building your legacy.</p>
             </div>
 
             <div id="notification-box" class="notification-box hidden"></div>
 
             <form id="auth-form">
-                <div class="form-group" id="name-group">
+                <div class="form-group hidden-field" id="name-group">
                     <label>Full Name</label>
                     <input type="text" id="name-input" placeholder="e.g. Shaurya Singh">
                 </div>
@@ -492,14 +417,24 @@
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" id="password-input" placeholder="••••••••" required>
+                    <div class="input-icon-wrap">
+                        <input type="password" id="password-input" placeholder="••••••••" required>
+                        <div class="pw-toggle" onclick="togglePassword('password-input', this)">
+                            <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group" id="confirm-password-group">
+                <div class="form-group hidden-field" id="confirm-password-group">
                     <label>Confirm Password</label>
-                    <input type="password" id="confirm-password-input" placeholder="••••••••">
+                    <div class="input-icon-wrap">
+                        <input type="password" id="confirm-password-input" placeholder="••••••••">
+                        <div class="pw-toggle" onclick="togglePassword('confirm-password-input', this)">
+                            <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </div>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn" id="submit-btn">Continue</button>
+                <button type="submit" class="btn" id="submit-btn">Sign In</button>
 
                 <div class="social-divider"><span>Or continue with</span></div>
 
@@ -518,18 +453,131 @@
     </div>
 
     <script>
-        /* ---- Mouse Glow ---- */
-        const mouseGlow = document.getElementById('mouse-glow');
-        window.addEventListener('mousemove', (e) => {
-            if(mouseGlow && window.innerWidth > 900) {
-                mouseGlow.style.opacity = '1';
-                mouseGlow.style.left = e.clientX + 'px';
-                mouseGlow.style.top = e.clientY + 'px';
+        /* ---- CONSTELLATION NETWORK GRAPH ---- */
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+        
+        function setCanvasSize() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        
+        let netMouse = { x: null, y: null, radius: 150 };
+        const leftPanel = document.getElementById('left-panel');
+        
+        leftPanel.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            netMouse.x = e.clientX - rect.left;
+            netMouse.y = e.clientY - rect.top;
+        });
+        
+        leftPanel.addEventListener('mouseleave', () => {
+            netMouse.x = null;
+            netMouse.y = null;
+        });
+        
+        window.addEventListener('resize', () => {
+            setCanvasSize();
+            initParticles();
+        });
+        
+        class Particle {
+            constructor(x, y, dx, dy, size) {
+                this.x = x; this.y = y;
+                this.dx = dx; this.dy = dy;
+                this.size = size;
+                this.baseX = this.x; this.baseY = this.y;
             }
-        });
-        window.addEventListener('mouseleave', () => {
-            if(mouseGlow) mouseGlow.style.opacity = '0';
-        });
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = 'rgba(196, 85, 118, 0.8)';
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
+                if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
+                
+                if (netMouse.x != null) {
+                    let dx = netMouse.x - this.x;
+                    let dy = netMouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < netMouse.radius) {
+                        const force = (netMouse.radius - distance) / netMouse.radius;
+                        this.x += (dx / distance) * force * 0.5;
+                        this.y += (dy / distance) * force * 0.5;
+                    } else {
+                        this.x += this.dx;
+                        this.y += this.dy;
+                    }
+                } else {
+                    this.x += this.dx;
+                    this.y += this.dy;
+                }
+                this.draw();
+            }
+        }
+        
+        function initParticles() {
+            particlesArray = [];
+            setCanvasSize();
+            let numNodes = (canvas.width * canvas.height) / 12000; 
+            for (let i = 0; i < numNodes; i++) {
+                let size = Math.random() * 1.5 + 0.5;
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                let dx = (Math.random() - 0.5) * 0.5;
+                let dy = (Math.random() - 0.5) * 0.5;
+                particlesArray.push(new Particle(x, y, dx, dy, size));
+            }
+        }
+        
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connectParticles();
+        }
+        
+        function connectParticles() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let dx = particlesArray[a].x - particlesArray[b].x;
+                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    let distance = dx * dx + dy * dy;
+                    if (distance < 10000) { 
+                        opacityValue = 1 - (distance / 10000);
+                        ctx.strokeStyle = `rgba(158, 59, 86, ${opacityValue * 0.5})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        setTimeout(() => {
+            initParticles();
+            animateParticles();
+        }, 100);
+
+        /* ---- Password Toggle ---- */
+        function togglePassword(inputId, toggleBtn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleBtn.innerHTML = `<svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+            } else {
+                input.type = 'password';
+                toggleBtn.innerHTML = `<svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+            }
+        }
 
         /* ---- Notification ---- */
         const notificationBox = document.getElementById('notification-box');
@@ -543,6 +591,19 @@
             notifTimeout = setTimeout(() => { notificationBox.classList.add('hidden'); notificationBox.classList.remove(type); }, 4000);
         }
 
+        /* ---- Mouse Glow ---- */
+        const mouseGlow = document.getElementById('mouse-glow');
+        window.addEventListener('mousemove', (e) => {
+            if(mouseGlow && window.innerWidth > 900) {
+                mouseGlow.style.opacity = '1';
+                mouseGlow.style.left = e.clientX + 'px';
+                mouseGlow.style.top = e.clientY + 'px';
+            }
+        });
+        window.addEventListener('mouseleave', () => {
+            if(mouseGlow) mouseGlow.style.opacity = '0';
+        });
+
         /* ---- Live preview sync ---- */
         function syncPreview(input, origEl, textEl) {
             const has = input.value.trim().length > 0;
@@ -550,8 +611,9 @@
             textEl.style.opacity = has ? '1' : '0';
             textEl.innerText = has ? input.value : '';
         }
-        ['name','role','company'].forEach(k => {
-            const inp  = document.getElementById('live-' + k);
+        
+        ['name', 'email'].forEach(k => {
+            const inp  = document.getElementById(k + '-input');
             const orig = document.getElementById('orig-' + k);
             const txt  = document.getElementById('text-' + k);
             if(inp && orig && txt) {
@@ -560,7 +622,7 @@
         });
 
         /* ---- Toggle logic ---- */
-        let isLogin = false;
+        let isLogin = true;
         const nameGroup            = document.getElementById('name-group');
         const confirmPasswordGroup = document.getElementById('confirm-password-group');
         const formTitle            = document.getElementById('form-title');
@@ -572,28 +634,35 @@
         document.getElementById('toggle-mode').addEventListener('click', () => {
             isLogin = !isLogin;
             notificationBox.classList.add('hidden');
-            document.body.classList.toggle('login-mode', isLogin);
+
+            document.body.classList.toggle('signup-mode', !isLogin);
 
             nameGroup.classList.toggle('hidden-field', isLogin);
             confirmPasswordGroup.classList.toggle('hidden-field', isLogin);
             document.getElementById('name-input').required = !isLogin;
 
-            if (!isLogin) {
-                ['live-name','live-role','live-company'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) { el.value = ''; el.dispatchEvent(new Event('input')); }
-                });
+            // Handle text preview visibility when switching modes
+            if (isLogin) {
+                const origName = document.getElementById('orig-name');
+                const textName = document.getElementById('text-name');
+                if (origName && textName) {
+                    origName.style.opacity = '1';
+                    textName.style.opacity = '0';
+                }
+            } else {
+                const nInp = document.getElementById('name-input');
+                if(nInp) nInp.dispatchEvent(new Event('input'));
             }
 
             [formTitle, formSubtitle, submitBtn].forEach(el => {
                 el.classList.remove('fade-text'); void el.offsetWidth; el.classList.add('fade-text');
             });
 
-            formTitle.innerText        = isLogin ? 'Welcome Back'                           : 'Create Account';
+            formTitle.innerText        = isLogin ? 'Welcome Back'                            : 'Create Account';
             formSubtitle.innerText     = isLogin ? 'Log in to continue building your legacy.' : 'Start building your professional legacy.';
-            submitBtn.innerText        = isLogin ? 'Sign In'                                : 'Continue';
-            toggleTextMain.innerText   = isLogin ? "Don't have an account?"                 : 'Already have an account?';
-            toggleActionText.innerText = isLogin ? 'Sign up'                                : 'Log in';
+            submitBtn.innerText        = isLogin ? 'Sign In'                                 : 'Continue';
+            toggleTextMain.innerText   = isLogin ? "Don't have an account?"                  : 'Already have an account?';
+            toggleActionText.innerText = isLogin ? 'Sign up'                                 : 'Log in';
         });
 
         /* ---- Form submit ---- */

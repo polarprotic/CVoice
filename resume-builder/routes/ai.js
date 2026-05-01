@@ -14,26 +14,30 @@ const MODELS = [
 router.post('/analyze', async (req, res) => {
     const { jobTitle, resumeData } = req.body;
 
-    const prompt = `You are an elite Technical Recruiter and ATS Expert.
+   const prompt = `You are a ruthless, highly critical Technical Recruiter and strict ATS Expert. Your job is to provide a realistic, hard-hitting evaluation of the provided resume against real-world hiring standards.
         
         USER'S GOAL / TARGET ROLE: "${jobTitle}"
         USER'S RESUME: 
         ${resumeData}
 
-        INSTRUCTIONS: Perform a deep audit of the resume and return exactly 3 scores (0-100) and 1 feedback string.
-        1. "atsScore": How machine-readable is the layout and text?
-        2. "score": Job match percentage. How well do the skills fit the target role?
-        3. "grammarScore": Spelling, punctuation, and tense consistency.
-        4. "suggestions": Actionable, highly critical advice using **bolding** and bullet points to fix the resume flaws.
+        INSTRUCTIONS: Perform a deep, critical audit of the resume and return exactly 3 scores (0-100) and 1 feedback string.
+        BE HIGHLY REALISTIC AND STRICT. An average resume should score between 40-65. Only exceptional, perfectly tailored resumes with quantifiable metrics should score 80+. Penalize heavily for missing keywords, generic phrasing, and weak impact.
+
+        1. "atsScore": Evaluate how machine-readable the layout and text are. Be strict: penalize complex formatting, missing standard sections (like Education or Experience), or lack of clear hierarchy.
+        2. "score": Evaluate the Job Match percentage. Be ruthless: if they lack the exact core skills required for "${jobTitle}", score them below 50. Do not give them the benefit of the doubt.
+        3. "grammarScore": Evaluate spelling, punctuation, and tense consistency.
+        4. "suggestions": Provide actionable, highly critical advice to fix the resume's flaws. Tell them exactly what keywords or metrics they are missing to improve their chances for the "${jobTitle}" role. Justify your critiques based on standard industry practices. Structure your response with clear section headers followed by bullet points. Use this exact format: each section starts with a header line in ALL CAPS followed by a colon, then bullet points below it starting with a dash (-). Do not use asterisks or markdown symbols anywhere.
         
         CRITICAL: You must return ONLY a valid JSON object in this EXACT format. Do not use markdown blocks around the JSON.
         {
-          "atsScore": 85,
-          "score": 75,
-          "grammarScore": 95,
-          "suggestions": "Detailed string here..."
+          "atsScore": 62,
+          "score": 45,
+          "grammarScore": 88,
+          "suggestions": "STRENGTHS:\\n- Point one...\\nWEAKNESSES:\\n- Point two...\\nACTIONABLE FIXES:\\n- Point three..."
         }
     `;
+
+    
 
     // Loop through the models until one succeeds
     for (const modelName of MODELS) {
