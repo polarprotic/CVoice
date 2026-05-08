@@ -1599,7 +1599,7 @@
           alert("Connection to AI server failed.");
       } finally {
           if (btn) {
-              btn.innerText = "Audit";
+              btn.innerText = "Analyse";
               btn.disabled = false;
           }
       }

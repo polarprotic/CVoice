@@ -223,16 +223,16 @@
          lighter (#2d2a30) so they clearly stand out as interactive
          surfaces. Text is high-contrast white. Labels are medium-grey.
       ════════════════════════════════════════════════════════ */
-      #editor {
+    #editor {
         width: var(--editor-width);
         min-width: 320px;
         max-width: 700px;
-        background: #211d24;
+        background: #0e0b0f;
         height: calc(100vh - 62px);
         margin-top: 62px;
         overflow-y: auto;
-        border-right: 1px solid rgba(255,255,255,0.07);
-        padding: 24px 18px 60px;
+        border-right: 1px solid rgba(196,85,118,0.15);
+        padding: 22px 16px 60px;
         z-index: 10;
         flex-shrink: 0;
         position: relative;
@@ -271,13 +271,13 @@
       #resize-handle.dragging::after { background: var(--rose-light); height: 48px; }
 
       /* ── Editor header ── */
-      .editor-header-ui {
+     .editor-header-ui {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 22px;
         padding-bottom: 16px;
-        border-bottom: 1px solid rgba(255,255,255,0.07);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
       }
       .editor-title {
         font-size: 0.88rem;
@@ -298,21 +298,24 @@
       }
 
       /* ── Section group headers ── */
-      .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 6px 10px;
-        margin: 22px 0 10px 0;
-        font-size: 11px;
-        font-weight: 600;
-        color: #c4b8c0;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        background: rgba(255,255,255,0.04);
-        border-radius: 6px;
-        border: none;
-      }
+    .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 12px 7px 10px;
+  margin: 28px 0 12px 0;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--rose-light);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  background: linear-gradient(90deg, rgba(196,85,118,0.1) 0%, rgba(196,85,118,0.02) 100%);
+  border-radius: 6px;
+  border-left: 3px solid var(--rose-light);
+  border-top: 1px solid rgba(196,85,118,0.1);
+  border-right: none;
+  border-bottom: none;
+}
 
       .form-grid {
         display: grid;
@@ -323,34 +326,32 @@
       .full-width { grid-column: span 2; }
       .field-group { display: flex; flex-direction: column; }
 
-      /* ── Labels ── */
-      label {
+    label {
         display: block;
-        font-size: 11.5px;
-        font-weight: 600;
-        color: #a094a0;
-        margin-bottom: 6px;
-        letter-spacing: 0.2px;
+        font-size: 10.5px;
+        font-weight: 700;
+        color: #7a6e84;
+        margin-bottom: 5px;
+        letter-spacing: 0.5px;
         text-transform: uppercase;
       }
 
       /* ── Base field styles ── */
-      input,
+     input,
       textarea,
       select {
         width: 100%;
         padding: 10px 13px;
-        border: 1px solid rgba(255,255,255,0.1);
+       border: 1px solid rgba(255,255,255,0.14);
         border-radius: 7px;
-        font-size: 13.5px;
+        font-size: 13px;
         font-family: inherit;
         font-weight: 400;
         outline: none;
-        background: #2e2a32;
-        color: #f0eaf0;
+        background: #221d28;
+        color: #ece8f0;
         -webkit-appearance: none;
         appearance: none;
-        /* NO transition on background — prevents dropdown icon flash */
         transition: border-color 0.15s, box-shadow 0.15s;
       }
 
@@ -362,8 +363,8 @@
 
       input:hover,
       textarea:hover {
-        border-color: rgba(255,255,255,0.18);
-        background: #322e36;
+        border-color: rgba(255,255,255,0.22);
+        background: #2a2432;
       }
       /* Select hover: only border, never background — kills icon animation */
       select:hover {
@@ -372,9 +373,9 @@
 
       input:focus,
       textarea:focus {
-        border-color: rgba(196,85,118,0.65);
-        background: #322e36;
-        box-shadow: 0 0 0 3px rgba(196,85,118,0.1);
+        border-color: rgba(196,85,118,0.7);
+        background: #1c1820;
+        box-shadow: 0 0 0 3px rgba(196,85,118,0.12);
         color: #fff;
       }
       select:focus {
@@ -390,9 +391,9 @@
         padding-right: 30px;
         cursor: pointer;
       }
-      select option {
-        background: #2e2a32;
-        color: #f0eaf0;
+     select option {
+        background: #1c1820;
+        color: #ece8f0;
       }
       textarea {
         resize: vertical;
@@ -402,8 +403,8 @@
       input[type="file"] {
         padding: 8px 13px;
         font-size: 12px;
-        color: #a094a0;
-        background: #2e2a32;
+        color: #7a6e84;
+        background: #1c1820;
       }
       input[type="number"] { -moz-appearance: textfield; }
       input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
@@ -434,18 +435,21 @@
       }
 
       /* ── Entry cards — slightly darker than panel to group fields ── */
-      .dynamic-item {
-        background: rgba(0,0,0,0.18);
+    .dynamic-item {
+        background: #161318;
         padding: 14px 40px 14px 14px;
         border-radius: 9px;
         margin-bottom: 10px;
         position: relative;
-        border: 1px solid rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-left: 2px solid rgba(196,85,118,0.35);
         animation: slideIn 0.2s ease forwards;
-        transition: border-color 0.15s;
+        transition: border-color 0.15s, background 0.15s;
       }
       .dynamic-item:hover {
-        border-color: rgba(255,255,255,0.13);
+        border-color: rgba(255,255,255,0.1);
+        border-left-color: var(--rose-light);
+        background: #1a1620;
       }
       .dynamic-item::before { display: none; }
 
@@ -747,7 +751,7 @@
       .tmpl-minimal {
         padding: 20pt 32pt 30pt; 
         font-family: "Computer Modern Serif", serif;
-        font-size: 10.5pt;
+        font-size: 10pt;
         line-height: 1.15; 
         color: #000 !important;
       }
@@ -794,7 +798,7 @@
       }
       
       .tmpl-minimal .section-title {
-        font-size: 12.5pt;
+        font-size: 12pt;
         font-weight: bold; 
         text-transform: none; 
         border-bottom: 1pt solid #000;
@@ -1316,7 +1320,7 @@
         display: block !important;
       }
 
-      @media print {
+     @media print {
         @page {
           margin: 0;
           size: a4 portrait;
@@ -1335,20 +1339,29 @@
         #editor,
         #resize-handle,
         #ai-result-area,
-        #print-overlay {
+        #print-overlay,
+        #mobile-preview-btn {
           display: none !important;
         }
 
         #preview-wrap {
+          position: static !important;
+          transform: none !important;
           margin: 0 !important;
           padding: 0 !important;
           display: block !important;
           height: auto !important;
           overflow: visible !important;
+          top: auto !important;
+          left: auto !important;
+          right: auto !important;
+          bottom: auto !important;
+          background: white !important;
         }
 
         .resume-page {
           transform: none !important;
+          zoom: 1 !important;
           overflow: visible !important;
           box-shadow: none !important;
           margin: 0 auto !important;
@@ -1356,6 +1369,12 @@
           min-height: 297mm !important;
           page-break-after: always;
         }
+      }
+
+      @keyframes fillLine {
+        0%   { transform: scaleX(0); opacity: 0.3; }
+        50%  { transform: scaleX(1); opacity: 1;   }
+        100% { transform: scaleX(0); opacity: 0.3; }
       }
 
       @keyframes fadeInWelcome {
@@ -1521,106 +1540,21 @@
       }
       .confirm-btn.ok:hover { background: #ef4444; color: #fff; }
 
-      /* ── Custom Select Dropdown ── */
-      .custom-select-wrap {
-        position: relative;
-        width: 100%;
-      }
-      .custom-select-trigger {
-        width: 100%;
-        padding: 10px 36px 10px 13px;
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 7px;
-        font-size: 13px;
-        font-family: inherit;
-        font-weight: 500;
-        background: #2e2a32;
-        color: #f0eaf0;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        user-select: none;
-        transition: border-color 0.15s, box-shadow 0.15s;
-        position: relative;
-      }
-      .custom-select-trigger::after {
-        content: '';
-        position: absolute;
-        right: 13px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 0; height: 0;
-        border-left: 4px solid transparent;
-        border-right: 4px solid transparent;
-        border-top: 5px solid #a094a0;
-        transition: transform 0.2s;
-        pointer-events: none;
-      }
-      .custom-select-wrap.open .custom-select-trigger {
-        border-color: rgba(196,85,118,0.65);
-        box-shadow: 0 0 0 3px rgba(196,85,118,0.1);
-      }
-      .custom-select-wrap.open .custom-select-trigger::after {
-        transform: translateY(-50%) rotate(180deg);
-      }
-      .custom-select-trigger:hover { border-color: rgba(255,255,255,0.18); }
-      .custom-select-menu {
-        position: absolute;
-        top: calc(100% + 6px);
-        left: 0; right: 0;
-        background: #2a2530;
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 9px;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-        z-index: 9000;
-        overflow: hidden;
-        display: none;
-        animation: toastIn 0.18s cubic-bezier(0.16,1,0.3,1) forwards;
-      }
-      .custom-select-wrap.open .custom-select-menu { display: block; }
-      .custom-select-option {
-        padding: 10px 14px;
-        font-size: 13px;
-        font-weight: 500;
-        color: rgba(240,234,240,0.75);
-        cursor: pointer;
-        transition: background 0.12s, color 0.12s;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .custom-select-option:hover {
-        background: rgba(255,255,255,0.06);
-        color: #f0eaf0;
-      }
-      .custom-select-option.selected {
-        background: rgba(196,85,118,0.12);
-        color: var(--rose-light);
-        font-weight: 600;
-      }
-      .custom-select-option .opt-dot {
-        width: 6px; height: 6px;
-        border-radius: 50%;
-        background: var(--rose-light);
-        opacity: 0;
-        flex-shrink: 0;
-      }
-      .custom-select-option.selected .opt-dot { opacity: 1; }
+     
 
       /* ── Premium Image Upload UI ── */
 .image-upload-wrapper {
   width: 100%;
-  background: #2e2a32;
-  border: 1px dashed rgba(255,255,255,0.2);
+  background: #161318;
+  border: 1px dashed rgba(255,255,255,0.1);
   border-radius: 7px;
   overflow: hidden;
   transition: var(--trans);
   margin-top: 4px;
 }
 .image-upload-wrapper:hover {
-  border-color: rgba(196,85,118,0.65);
-  background: #322e36;
+  border-color: rgba(196,85,118,0.5);
+  background: #1c1820;
 }
 .image-upload-zone {
   display: flex;
@@ -1646,7 +1580,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background: #2a2530;
+  background: #1c1820;
 }
 #img-preview-thumb {
   width: 48px;
@@ -1675,6 +1609,296 @@
   border-color: #ef4444;
 }
 
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Two-row navbar */
+  .editor-nav {
+    height: auto;
+    flex-direction: column;
+    padding: 0;
+    align-items: stretch;
+  }
+
+  /* Row 1: Logo + Greeting */
+  .editor-nav > div:first-child,
+  .editor-nav > div:nth-child(2) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+  }
+
+  .editor-nav > div:first-child {
+    justify-content: flex-start;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  #user-greeting {
+    display: block !important;
+    font-size: 0.78rem;
+  }
+
+  /* Row 2: all nav buttons in a scrollable strip */
+  .nav-links {
+    flex: unset;
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    gap: 6px;
+    padding: 6px 10px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Keep ALL buttons visible — no hiding */
+  .nav-links .btn-nav {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    padding: 6px 11px;
+    white-space: nowrap;
+  }
+
+  /* Mobile preview toggle button — always shown */
+  #mobile-preview-btn {
+    display: flex !important;
+  }
+
+  #editor {
+    width: 100% !important;
+    min-width: unset;
+    max-width: unset;
+    /* nav is ~88px tall on mobile (two rows) */
+    height: calc(100vh - 88px);
+    margin-top: 88px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    z-index: 20;
+  }
+
+  #resize-handle {
+    display: none;
+  }
+
+  #preview-wrap {
+    position: fixed;
+    top: 88px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: 0;
+    height: calc(100vh - 88px) !important;
+    padding: 20px 10px;
+    z-index: 30;
+    background-color: #0A0608;
+    /* Hidden off-screen to the right by default */
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  #preview-wrap.mobile-visible {
+    transform: translateX(0);
+  }
+
+#preview-wrap {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 16px 8px;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .resume-page {
+    zoom: 0.43;
+    transform: none;
+    transform-origin: top center;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  body {
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .editor-nav {
+    height: auto;
+    flex-direction: column;
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .editor-nav > div:first-child {
+    padding: 8px 16px;
+    border-bottom: none;
+  }
+
+  .nav-links {
+    flex: unset;
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    gap: 6px;
+    padding: 6px 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links .btn-nav {
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    padding: 7px 13px;
+    white-space: nowrap;
+  }
+
+  #mobile-preview-btn {
+    display: flex !important;
+  }
+
+  #editor {
+    width: 100% !important;
+    min-width: unset;
+    max-width: unset;
+    height: calc(100vh - 88px);
+    margin-top: 88px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    z-index: 20;
+  }
+
+  #resize-handle {
+    display: none;
+  }
+
+  #preview-wrap {
+    position: fixed;
+    top: 88px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: 0;
+    height: calc(100vh - 88px) !important;
+    padding: 24px 16px;
+    z-index: 30;
+    background-color: #0A0608;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  #preview-wrap.mobile-visible {
+    transform: translateX(0);
+  }
+
+  .resume-page {
+    zoom: 0.62;
+    transform: none;
+    transform-origin: top center;
+    margin-bottom: 24px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 1025px) {
+  #mobile-preview-btn {
+    display: none !important;
+  }
+}
+
+/* Studio: hidden on touch/tablet — matches dashboard.html's ≤1100px btn-customize cutoff */
+@media (max-width: 1100px) {
+  #btn-studio {
+    display: none !important;
+  }
+}
+
+      /* ── PDF Import Overlay ── */
+      #pdf-import-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.72);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 99997;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+      #pdf-import-overlay.visible { display: flex; }
+      .pdf-import-box {
+        background: #2a2530;
+        border: 1px solid rgba(196,85,118,0.35);
+        border-radius: 18px;
+        padding: 40px 44px;
+        text-align: center;
+        min-width: 300px;
+        max-width: 380px;
+        box-shadow: 0 30px 70px rgba(0,0,0,0.75);
+        animation: toastIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards;
+        position: relative;
+        overflow: hidden;
+      }
+      .pdf-import-box::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 2px;
+        background: linear-gradient(to right, var(--rose), var(--rose-light));
+      }
+      .pdf-import-spinner {
+        width: 52px; height: 52px;
+        border: 3px solid rgba(196,85,118,0.18);
+        border-top-color: var(--rose-light);
+        border-radius: 50%;
+        animation: pdfSpin 0.85s linear infinite;
+        margin: 0 auto 20px;
+      }
+      @keyframes pdfSpin { to { transform: rotate(360deg); } }
+      .pdf-import-icon {
+        font-size: 2.4rem; margin-bottom: 16px; line-height: 1;
+      }
+      .pdf-import-title {
+        font-size: 1.05rem; font-weight: 800;
+        color: #f0eaf0; margin-bottom: 8px; letter-spacing: -0.2px;
+      }
+      #pdf-import-status {
+        font-size: 0.82rem; color: rgba(240,234,240,0.55);
+        line-height: 1.6; min-height: 20px;
+        transition: color 0.3s;
+      }
+      .pdf-import-steps {
+        display: flex; justify-content: center; gap: 6px;
+        margin-top: 20px;
+      }
+      .pdf-step-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: rgba(255,255,255,0.12);
+        transition: background 0.3s;
+      }
+      .pdf-step-dot.active {
+        background: var(--rose-light);
+        box-shadow: 0 0 6px var(--rose-light);
+      }
+
     </style>
   </head>
   <body>
@@ -1688,76 +1912,81 @@
         <div id="confirm-title">Are you sure?</div>
         <div id="confirm-message">This action cannot be undone.</div>
         <div id="confirm-actions">
-          <button class="confirm-btn cancel" onclick="resolveConfirm(false)">Cancel</button>
+       <button class="confirm-btn cancel" onclick="resolveConfirm(false)">Cancel</button>
           <button class="confirm-btn ok" onclick="resolveConfirm(true)">Yes, clear</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pdf-import-overlay">
+      <div class="pdf-import-box">
+        <div class="pdf-import-spinner" id="pdf-spinner"></div>
+        <div class="pdf-import-title">Importing Your Resume</div>
+        <div id="pdf-import-status">Reading PDF file…</div>
+        <div class="pdf-import-steps">
+          <div class="pdf-step-dot active" id="pstep-1"></div>
+          <div class="pdf-step-dot" id="pstep-2"></div>
+          <div class="pdf-step-dot" id="pstep-3"></div>
         </div>
       </div>
     </div>
 
 
 
-    <nav class="editor-nav">
-      <div style="flex:1; display:flex; align-items:center;">
-        <div class="logo">Pro<span>Resume</span></div>
-      </div>
+   <nav class="editor-nav">
+  <div style="flex:1; display:flex; align-items:center;">
+    <a href="dashboard.html" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+  <div class="logo-mark" style="width:22px; height:28px; background:#ffffff; border:1.5px solid rgba(196,85,118,0.25); border-radius:3px 6px 3px 3px; display:flex; flex-direction:column; justify-content:flex-end; gap:2px; padding:4px 4px 5px; box-shadow:0 3px 14px rgba(158,59,86,0.4); flex-shrink:0; position:relative; overflow:hidden;">
+    <div style="position:absolute; top:0; right:0; width:7px; height:7px; background:linear-gradient(225deg, rgba(196,85,118,0.15) 50%, #ffffff 50%); border-bottom-left-radius:3px; border-left:1px solid rgba(196,85,118,0.2); border-bottom:1px solid rgba(196,85,118,0.2);"></div>
+    <div style="height:3px; background:var(--rose-light); border-radius:3px; width:55%; transform-origin:left; animation:fillLine 1.5s infinite 0s;"></div>
+    <div style="height:2px; background:var(--rose-light); border-radius:3px; width:100%; opacity:0.7; transform-origin:left; animation:fillLine 1.5s infinite 0.2s;"></div>
+    <div style="height:2px; background:#e5e7eb; border-radius:3px; width:65%; opacity:0.4; transform-origin:left; animation:fillLine 1.5s infinite 0.6s;"></div>
+  </div>
+  <span style="font-size:1.1rem; font-weight:800; letter-spacing:-0.5px; color:var(--text-main);">CV<span style="color:var(--rose-light);">oice</span></span>
+</a>
+  </div>
 
-      <div style="flex:1; display:flex; justify-content:center; align-items:center;">
-        <span id="user-greeting" style="font-size:0.88rem; font-weight:700; color:var(--rose-light); letter-spacing:0.3px;"></span>
-      </div>
+  <div style="flex:1; display:flex; justify-content:center; align-items:center;">
+    <span id="user-greeting" style="font-size:0.88rem; font-weight:700; color:var(--rose-light); letter-spacing:0.3px;"></span>
+  </div>
 
-      <div class="nav-links">
-        <a href="dashboard.html" class="btn-nav">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Dashboard
-        </a>
-        <button class="btn-nav" onclick="convertToStudio(this)">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-          Studio
-        </button>
-        <button class="btn-nav" onclick="saveResumeToDB()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
-          Save
-        </button>
-        <button class="btn-nav primary" onclick="downloadResumePDF()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download PDF
-        </button>
-      </div>
-    </nav>
+  <div class="nav-links">
+    <button id="mobile-preview-btn" class="btn-nav" onclick="toggleMobilePreview()" style="display:none;">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+  Preview
+</button>
+    <a href="dashboard.html" class="btn-nav">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <input type="file" id="pdf-import-file" accept=".pdf,application/pdf" hidden onchange="handlePDFImport(this)">
+    <button id="btn-studio" class="btn-nav" onclick="convertToStudio(this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Studio
+    </button>
+    <button class="btn-nav" onclick="saveResumeToDB()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+      Save
+    </button>
+    <button class="btn-nav primary" onclick="downloadResumePDF()" style="white-space:nowrap; flex-shrink:0;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download PDF
+    </button>
+  </div>
+</nav>
 
 
     <div id="editor">
-      <div class="editor-header-ui" style="margin-bottom: 16px;">
-        <div class="editor-title">Pro Builder</div>
-        <div style="font-size: 11px; color: #6a5e68; font-weight: 600; letter-spacing: 1px;">EDITOR</div>
-      </div>
+      <label for="pdf-import-file" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; width:100%; padding:22px 16px; margin-bottom:18px; border:2px dashed rgba(196,85,118,0.35); border-radius:10px; background:rgba(196,85,118,0.04); cursor:pointer; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--rose-light)';this.style.background='rgba(196,85,118,0.09)'" onmouseout="this.style.borderColor='rgba(196,85,118,0.35)';this.style.background='rgba(196,85,118,0.04)'">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--rose-light)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="12 18 12 12"/><polyline points="9 15 12 12 15 15"/></svg>
+        <div style="text-align:center;">
+          <div style="font-size:13px; font-weight:700; color:#f0eaf0; margin-bottom:3px;">Import your resume</div>
+          <div style="font-size:11px; color:#705460;">Drop a PDF or click to auto-fill all fields</div>
+        </div>
+      </label>
 
       <div class="form-grid" data-display="grid" style="margin-bottom: 18px">
-        <div class="full-width">
-          <label>Select Master Template</label>
-          <div class="custom-select-wrap" id="template-select-wrap">
-            <div class="custom-select-trigger" id="template-select-trigger" onclick="toggleCustomSelect()">
-              Technical Executive
-            </div>
-            <div class="custom-select-menu" id="template-select-menu">
-              <div class="custom-select-option selected" data-value="academic" onclick="pickTemplate('academic',this)">
-                <span class="opt-dot"></span> Technical Executive
-              </div>
-              <div class="custom-select-option" data-value="minimal" onclick="pickTemplate('minimal',this)">
-                <span class="opt-dot"></span> Sleek Minimalist
-              </div>
-              <div class="custom-select-option" data-value="modern" onclick="pickTemplate('modern',this)">
-                <span class="opt-dot"></span> Contemporary Creative
-              </div>
-              <div class="custom-select-option" data-value="attorney" onclick="pickTemplate('attorney',this)">
-                <span class="opt-dot"></span> Traditional Corporate
-              </div>
-              <div class="custom-select-option" data-value="innovative" onclick="pickTemplate('innovative',this)">
-                <span class="opt-dot"></span> Executive Innovative
-              </div>
-            </div>
-          </div>
-        </div>
+       
 
       <div class="full-width" data-show="modern,innovative">
   <label>Profile Image (High Res)</label>
@@ -1988,27 +2217,24 @@
         />
       </div>
 
-      <div class="section-header" data-show="minimal,attorney,innovative" data-display="flex">
+     <div class="section-header" data-show="minimal,attorney,innovative" data-display="flex">
         Achievements
+        <button class="btn-add" onclick="add('achievements')">+ Add Entry</button>
       </div>
       <div class="section-header" data-show="academic" style="display:none;" data-display="flex">
         Achievements
-      </div>
-      <div data-show="academic,minimal,attorney,innovative" style="margin-bottom: 12px;">
-        <button class="btn-add" onclick="add('achievements')">
-          + Add Entry
-        </button>
+        <button class="btn-add" onclick="add('achievements')">+ Add Entry</button>
       </div>
       
       <div id="achieve-fields" data-show="academic,minimal,attorney,innovative"></div>
 
-      <div class="section-header">AI Resume Auditor</div>
+      <div class="section-header">Analyse your resume</div>
       <div class="form-grid" style="margin-bottom: 18px;">
         <div class="full-width">
-          <label>Your Dream Job</label>
-          <div style="display: flex; gap: 10px;">
-            <input type="text" id="dream-job" placeholder="e.g. Fullstack Developer" style="flex: 1;">
-            <button class="btn-add" id="ai-analyze-btn" onclick="analyzeResume()" style="padding: 0 18px; border-radius: 8px; white-space: nowrap;">Audit</button>
+          <label>Job Description</label>
+          <div style="display: flex; gap: 10px; align-items: flex-start;">
+            <textarea id="dream-job" placeholder="Paste the full job description here..." style="flex: 1; min-height: 85px;"></textarea>
+            <button class="btn-add" id="ai-analyze-btn" onclick="analyzeResume()" style="padding: 8px 18px; border-radius: 8px; white-space: nowrap; height: fit-content;">Analyse</button>
           </div>
         </div>
       </div>
@@ -2025,7 +2251,7 @@
     <div id="preview-wrap">
       <div id="preview" class="resume-page tmpl-academic"></div>
       
-   <div id="ai-result-area" style="width: 100%; max-width: 760px; margin-top: -20px; margin-bottom: 100px; display: none;">
+   <div id="ai-result-area" style="width: 100%; max-width: 760px; margin-top: 32px; margin-bottom: 100px; display: none; position: relative; z-index: 10;">
 
         <!-- Header bar -->
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px;">
@@ -2137,25 +2363,7 @@
       render();
     }
 
-    /* ── Custom select ── */
-    function toggleCustomSelect() {
-      const wrap = document.getElementById('template-select-wrap');
-      const isOpen = wrap.classList.contains('open');
-      wrap.classList.toggle('open', !isOpen);
-    }
-    function pickTemplate(val, el) {
-      const menu = document.getElementById('template-select-menu');
-      const trigger = document.getElementById('template-select-trigger');
-      menu.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
-      el.classList.add('selected');
-      trigger.textContent = el.textContent.trim();
-      document.getElementById('template-select-wrap').classList.remove('open');
-      updateTemplate(val);
-    }
-    document.addEventListener('click', function(e) {
-      const wrap = document.getElementById('template-select-wrap');
-      if (wrap && !wrap.contains(e.target)) wrap.classList.remove('open');
-    });
+ 
 
 
     function initAll() {
@@ -2205,6 +2413,9 @@
     }
 
     async function analyzeResume() {
+      // Force the preview to un-zoom so it doesn't overlap the AI Audit
+      if (typeof window.resetPreviewZoom === 'function') window.resetPreviewZoom(); 
+
       const job = document.getElementById("dream-job").value;
       const btn = document.getElementById("ai-analyze-btn");
       const resultArea = document.getElementById("ai-result-area");
@@ -2214,7 +2425,7 @@
       
       const suggestionsDiv = document.getElementById("ai-suggestions");
 
-      if (!job) return showToast("warning","Missing Field","Please enter your dream job first.");
+      if (!job) return showToast("warning","Missing Field","Please paste the job description first.");
 
       btn.innerText = "Analyzing...";
       btn.disabled = true;
@@ -2222,7 +2433,7 @@
       try {
           const resumeText = document.getElementById("preview").innerText;
 
-          const response = await fetch("http://localhost:5000/api/ai/analyze", {
+          const response = await fetch("/api/ai/analyze", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ jobTitle: job, resumeData: resumeText }),
@@ -2300,13 +2511,25 @@
             }
           }
 
-          if (resultArea) resultArea.scrollIntoView({ behavior: "smooth" });
+          if (resultArea) {
+  // On mobile, open the preview panel first, then scroll
+  const previewWrap = document.getElementById('preview-wrap');
+  const btn = document.getElementById('mobile-preview-btn');
+  if (previewWrap && !previewWrap.classList.contains('mobile-visible') && window.innerWidth <= 1024) {
+    previewWrap.classList.add('mobile-visible');
+    if (btn) btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Close`;
+    // Wait for the slide-in transition (350ms) before scrolling
+    setTimeout(() => resultArea.scrollIntoView({ behavior: "smooth" }), 380);
+  } else {
+    resultArea.scrollIntoView({ behavior: "smooth" });
+  }
+}
       } catch (err) {
           console.error("Audit Error:", err);
           showToast("error","Connection Failed","Could not reach the AI server.");
       } finally {
           if (btn) {
-              btn.innerText = "Audit";
+              btn.innerText = "Analyse";
               btn.disabled = false;
           }
       }
@@ -2353,8 +2576,8 @@
 
    const TEMPLATES = ["academic", "minimal", "modern", "attorney", "innovative"];
 
-    const SAMPLE_DATA = {
-      name: "Shaurya Singh",
+    const SAMPLE_DATA_academic = {
+      name: "FIRST LAST",
       role: "Computer Science Undergraduate",
       phone: "+918368093386",
       email: "singhshaurya2.7182@gmail.com",
@@ -2401,6 +2624,193 @@
       references: [],
       photo: "",
       refs: ""
+    };
+
+    const SAMPLE_DATA_minimal = {
+      name: "First Last",
+      phone: "+918368093386",
+      email: "singhshaurya2.7182@gmail.com",
+      linkedin: "linkedin.com/in/shaurya",
+      github: "github.com/shaurya",
+      address: "Sonepat, Haryana",
+      summary: "Computer Science undergraduate with a strong foundation in full-stack development and competitive programming. Experienced in building production-ready web applications using the MERN stack. Passionate about clean code, system design, and open-source contribution.",
+      education: [
+        { school: "Indian Institute of Information Technology", degree: "B.Tech in Computer Science (CGPA - 7.83)", location: "Sonepat, Haryana", date: "Aug 2027" },
+        { school: "Gurukul The School", degree: "CBSE Class XII (86.5%)", location: "Ghaziabad, UP", date: "Aug 2022" }
+      ],
+      experience: [
+        { title: "Desktop App Developer Intern", company: "IIIT Sonepat", date: "Feb 2025 – May 2025", desc: "– Developed a Qt C++ attendance management desktop app adopted by 1,000+ students.\n– Eliminated 90% of paper-based registers; received a Letter of Recommendation.", link: "", linkText: "", linkType: "separate" }
+      ],
+      projects: [
+        { title: "ResumePro", tech: "React.js, Node.js, MongoDB, Gemini API", date: "Mar 2025", desc: "– Full-stack resume builder with live preview, ATS scoring, and PDF export.\n– Supports 5 professional templates with real-time customization.", link: "https://github.com", liveLink: "https://demo.com" },
+        { title: "Finalist — DSA Practice Platform", tech: "React.js, Node.js, MongoDB, Gemini API", date: "Mar 2026", desc: "– Built streak tracking and AI hint system improving daily engagement.\n– Analytics dashboard tracks accuracy and weak topic areas.", link: "https://github.com", liveLink: "https://demo.com" }
+      ],
+      coursework: "Data Structures, Algorithms, Operating Systems, DBMS, Computer Networks, OOP",
+      techSkills: [
+        { cat: "Languages", items: "C, C++, Python, Java, JavaScript" },
+        { cat: "Web", items: "React.js, Node.js, Express.js, MongoDB, Tailwind CSS" },
+        { cat: "Tools", items: "Git, GitHub, Postman, VS Code, Linux" }
+      ],
+      certifications: [
+        { name: "Oracle Cloud Infrastructure 2025 AI Foundation", date: "Sep 2025", link: "#", linkText: "Certificate", linkType: "separate" },
+        { name: "Python & Web Security Bootcamp (7-day)", date: "Jun 2025", link: "#", linkText: "Certificate", linkType: "separate" }
+      ],
+      extracurricular: [
+        { org: "Google Developer Student Club", role: "Technical Member", date: "2024–2025", desc: "Organised workshops on web dev and open source for 200+ students.", link: "", linkText: "", linkType: "separate" }
+      ],
+      achievements: [
+        { text: "Qualified GATE 2026", date: "Feb 2026", desc: "All India Rank under 12,126 out of 100,000+ candidates.", linkType: "separate" },
+        { text: "Top 10 — Hackground 2025", date: "Nov 2025", desc: "Organized by Maharaja Surajmal Institute of Technology (MSIT).", linkType: "separate" },
+        { text: "5th Place — Thinkers Quest 2025", date: "Oct 2025", desc: "Organized by Netaji Subhas University of Technology (NSUT).", linkType: "separate" }
+      ],
+      skills: "",
+      languages: "",
+      hobbies: "",
+      linkedinDisplay: "label",
+      githubDisplay: "label",
+      photo: "",
+      refs: "",
+      skillLevels: [],
+      references: [],
+      role: ""
+    };
+
+    const SAMPLE_DATA_modern = {
+      name: "First Last",
+      role: "Full Stack Developer",
+      phone: "+918368093386",
+      email: "singhshaurya2.7182@gmail.com",
+      linkedin: "linkedin.com/in/shaurya",
+      github: "github.com/shaurya",
+      address: "Sonepat, Haryana",
+      summary: "Creative and driven Computer Science undergraduate specializing in full-stack web development. I build fast, scalable, and user-focused applications. Currently exploring AI-integrated products and open-source tools.",
+      education: [
+        { school: "IIIT Sonepat", degree: "B.Tech — Computer Science (CGPA 7.83)", location: "Sonepat, Haryana", date: "2023 – 2027" },
+        { school: "Gurukul The School", degree: "CBSE Class XII — 86.5%", location: "Ghaziabad, UP", date: "2022" }
+      ],
+      experience: [
+        { title: "Desktop App Developer Intern", company: "IIIT Sonepat", date: "Feb – May 2025", desc: "– Built a Qt C++ attendance system used by 1,000+ students.\n– Replaced paper registers entirely; zero critical bugs post-launch.\n– Awarded Letter of Recommendation.", link: "", linkText: "", linkType: "separate" }
+      ],
+      projects: [
+        { title: "ResumePro", tech: "MERN Stack, Gemini API", date: "Mar 2025", desc: "– AI-powered resume builder with 5 templates, live preview and ATS scoring.\n– Integrated Gemini API for smart text enhancement.", link: "https://github.com", liveLink: "https://demo.com" },
+        { title: "Finalist — DSA Platform", tech: "React, Node.js, MongoDB", date: "Mar 2026", desc: "– Streak system and AI hint engine boosting daily active users.\n– Built REST APIs with JWT auth.", link: "https://github.com", liveLink: "" }
+      ],
+      skillLevels: [
+        { name: "React.js", level: "88" },
+        { name: "Node.js", level: "82" },
+        { name: "MongoDB", level: "75" },
+        { name: "C++", level: "80" },
+        { name: "Python", level: "70" }
+      ],
+      references: [
+        { name: "Dr. Rajesh Kumar", role: "Associate Professor", company: "IIIT Sonepat" }
+      ],
+      languages: "English, Hindi",
+      hobbies: "Open Source, Competitive Programming, Chess",
+      achievements: [],
+      certifications: [],
+      techSkills: [],
+      extracurricular: [],
+      skills: "",
+      coursework: "",
+      linkedinDisplay: "label",
+      githubDisplay: "label",
+      photo: "",
+      refs: ""
+    };
+
+    const SAMPLE_DATA_attorney = {
+      name: "First Last",
+      phone: "+918368093386",
+      email: "singhshaurya2.7182@gmail.com",
+      linkedin: "linkedin.com/in/shaurya",
+      github: "github.com/shaurya",
+      address: "Sonepat, Haryana",
+      summary: "Computer Science undergraduate at IIIT Sonepat with demonstrated experience in full-stack software development and competitive programming. Adept at delivering production-grade applications under institutional constraints. Strong academic record complemented by practical engineering internship experience.",
+      education: [
+        { school: "Indian Institute of Information Technology, Sonepat", degree: "Bachelor of Technology in Computer Science — CGPA 7.83", location: "Sonepat, Haryana", date: "Aug 2027" },
+        { school: "Gurukul The School, Ghaziabad", degree: "CBSE Class XII — 86.5%", location: "Ghaziabad, Uttar Pradesh", date: "Aug 2022" }
+      ],
+      experience: [
+        { title: "Software Developer Intern", company: "Indian Institute of Information Technology, Sonepat", date: "February 2025 – May 2025", desc: "– Engineered a Qt C++ desktop attendance system eliminating 90% of manual paper registers.\n– System adopted by faculty and 1,000+ students within the first semester of deployment.\n– Awarded a formal Letter of Recommendation for institutional impact and code quality.", link: "", linkText: "", linkType: "separate" }
+      ],
+      projects: [
+        { title: "ResumePro", tech: "React.js, Node.js, Express.js, MongoDB, Gemini API", date: "March 2025", desc: "– Developed a full-stack resume builder with ATS scoring, job-match analysis, and PDF export.\n– Implemented five distinct resume templates with real-time preview and AI text enhancement.", link: "https://github.com", liveLink: "https://demo.com" },
+        { title: "Finalist — Competitive Programming Platform", tech: "React.js, Node.js, MongoDB, JWT", date: "March 2026", desc: "– Architected RESTful API with JWT-based authentication for secure multi-user access.\n– Designed analytics dashboard tracking user performance, accuracy, and topic weaknesses.", link: "https://github.com", liveLink: "" }
+      ],
+      certifications: [
+        { name: "Secured Top 10 position at Hackground 2025, organized by MSIT Delhi", date: "November 2025", link: "", linkText: "", linkType: "separate" },
+        { name: "Achieved 5th place at Thinkers Quest 2025, organized by NSUT Delhi", date: "October 2025", link: "", linkText: "", linkType: "separate" },
+        { name: "Qualified GATE 2026 — All India Rank under 12,126", date: "February 2026", link: "", linkText: "", linkType: "separate" }
+      ],
+      techSkills: [
+        { cat: "Languages", items: "C, C++, Python, Java, JavaScript, TypeScript" },
+        { cat: "Frameworks", items: "React.js, Node.js, Express.js, Tailwind CSS, Bootstrap" },
+        { cat: "Databases & Tools", items: "MongoDB, SQL, Git, GitHub, Postman, VS Code" }
+      ],
+      extracurricular: [
+        { org: "Google Developer Student Club — IIIT Sonepat", role: "Technical Core Member", date: "2024–2025", desc: "Organised technical workshops on web development and open-source contribution for 200+ students.", link: "", linkText: "", linkType: "separate" }
+      ],
+      achievements: [
+        { text: "Attended Level-1 Blockchain Developer Workshop, CrewSphere", date: "2025", desc: "", linkType: "separate" },
+        { text: "Oracle Cloud Infrastructure 2025 AI Foundation Certified", date: "Sep 2025", desc: "", linkType: "separate" }
+      ],
+      skills: "",
+      languages: "",
+      hobbies: "",
+      coursework: "",
+      linkedinDisplay: "label",
+      githubDisplay: "label",
+      photo: "",
+      refs: "",
+      skillLevels: [],
+      references: [],
+      role: ""
+    };
+
+    const SAMPLE_DATA_innovative = {
+      name: "First Last",
+      role: "Software Engineer & Builder",
+      phone: "+918368093386",
+      email: "singhshaurya2.7182@gmail.com",
+      linkedin: "linkedin.com/in/shaurya",
+      github: "github.com/shaurya",
+      address: "Sonepat, Haryana",
+      summary: "CS undergrad who ships real products. Built an AI-powered resume builder used by peers, a DSA platform with streaks and hints, and a Qt desktop tool adopted by 1,000+ students. I care about code quality, fast iteration, and products that actually solve problems.",
+      education: [
+        { school: "Indian Institute of Information Technology", degree: "B.Tech — Computer Science (CGPA 7.83)", location: "Sonepat, Haryana", date: "2027" },
+        { school: "Gurukul The School", degree: "CBSE Class XII — 86.5%", location: "Ghaziabad, UP", date: "2022" }
+      ],
+      experience: [
+        { title: "Desktop App Developer Intern", company: "IIIT Sonepat", date: "Feb – May 2025", desc: "– Built Qt C++ attendance app replacing 90% of paper registers.\n– Adopted by 1,000+ students; awarded Letter of Recommendation.\n– Zero critical bugs post-deployment.", link: "", linkText: "", linkType: "separate" }
+      ],
+      projects: [
+        { title: "ResumePro", tech: "React, Node.js, MongoDB, Gemini API", date: "Mar 2025", desc: "– AI resume builder with 5 templates, ATS scoring and live preview.\n– Gemini-powered text enhancement and job-match analysis.", link: "https://github.com", liveLink: "https://demo.com" },
+        { title: "Finalist — DSA Platform", tech: "React, Node.js, MongoDB, JWT", date: "Mar 2026", desc: "– Streak system and AI hint engine driving consistent daily usage.\n– JWT auth, analytics dashboard, weak-area tracking.", link: "https://github.com", liveLink: "" }
+      ],
+      techSkills: [{ cat: "", items: "C++, Python, JavaScript, React.js, Node.js, Express.js, MongoDB, SQL, Git, Tailwind CSS, REST APIs, JWT, Gemini API" }],
+      achievements: [
+        { text: "Qualified GATE 2026 — AIR under 12,126", date: "Feb 2026", desc: "", linkType: "separate" },
+        { text: "Top 10 — Hackground 2025 (MSIT Delhi)", date: "Nov 2025", desc: "", linkType: "separate" },
+        { text: "5th Place — Thinkers Quest 2025 (NSUT Delhi)", date: "Oct 2025", desc: "", linkType: "separate" },
+        { text: "Oracle Cloud AI Foundation Certified", date: "Sep 2025", desc: "", linkType: "separate" }
+      ],
+      certifications: [
+        { name: "Oracle Cloud Infrastructure 2025 AI Foundation", date: "Sep 2025", link: "#", linkText: "↗", linkType: "separate" }
+      ],
+      extracurricular: [
+        { org: "Google Developer Student Club", role: "Tech Core Member", date: "2024–25", desc: "Ran workshops on web dev and open source for 200+ students.", link: "", linkText: "", linkType: "separate" }
+      ],
+      languages: "English, Hindi",
+      hobbies: "Open Source, Competitive Programming, Chess",
+      skills: "",
+      coursework: "",
+      linkedinDisplay: "label",
+      githubDisplay: "label",
+      photo: "",
+      refs: "",
+      skillLevels: [],
+      references: []
     };
 
     function freshTemplateState() {
@@ -2525,7 +2935,7 @@
           .map(line => line.trim())
           .filter(line => line.length > 0)
           .map(line => {
-              let cleanedLine = line.replace(/^[•–—*\-]\s*/, '');
+              let cleanedLine = line.replace(/^(?:[•–—\-]|\*(?!\*))\s*/, '');
               return `<li>${formatText(cleanedLine)}</li>`;
           })
           .join('');
@@ -2600,7 +3010,7 @@
         );
         if (ok) {
           templateStates[currentTemplate] = freshTemplateState();
-          Object.keys(SAMPLE_DATA).forEach(k => {
+          Object.keys(SAMPLE_DATA_academic).forEach(k => {
              templateStates[currentTemplate]._touched[k] = true;
           });
           renderInputs();
@@ -2811,11 +3221,12 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
             <input placeholder="Organization / Activity" value="${esc(item.org)}" oninput="state.extracurricular[${i}].org=this.value; render()">
             <input placeholder="Role (Optional)" value="${esc(item.role)}" oninput="state.extracurricular[${i}].role=this.value; render()">
           </div>
+          ${currentTemplate !== 'academic' ? `
           <div class="form-grid" style="margin-bottom:8px">
             <input placeholder="Date" value="${esc(item.date)}" oninput="state.extracurricular[${i}].date=this.value; render()">
-          </div>
+          </div>` : ''}
           <div class="label-row" style="margin-top:8px;"><label style="font-size:12px; color:#a094a0;">Description</label><button class="btn-ai" onclick="rewriteText(event, 'extracurricular', ${i})">✨ Enhance</button></div>
-          <textarea placeholder="Description (Supports multiline for bullets and **bold** text)" oninput="state.extracurricular[${i}].desc=this.value; render()">${esc(item.desc)}</textarea>
+          <textarea placeholder="Brief description (shown after a dash)" oninput="state.extracurricular[${i}].desc=this.value; render()">${esc(item.desc)}</textarea>
           <div class="form-grid" style="margin-top: 10px;">
             ${buildLinkTypeToggle('extracurricular', i, item.linkType)}
           </div>
@@ -2880,8 +3291,10 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
         normalizeState();
         
         const previewState = {};
-        Object.keys(SAMPLE_DATA).forEach(k => {
-          previewState[k] = state._touched[k] ? state[k] : SAMPLE_DATA[k];
+       const _sampleMap = { academic: SAMPLE_DATA_academic, minimal: SAMPLE_DATA_minimal, modern: SAMPLE_DATA_modern, attorney: SAMPLE_DATA_attorney, innovative: SAMPLE_DATA_innovative };
+        const _activeSample = _sampleMap[currentTemplate] || SAMPLE_DATA_academic;
+        Object.keys(_activeSample).forEach(k => {
+          previewState[k] = state._touched[k] ? state[k] : _activeSample[k];
         });
         previewState.template = state.template;
 
@@ -3028,7 +3441,9 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
                   ${extracurricular.map(e => {
                     const orgHtml = applyTextLink(esc(e.org), e, false);
                     const sepLink = (!isTextLink(e) && e.link) ? buildSeparateLink(e, false, e.linkText || 'Link') : '';
-                    return `<li>${orgHtml}${e.role ? ` - ${esc(e.role)}` : ''}${sepLink}</li>`;
+                    const roleStr = e.role ? ` (${esc(e.role)})` : '';
+                    const descStr = e.desc ? ` - ${formatText(e.desc)}` : '';
+                    return `<li>${orgHtml}${roleStr}${descStr}${sepLink}</li>`;
                   }).join('')}
                 </ul>
                 ` : ""}
@@ -3737,7 +4152,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
           btn.disabled = true;
 
           try {
-              const response = await fetch("http://localhost:5000/api/ai/rewrite", {
+              const response = await fetch("/api/ai/rewrite", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ 
@@ -3776,7 +4191,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
       async function saveResumeToDB() {
   const userId = localStorage.getItem("userId");
   const urlParams = new URLSearchParams(window.location.search);
-  const existingResumeId = urlParams.get("id");
+ const existingResumeId = urlParams.get("id") || urlParams.get("resumeId");
  
   // Validate using current template's data
   if (!state.name || !state.email) {
@@ -3804,7 +4219,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
   };
  
   try {
-    const response = await fetch("http://localhost:5000/api/resume", {
+    const response = await fetch("/api/resume", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -3828,7 +4243,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
 
       async function loadResumeData(id) {
   try {
-    const response = await fetch(`http://localhost:5000/api/resume/${id}`);
+    const response = await fetch(`/api/resume/${id}`);
     if (!response.ok) throw new Error("Failed to load");
  
     const data = await response.json();
@@ -3843,7 +4258,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
             templateStates[t] = { ...freshTemplateState(), ...tsi._perTemplateStates[t] };
             // FIX: Force all fields to be "touched" so sample data is hidden immediately
             if (!templateStates[t]._touched) templateStates[t]._touched = {};
-            Object.keys(SAMPLE_DATA).forEach(k => templateStates[t]._touched[k] = true);
+            Object.keys(SAMPLE_DATA_academic).forEach(k => templateStates[t]._touched[k] = true);
           }
         });
         currentTemplate = tsi._activeTemplate || data.templateType || "academic";
@@ -3856,7 +4271,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
         templateStates[savedTemplate] = { ...freshTemplateState(), ...legacyState };
         // FIX: Force all fields to be "touched" so sample data is hidden immediately
         if (!templateStates[savedTemplate]._touched) templateStates[savedTemplate]._touched = {};
-        Object.keys(SAMPLE_DATA).forEach(k => templateStates[savedTemplate]._touched[k] = true);
+        Object.keys(SAMPLE_DATA_academic).forEach(k => templateStates[savedTemplate]._touched[k] = true);
       }
  
       // Update UI to reflect loaded template
@@ -3886,7 +4301,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
       window.addEventListener("DOMContentLoaded", async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const requestedTemplate = urlParams.get("template");
-        const resumeId = urlParams.get("id");
+        const resumeId = urlParams.get("id") || urlParams.get("resumeId");
 
         if (resumeId) {
   loadResumeData(resumeId);
@@ -4024,11 +4439,11 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
            * Right/center aligned text must NOT get extra width or it shifts left.
            * Left-aligned gets only +2 px (minimal anti-clip buffer).
            */
-          const safeWidth = (measuredW, align) => {
-              if (align === "right" || align === "end")  return measuredW;
-              if (align === "center")                     return measuredW;
-              return measuredW + 2;
-          };
+         const safeWidth = (measuredW, align) => {
+    if (align === "right" || align === "end")  return measuredW + 4;
+    if (align === "center")                     return measuredW + 10;
+    return measuredW + 12;
+};
 
           /*
            * KEY FIX 2 — unitless line-height ratio
@@ -4212,6 +4627,210 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
               showToast("error", "Export Failed", "Could not serialize resume. Try reducing content.");
           }
       }
+
+      /* ── PDF Resume Import ── */
+      async function handlePDFImport(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+        input.value = '';
+
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+          return showToast('warning', 'Wrong File Type', 'Please select a PDF file.');
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          return showToast('warning', 'File Too Large', 'Please use a PDF under 10 MB.');
+        }
+
+        const overlay  = document.getElementById('pdf-import-overlay');
+        const statusEl = document.getElementById('pdf-import-status');
+        const spinner  = document.getElementById('pdf-spinner');
+
+        const setStep = (n, msg) => {
+          statusEl.textContent = msg;
+          [1,2,3].forEach(i => {
+            const d = document.getElementById('pstep-' + i);
+            if (d) d.classList.toggle('active', i <= n);
+          });
+        };
+
+        overlay.classList.add('visible');
+        setStep(1, 'Reading PDF file…');
+
+        try {
+          /* ── Step 1: base64 encode ── */
+          const base64 = await new Promise((res, rej) => {
+            const reader = new FileReader();
+            reader.onload  = () => res(reader.result.split(',')[1]);
+            reader.onerror = () => rej(new Error('Could not read file.'));
+            reader.readAsDataURL(file);
+          });
+
+          /* ── Step 2: send to backend ── */
+          setStep(2, 'Extracting data with AI…');
+
+          const apiRes = await fetch('/api/ai/parse-resume', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pdfBase64: base64 })
+          });
+
+          if (!apiRes.ok) {
+            const errBody = await apiRes.json().catch(() => ({}));
+            throw new Error(errBody.error || `Server error ${apiRes.status}`);
+          }
+
+          const extracted = await apiRes.json();
+
+          /* ── Step 3: populate state ── */
+          setStep(3, 'Filling in your fields…');
+
+          const scalarFields = [
+            'name','role','phone','email','linkedin','github',
+            'address','summary','skills','languages','hobbies','coursework'
+          ];
+          scalarFields.forEach(f => {
+            if (extracted[f] !== undefined && extracted[f] !== null) {
+              state[f] = String(extracted[f]);
+              state._touched[f] = true;
+            }
+          });
+
+          const arrayFields = [
+            'education','experience','projects','techSkills',
+            'achievements','certifications','extracurricular'
+          ];
+          arrayFields.forEach(f => {
+            if (Array.isArray(extracted[f]) && extracted[f].length > 0) {
+              state[f] = extracted[f];
+              state._touched[f] = true;
+            }
+          });
+
+          /* Sync display toggle buttons to "label" */
+          state.linkedinDisplay = 'label';
+          state.githubDisplay   = 'label';
+
+          renderInputs();
+          render();
+          updateImageUI();
+
+          await new Promise(r => setTimeout(r, 400));
+          overlay.classList.remove('visible');
+          showToast('success', 'Resume Imported!', `Fields populated from "${file.name}".`);
+
+        } catch (err) {
+          console.error('PDF Import Error:', err);
+          overlay.classList.remove('visible');
+
+          if (err.message.includes('JSON') || err.message.includes('parse')) {
+            showToast('error', 'Parse Error', 'AI returned unexpected data. Please try again.');
+          } else if (err.message.includes('fetch') || err.message.includes('network') || err.message.includes('Failed to fetch')) {
+            showToast('error', 'Connection Error', 'Cannot reach the server. Is it running on port 5000?');
+          } else {
+            showToast('error', 'Import Failed', err.message || 'Something went wrong.');
+          }
+        }
+      }
+
+      /* ── Mobile Preview Toggle ── */
+function toggleMobilePreview() {
+  const previewWrap = document.getElementById('preview-wrap');
+  const btn = document.getElementById('mobile-preview-btn');
+  const isVisible = previewWrap.classList.toggle('mobile-visible');
+
+ btn.innerHTML = isVisible
+    ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Close`
+    : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Preview`;
+}
+
+/* ── ULTIMATE MOBILE PINCH-TO-ZOOM & PAN FIX ── */
+window.addEventListener('load', () => {
+  const wrap = document.getElementById('preview-wrap');
+  const preview = document.getElementById('preview');
+  if (!wrap || !preview) return;
+
+  let scale = 1, panX = 0, panY = 0;
+  let startX = 0, startY = 0, startPanX = 0, startPanY = 0;
+  let startDist = 0, startScale = 1;
+  let isPanning = false;
+
+  const getDist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+
+  window.resetPreviewZoom = () => {
+    scale = 1; panX = 0; panY = 0;
+    applyTransforms();
+  };
+
+  function applyTransforms() {
+    if (scale <= 1) {
+      scale = 1; panX = 0; panY = 0;
+      preview.style.transform = ''; 
+      preview.style.animation = ''; // Restore CSS animation
+      preview.style.position = '';  // Remove layout overrides
+      preview.style.zIndex = '';
+      wrap.style.overflow = '';
+      wrap.style.touchAction = '';
+    } else {
+      // CRITICAL: Kill CSS animations so inline transform works
+      preview.style.animation = 'none'; 
+      preview.classList.remove('animating'); 
+      
+      preview.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+      preview.style.transformOrigin = 'top center';
+      preview.style.position = 'relative'; // Elevate stacking context
+      preview.style.zIndex = '9999';       // Push above AI panel and blurred backgrounds
+      wrap.style.overflow = 'hidden'; 
+      wrap.style.touchAction = 'none'; // Lock native scrolling
+    }
+  }
+
+  wrap.addEventListener('touchstart', (e) => {
+    if (window.innerWidth > 1024) return;
+    
+    if (e.touches.length === 2) {
+      e.preventDefault(); 
+      startDist = getDist(e.touches);
+      startScale = scale;
+      isPanning = false;
+    } else if (e.touches.length === 1 && scale > 1) {
+      isPanning = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      startPanX = panX;
+      startPanY = panY;
+    }
+  }, { passive: false });
+
+  wrap.addEventListener('touchmove', (e) => {
+    if (window.innerWidth > 1024) return;
+
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dist = getDist(e.touches);
+      scale = Math.min(Math.max(1, startScale * (dist / startDist)), 4); // Clamp 1x to 4x
+      applyTransforms();
+    } else if (e.touches.length === 1 && isPanning && scale > 1) {
+      e.preventDefault(); 
+      // Speed multiplier (1 / scale) so dragging feels 1:1 with finger
+      panX = startPanX + ((e.touches[0].clientX - startX) / scale);
+      panY = startPanY + ((e.touches[0].clientY - startY) / scale);
+      applyTransforms();
+    }
+  }, { passive: false });
+
+  wrap.addEventListener('touchend', (e) => {
+    if (e.touches.length < 2) startDist = 0;
+    if (e.touches.length === 0) isPanning = false;
+    if (scale < 1.05) applyTransforms(); // snap back
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1024 && scale !== 1) {
+      scale = 1;
+      applyTransforms();
+    }
+  });
+});
     </script>
   </body>
 </html>

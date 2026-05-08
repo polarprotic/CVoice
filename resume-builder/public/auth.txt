@@ -64,19 +64,11 @@
             100% { transform: translate(5%, 5%) scale(1.1); }
         }
 
-        /* --- Warp Speed Grid Changes --- */
         .grid-perspective {
             position: absolute; inset: 0; perspective: 1000px;
             mask-image: radial-gradient(ellipse at 50% 30%, black 10%, transparent 70%);
             -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 10%, transparent 70%);
-            transition: perspective 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        body.signup-mode .grid-perspective {
-            /* Pulling perspective close simulates moving much faster! */
-            perspective: 250px; 
-        }
-
         .grid-plane {
             position: absolute; width: 200vw; height: 200vh; left: -50vw; top: -50vh;
             background-image: 
@@ -115,7 +107,6 @@
             background-color: transparent;
         }
 
-        /* --- Warp Speed Particles Changes --- */
         #network-canvas {
             position: absolute;
             inset: 0;
@@ -124,21 +115,22 @@
             z-index: 1;
             pointer-events: none;
             opacity: 0.8;
-            transform: scale(1) rotate(0deg);
-            filter: blur(0px);
-            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s ease, filter 1.5s ease;
+            transition: opacity 0.8s ease;
         }
 
+        /* login-mode is now the DEFAULT — signup dims the canvas */
         body.signup-mode #network-canvas {
-            /* Scale up and tilt to simulate camera flying into space */
-            transform: scale(2.5) rotate(12deg); 
-            opacity: 0.35;
-            filter: blur(1.5px);
+            opacity: 0.2;
         }
 
-       .focus-overlay {
+        .focus-overlay {
             position:absolute; inset:0; z-index:5; pointer-events:none;
             background:rgba(10,6,8,0); backdrop-filter:blur(0px); -webkit-backdrop-filter:blur(0px);
+            transition: all 0.8s cubic-bezier(0.4,0,0.2,1) 0s;
+        }
+        body.signup-mode .focus-overlay {
+            background:rgba(10,6,8,0.5); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+            transition: all 0.8s cubic-bezier(0.4,0,0.2,1) 0.65s;
         }
 
         /* =====================
@@ -150,23 +142,39 @@
             z-index:10;
         }
 
+        .welcome-hero {
+            position:absolute; left:7%; top:50%; transform:translateY(-50%);
+            max-width:320px; opacity:1;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            z-index:20;
+        }
+        body.signup-mode .welcome-hero { opacity:0; transform:translate(-60px,-50%); pointer-events:none; }
+
+        .welcome-hero h1 { font-size:3.5rem; font-weight:800; margin:0; letter-spacing:-2px; line-height:1.05; color: var(--text); }
+        .welcome-divider { width:46px; height:5px; background:linear-gradient(90deg,var(--rose),var(--rose-light)); margin:14px 0; border-radius:4px; box-shadow:0 4px 10px rgba(196,85,118,0.3); }
+        .welcome-hero p { color:var(--text-2); font-size:0.98rem; line-height:1.65; font-weight:500; margin:0; }
+
         .iso-glow {
-            position:absolute; left:50%; top:50%;
+            position:absolute; left:65%; top:50%;
             width:400px; height:400px;
             transform:translate(-50%,-50%);
             background:radial-gradient(circle,rgba(196,85,118,0.2) 0%,transparent 65%);
             border-radius:50%; filter:blur(40px);
             z-index:5; pointer-events:none;
             animation:pulseGlow 4s infinite alternate;
+            transition: left 0.7s cubic-bezier(0.4,0,0.2,1) 0.6s;
         }
+        body.signup-mode .iso-glow { left:50%; }
         @keyframes pulseGlow { 0% { opacity:0.6; } 100% { opacity:1; } }
 
         .workspace-stage {
-            position:absolute; left:50%; top:50%;
-            width:300px; height:380px;
+            position:absolute; left:65%; top:50%;
+            width:600px; height:400px;
             transform:translate(-50%,-50%);
+            transition: left 0.7s cubic-bezier(0.4,0,0.2,1) 0.6s;
             z-index:30; pointer-events:none;
         }
+        body.signup-mode .workspace-stage { left:50%; }
 
         .levitator {
             width:100%; height:100%; position:relative;
@@ -175,12 +183,58 @@
         @keyframes stageFloat { 0% { transform:translateY(-10px); } 100% { transform:translateY(10px); } }
 
         /* =====================
+           EDITOR PANEL
+        ===================== */
+        .editor-part {
+            position:absolute; left:150px; top:10px;
+            width:300px; height:380px;
+            background: linear-gradient(145deg, #1e1317 0%, #0A0608 100%);
+            border-radius:16px 0 0 16px;
+            border:1px solid rgba(255,255,255,0.08); 
+            border-top: 1px solid rgba(255,255,255,0.15);
+            border-right:1px solid rgba(0,0,0,0.5);
+            box-shadow: -30px 40px 70px rgba(0,0,0,0.8);
+            padding:24px 22px; overflow:hidden;
+            opacity:0;
+            transition: left 0.5s cubic-bezier(0.4,0,0.2,1) 0s, opacity 0.25s ease 0s;
+            z-index:1; pointer-events:none;
+        }
+        body.signup-mode .editor-part {
+            left:0; opacity:1; pointer-events:auto;
+            transition: left 0.55s cubic-bezier(0.34,1.56,0.64,1) 0.6s, opacity 0.35s ease 0.6s;
+        }
+
+        .mac-dots { display: flex; gap: 6px; margin-bottom: 18px; }
+        .mac-dots span { width: 10px; height: 10px; border-radius: 50%; }
+        .mac-dots .r { background: #ff5f56; }
+        .mac-dots .y { background: #ffbd2e; }
+        .mac-dots .g { background: #27c93f; }
+
+        .editor-part h3 { margin:0 0 16px 0; font-size:0.92rem; font-weight:800; display:flex; align-items:center; gap:8px; color: var(--text);}
+        .editor-part h3 svg { stroke:var(--rose-light); flex-shrink:0; }
+        .editor-inputs { display:flex; flex-direction:column; gap:13px; }
+        .editor-inputs input {
+            width:100%; padding:11px 13px;
+            background: rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:10px;
+            font-family:'Plus Jakarta Sans',sans-serif;
+            font-size:0.83rem; font-weight:600; color:var(--text); outline:none;
+            transition:0.3s; box-shadow:inset 0 3px 6px rgba(0,0,0,0.4);
+        }
+        .editor-inputs input::placeholder { color:var(--text-3); font-weight:400; }
+        .editor-inputs input:focus { border-color:var(--rose); background:rgba(0,0,0,0.6); box-shadow:0 0 0 3px var(--rose-glow); }
+
+        /* =====================
            RESUME PANEL
         ===================== */
         .resume-part {
-            position:absolute; left:0; top:0;
-            width:100%; height:100%;
+            position:absolute; left:150px; top:10px;
+            width:300px; height:380px;
             perspective:1200px; z-index:10;
+            transition: left 0.6s cubic-bezier(0.4,0,0.2,1) 0.55s;
+        }
+        body.signup-mode .resume-part {
+            left:300px;
+            transition: left 0.6s cubic-bezier(0.4,0,0.2,1) 0.6s;
         }
 
         .resume-card {
@@ -190,12 +244,14 @@
             transform:rotateX(55deg) rotateZ(-35deg) scale(0.9);
             border-radius:16px;
             box-shadow: -30px 40px 70px rgba(0,0,0,0.7), inset 0 2px 2px rgba(255,255,255,1);
-            transition: transform 0.6s cubic-bezier(0.4,0,0.2,1) 0s, box-shadow 0.6s;
+            transition: transform 0.6s cubic-bezier(0.4,0,0.2,1) 0.55s, border-radius 0.6s, box-shadow 0.6s;
         }
-
         body.signup-mode .resume-card {
             transform:rotateX(0deg) rotateZ(0deg) scale(1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 0 1px var(--border);
+            border-radius:0 16px 16px 0;
+            border:1px solid var(--border); border-left:none;
+            box-shadow: 20px 20px 60px rgba(0,0,0,0.6), inset -1px 1px 1px rgba(255,255,255,0.5);
+            transition: transform 0.6s cubic-bezier(0.4,0,0.2,1) 0s, border-radius 0.6s, box-shadow 0.6s;
         }
 
         .resume-card::before {
@@ -203,25 +259,17 @@
             background:#cbd5e1;
             transform:translateZ(-14px); border-radius:inherit;
             box-shadow:-10px 20px 30px rgba(0,0,0,0.5);
-            pointer-events:none;
-            transition: opacity 0.5s ease;
+            transition:opacity 0.5s ease; pointer-events:none;
         }
-
-        body.signup-mode .resume-card::before { 
-            opacity: 0; 
-        }
+        body.signup-mode .resume-card::before { opacity:0; }
 
         .iso-el {
             position:absolute; border-radius:4px;
             transform:translateZ(14px);
             box-shadow:-5px 8px 12px rgba(0,0,0,0.1);
-            transition: transform 0.6s ease, box-shadow 0.5s ease;
+            transition:transform 0.6s ease, box-shadow 0.5s ease, opacity 0.3s ease;
         }
-
-        body.signup-mode .iso-el { 
-            transform:translateZ(0); 
-            box-shadow:none; 
-        }
+        body.signup-mode .iso-el { transform:translateZ(0); box-shadow:none; }
 
         .el-header  { top:35px;  left:30px;  width:118px; height:13px; background:linear-gradient(90deg, var(--rose), var(--rose-light)); }
         .el-sub     { top:55px;  left:30px;  width:74px;  height:7px;  background:var(--rose-light); }
@@ -233,7 +281,7 @@
         .el-badge-1 { bottom:38px; left:30px;  width:43px; height:12px; border-radius:10px; background:rgba(196, 85, 118, 0.15); border: 1px solid rgba(196, 85, 118, 0.2); }
         .el-badge-2 { bottom:38px; left:83px;  width:53px; height:12px; border-radius:10px; background:rgba(196, 85, 118, 0.15); border: 1px solid rgba(196, 85, 118, 0.2); }
         .el-badge-3 { bottom:38px; left:146px; width:39px; height:12px; border-radius:10px; background:rgba(196, 85, 118, 0.15); border: 1px solid rgba(196, 85, 118, 0.2); }
-        
+
         .preview-text {
             position:absolute; font-family:'Plus Jakarta Sans',sans-serif;
             color:#111111;
@@ -241,8 +289,9 @@
             white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
             transform:translateZ(1px); z-index:20; pointer-events:none;
         }
-        .pt-name  { top:28px; left:28px; font-size:18px; font-weight:800; max-width:180px; }
-        .pt-email { top:51px; left:28px; font-size:11px; font-weight:700; color:var(--rose); max-width:150px; }
+        .pt-name    { top:28px;  left:28px; font-size:18px; font-weight:800; max-width:180px; }
+        .pt-role    { top:51px;  left:28px; font-size:12px; font-weight:700; color:var(--rose); max-width:150px; }
+        .pt-company { top:112px; left:28px; font-size:11px; font-weight:600; color:#666666; max-width:200px; }
 
         /* =====================
            RIGHT PANEL
@@ -336,6 +385,7 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
+<!-- Default state is LOGIN (3D resume visible, no signup-mode class) -->
 <body>
 
     <div class="premium-bg">
@@ -361,27 +411,53 @@
         <div class="focus-overlay"></div>
 
         <div class="showcase-area">
+
+            <div class="welcome-hero">
+                <h1>Craft Your<br>Legacy</h1>
+                <div class="welcome-divider"></div>
+                <p>Join ProResume to start building your career journey. The most advanced ATS-optimised builder.</p>
+            </div>
+
             <div class="iso-glow"></div>
+
             <div class="workspace-stage">
                 <div class="levitator">
+
+                    <div class="editor-part">
+                        <div class="mac-dots">
+                            <span class="r"></span>
+                            <span class="y"></span>
+                            <span class="g"></span>
+                        </div>
+                        <h3>
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            Interactive Preview
+                        </h3>
+                        <div class="editor-inputs">
+                            <input type="text" id="live-name"    placeholder="Type your Name..."  autocomplete="off" maxlength="15">
+                            <input type="text" id="live-role"    placeholder="Type your Role..."  autocomplete="off" maxlength="20">
+                            <input type="text" id="live-company" placeholder="Current Company..." autocomplete="off" maxlength="25">
+                        </div>
+                    </div>
+
                     <div class="resume-part">
                         <div class="resume-card">
-                            <div class="iso-el el-header" id="orig-name"></div>
-                            <div class="iso-el el-sub" id="orig-email"></div>
+                            <div class="iso-el el-header"  id="orig-name"></div>
+                            <div class="iso-el el-sub"     id="orig-role"></div>
                             <div class="iso-el el-avatar"></div>
-                            <div class="iso-el el-line-1"></div>
+                            <div class="iso-el el-line-1"  id="orig-company"></div>
                             <div class="iso-el el-line-2"></div>
                             <div class="iso-el el-box-1"></div>
                             <div class="iso-el el-box-2"></div>
                             <div class="iso-el el-badge-1"></div>
                             <div class="iso-el el-badge-2"></div>
                             <div class="iso-el el-badge-3"></div>
-                            
-                            <!-- Spans for real-time syncing -->
-                            <span class="preview-text pt-name" id="text-name"></span>
-                            <span class="preview-text pt-email" id="text-email"></span>
+                            <span class="preview-text pt-name"    id="text-name"></span>
+                            <span class="preview-text pt-role"    id="text-role"></span>
+                            <span class="preview-text pt-company" id="text-company"></span>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -391,6 +467,7 @@
         <div class="auth-wrapper">
             <div class="auth-nav-container">
                 <div class="auth-nav">
+                    <!-- Default: login mode, so prompt to sign up -->
                     <span id="toggle-text-main">Don't have an account?</span>
                     <div id="toggle-mode" class="auth-link">
                         <span id="toggle-action-text">Sign up</span>
@@ -400,6 +477,7 @@
             </div>
 
             <div class="form-header">
+                <!-- Default: login -->
                 <h2 id="form-title">Welcome Back</h2>
                 <p id="form-subtitle">Log in to continue building your legacy.</p>
             </div>
@@ -407,6 +485,7 @@
             <div id="notification-box" class="notification-box hidden"></div>
 
             <form id="auth-form">
+                <!-- Hidden by default — only shown in signup mode -->
                 <div class="form-group hidden-field" id="name-group">
                     <label>Full Name</label>
                     <input type="text" id="name-input" placeholder="e.g. Shaurya Singh">
@@ -424,6 +503,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- Hidden by default — only shown in signup mode -->
                 <div class="form-group hidden-field" id="confirm-password-group">
                     <label>Confirm Password</label>
                     <div class="input-icon-wrap">
@@ -434,6 +514,7 @@
                     </div>
                 </div>
 
+                <!-- Default: login -->
                 <button type="submit" class="btn" id="submit-btn">Sign In</button>
 
                 <div class="social-divider"><span>Or continue with</span></div>
@@ -611,9 +692,8 @@
             textEl.style.opacity = has ? '1' : '0';
             textEl.innerText = has ? input.value : '';
         }
-        
-        ['name', 'email'].forEach(k => {
-            const inp  = document.getElementById(k + '-input');
+        ['name','role','company'].forEach(k => {
+            const inp  = document.getElementById('live-' + k);
             const orig = document.getElementById('orig-' + k);
             const txt  = document.getElementById('text-' + k);
             if(inp && orig && txt) {
@@ -621,7 +701,10 @@
             }
         });
 
-        /* ---- Toggle logic ---- */
+        /* ---- Toggle logic ----
+           isLogin = true  → Login form  (default, 3D resume shown)
+           isLogin = false → Signup form (signup-mode class, resume goes flat)
+        ---- */
         let isLogin = true;
         const nameGroup            = document.getElementById('name-group');
         const confirmPasswordGroup = document.getElementById('confirm-password-group');
@@ -635,23 +718,19 @@
             isLogin = !isLogin;
             notificationBox.classList.add('hidden');
 
+            // signup-mode drives all the CSS animations (was login-mode before)
             document.body.classList.toggle('signup-mode', !isLogin);
 
             nameGroup.classList.toggle('hidden-field', isLogin);
             confirmPasswordGroup.classList.toggle('hidden-field', isLogin);
             document.getElementById('name-input').required = !isLogin;
 
-            // Handle text preview visibility when switching modes
+            // Clear live preview inputs when switching back to login
             if (isLogin) {
-                const origName = document.getElementById('orig-name');
-                const textName = document.getElementById('text-name');
-                if (origName && textName) {
-                    origName.style.opacity = '1';
-                    textName.style.opacity = '0';
-                }
-            } else {
-                const nInp = document.getElementById('name-input');
-                if(nInp) nInp.dispatchEvent(new Event('input'));
+                ['live-name','live-role','live-company'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) { el.value = ''; el.dispatchEvent(new Event('input')); }
+                });
             }
 
             [formTitle, formSubtitle, submitBtn].forEach(el => {

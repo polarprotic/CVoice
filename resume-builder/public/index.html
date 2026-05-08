@@ -8,7 +8,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProResume | The Intelligent Resume Builder</title>
+    <title>CVoid | The Intelligent Resume Builder</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -120,7 +120,50 @@
             border-bottom: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .logo { font-size: 1.5rem; letter-spacing: -0.3px; color: var(--text); font-weight: 700; }
+        /* --- NEW LOGO STYLES --- */
+.logo {
+    display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none;
+}
+.logo-mark {
+    width: 26px; height: 34px;
+    background: #ffffff;
+    border: 1.5px solid rgba(212, 96, 126, 0.25);
+    border-radius: 3px 7px 3px 3px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    gap: 3px; padding: 5px 5px 6px;
+    box-shadow: 0 3px 14px rgba(176, 64, 95, 0.4), 0 1px 3px rgba(0,0,0,0.2);
+    flex-shrink: 0; position: relative; overflow: hidden;
+}
+/* Dog-ear fold */
+.logo-mark::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 8px; height: 8px;
+    background: linear-gradient(225deg, rgba(212,96,126,0.15) 50%, #ffffff 50%);
+    border-bottom-left-radius: 3px;
+    border-left: 1px solid rgba(212,96,126,0.2);
+    border-bottom: 1px solid rgba(212,96,126,0.2);
+}
+.logo-r-line {
+    height: 3px; background: var(--rose);
+    border-radius: 3px; transform-origin: left;
+    animation: fillLine 1.5s infinite;
+}
+.logo-r-line.logo-r-header { height: 4px; background: var(--rose-light); width: 55%; animation-delay: 0s; }
+.logo-r-line:nth-child(2) { width: 100%; animation-delay: 0.2s; }
+.logo-r-line.logo-r-short  { width: 65%; animation-delay: 0.6s; background: #e5e7eb; opacity: 0.5; }
+.logo-text {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.5rem; font-weight: 800;
+    color: var(--text); letter-spacing: -0.5px;
+}
+.logo-text span { color: var(--rose-light); }
+
+@keyframes fillLine {
+    0%   { transform: scaleX(0); opacity: 0.3; }
+    50%  { transform: scaleX(1); opacity: 1;   }
+    100% { transform: scaleX(0); opacity: 0.3; }
+}
         .nav-actions { display: flex; align-items: center; gap: 24px; }
         .nav-login { font-size: .85rem; font-weight: 600; color: var(--text-2); text-decoration: none; transition: color .2s; }
         .nav-login:hover { color: var(--text); }
@@ -286,17 +329,18 @@
 
         .tut-container { display: grid; grid-template-columns: 350px 1fr; gap: 60px; align-items: center; }
 
-        .tut-sidebar { display: flex; flex-direction: column; gap: 20px; }
-        .tut-tab { text-align: left; background: transparent; border: 1px solid transparent; padding: 24px; border-radius: 16px; cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); display: flex; flex-direction: column; gap: 12px; align-items: flex-start; opacity: 0.5; position: relative; overflow: hidden; }
+        .tut-sidebar { display: flex; flex-direction: column; gap: 12px; }
+        .tut-tab { text-align: left; background: transparent; border: 1px solid transparent; padding: 20px 20px 20px 24px; border-radius: 16px; cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); display: flex; flex-direction: row; gap: 16px; align-items: flex-start; opacity: 0.5; position: relative; overflow: hidden; width: 100%; }
         .tut-tab:hover { background: rgba(255,255,255,0.03); opacity: 0.8; }
-        .tut-tab.active { background: var(--surface); border-color: var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.4); opacity: 1; transform: translateX(15px); }
+        .tut-tab.active { background: var(--surface); border-color: var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.4); opacity: 1; transform: translateX(10px); }
         .tab-active-indicator { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--rose); transform: scaleY(0); transition: transform 0.4s var(--ease); transform-origin: top; border-radius: 0 4px 4px 0; }
         .tut-tab.active .tab-active-indicator { transform: scaleY(1); }
 
-        .way-badge { display: inline-flex; align-items: center; justify-content: center; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; background: rgba(196,85,118,0.15); color: var(--rose-light); border: 1px solid rgba(196,85,118,0.2); transition: all 0.3s; }
-        .tut-tab.active .way-badge { background: var(--rose); color: #fff; box-shadow: 0 4px 15px rgba(158, 59, 86, 0.3); border-color: transparent;}
-        .tut-tab-text strong { display: block; font-size: 1.1rem; color: var(--text); margin-bottom: 6px; font-weight: 800;}
-        .tut-tab-text span { font-size: 0.85rem; color: var(--text-2); line-height: 1.5; }
+        .way-badge { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(196,85,118,0.15); color: var(--rose-light); border: 1px solid rgba(196,85,118,0.2); transition: all 0.3s; margin-top: 2px; }
+        .tut-tab.active .way-badge { background: var(--rose); color: #fff; box-shadow: 0 4px 15px rgba(158, 59, 86, 0.3); border-color: transparent; }
+        .tut-tab-text { flex: 1; min-width: 0; }
+        .tut-tab-text strong { display: block; font-size: 1rem; color: var(--text); margin-bottom: 5px; font-weight: 800; }
+        .tut-tab-text span { font-size: 0.82rem; color: var(--text-2); line-height: 1.5; }
 
         .tut-display { position: relative; width: 100%; aspect-ratio: 16 / 10; background: var(--bg); border-radius: 24px; border: 1px solid var(--border); box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);}
         .tut-window { position: absolute; inset: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05); overflow: hidden; opacity: 0; pointer-events: none; transform: translateX(20px); transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); z-index: 1; }
@@ -336,7 +380,29 @@
         .tp-label { font-size: 0.8rem; font-weight: 800; color: var(--rose); text-transform: uppercase; letter-spacing: 0.5px;}
         .tp-line { height: 8px; background: #e5e7eb; border-radius: 4px; }
 
-        /* Window 2: Canvas Styles (WHITE DOCUMENT) */
+       /* Window 2: Canvas Styles (WHITE DOCUMENT) */
+        .canvas-mobile-notice { display: none; }
+
+        @media (max-width: 1024px) {
+            .canvas-mobile-notice { 
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                gap: 12px; height: calc(100% - 45px); padding: 28px 24px; text-align: center;
+            }
+            .canvas-mobile-notice .cmn-icon { 
+                width: 52px; height: 52px; border-radius: 14px; background: rgba(196,85,118,0.1);
+                border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+                color: var(--rose-light); margin-bottom: 4px;
+            }
+            .canvas-mobile-notice .cmn-badge {
+                font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+                color: var(--rose-light); background: rgba(196,85,118,0.1); border: 1px solid var(--border);
+                padding: 4px 10px; border-radius: 20px;
+            }
+            .canvas-mobile-notice .cmn-title { font-size: 1rem; font-weight: 800; color: var(--text); line-height: 1.4; }
+            .canvas-mobile-notice .cmn-desc { font-size: 0.8rem; color: var(--text-3); line-height: 1.6; max-width: 240px; }
+            .tut-canvas-body { display: none !important; }
+        }
+
         .tut-canvas-body { display: flex; height: calc(100% - 45px); position: relative; }
         .tc-sidebar { width: 60px; background: var(--bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 12px; z-index: 10; }
         .tc-tool { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-3); transition: 0.3s; }
@@ -424,76 +490,68 @@
         .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
-        footer { position: relative; z-index: 10; border-top: 1px solid var(--border); padding: 32px 7%; display: flex; align-items: center; justify-content: space-between; background: rgba(10,6,8,0.8); backdrop-filter: blur(12px); padding-bottom: 80px; /* added space for mobile banner */ }
+        footer { position: relative; z-index: 10; border-top: 1px solid var(--border); padding: 32px 7%; display: flex; align-items: center; justify-content: space-between; background: rgba(10,6,8,0.8); backdrop-filter: blur(12px); }
         .footer-logo { font-size: 1.1rem; font-weight: 700; color: var(--text); }
         .footer-copy { font-size: .8rem; color: var(--text-3); font-weight: 500; }
 
-        /* ── NEW: GENTLE MOBILE TEASER BANNER ── */
-        .mobile-teaser {
-            display: none; /* hidden on desktop */
-            position: fixed;
-            bottom: 0; 
-            left: 0; 
-            right: 0;
-            background: rgba(20, 13, 16, 0.85);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-top: 1px solid var(--border);
-            color: var(--text);
-            text-align: center;
-            padding: 16px 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            z-index: 9999;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
-        }
-        .mobile-teaser span {
-            color: var(--rose-light);
-            font-weight: 800;
-        }
-
-        @media (max-width: 900px) {
-            .hero { grid-template-columns: 1fr; padding-top: 120px; gap: 50px; text-align: center; perspective: none;}
+       @media (max-width: 1024px) {
+            .hero { grid-template-columns: 1fr; padding: 96px 5% 40px; gap: 24px; text-align: center; perspective: none; min-height: auto; }
             .hero-left { align-items: center; }
             .hero-sub { max-width: 100%; }
             .hero-right { display: none; }
-            .section-header-row { grid-template-columns: 1fr; margin-bottom: 30px;}
-            
+            .metrics { padding: 0 5%; margin-bottom: 70px; }
+            .metrics-inner { flex-wrap: wrap; gap: 0; }
+            .metric { flex: 1 1 calc(50% - 1px); padding: 28px 20px; }
+            .metric-divider { display: none; }
+            .metric:not(:nth-child(odd))::before { content: ''; display: block; position: absolute; left: 0; top: 20%; height: 60%; width: 1px; background: var(--border); }
+            .metric { position: relative; }
+            .metric:nth-child(n+3) { border-top: 1px solid var(--border); }
+            .tutorial-section, .features-section { padding: 0 5%; margin-bottom: 80px; }
             .tut-container { grid-template-columns: 1fr; gap: 30px; }
-            .tut-sidebar { flex-direction: row; overflow-x: auto; padding-bottom: 10px; }
-            .tut-tab { min-width: 250px; flex-shrink: 0; padding: 16px; }
-            .tut-display { aspect-ratio: auto; height: 450px; }
-            .tut-editor-body { grid-template-columns: 1fr; gap: 30px; padding: 20px;}
-            .tut-preview-card { display: none; } 
-            
-            .features-grid { grid-template-columns: 1fr; }
+            .tut-sidebar { flex-direction: column; gap: 10px; }
+            .tut-tab { transform: none !important; padding: 16px 16px 16px 20px; }
+            .tut-display { aspect-ratio: auto; height: 400px; }
+            .tut-editor-body { grid-template-columns: 1fr; gap: 16px; padding: 16px; align-items: start; overflow-y: auto; }
+            .tut-preview-card { display: flex; flex-shrink: 0; }
+            .tut-inputs { gap: 12px; }
+            .tut-btn { margin-top: 4px; }
+            .features-grid { grid-template-columns: 1fr; gap: 16px; }
             .f-card-wide { grid-column: span 1; grid-template-columns: 1fr; }
-            .metrics-inner { flex-direction: column; gap: 24px; }
-            .metric-divider { width: 60px; height: 1px; }
-            footer { flex-direction: column; gap: 8px; text-align: center; }
-            
-            .f-card { animation: none !important; transform: none !important;} 
-            #mouse-glow { display: none; } 
+            .f-card { animation: none !important; }
+            footer { flex-direction: column; gap: 8px; text-align: center; padding: 24px 5%; }
+            #mouse-glow { display: none; }
+        }
 
-            /* ── MOBILE READ-ONLY MODIFICATIONS ── */
-            /* Hide the main action buttons */
-            .nav-actions { display: none !important; }
-            .hero-actions { display: none !important; }
-            
-            /* Show the bottom sticky teaser */
-            .mobile-teaser { display: block; }
-            
-            /* Disable pointer events on the interactive tutorial so it acts as pure display on mobile */
-            .tutorial-section { pointer-events: none; }
+        @media (max-width: 640px) {
+            nav { padding: 0 5%; height: 60px; }
+            .logo { font-size: 1.25rem; }
+            .btn-lg { height: 46px; padding: 0 24px; font-size: .875rem; }
+            .hero { padding: 88px 5% 36px; gap: 20px; min-height: auto; }
+            .hero-headline { font-size: clamp(2rem, 8vw, 2.6rem); letter-spacing: -.5px; }
+            .hero-sub { font-size: .95rem; }
+            .hero-actions { flex-direction: column; width: 100%; gap: 10px; }
+            .hero-actions .btn { width: 100%; justify-content: center; }
+            .metrics-inner { border-radius: 14px; padding: 0; }
+            .metric { padding: 24px 16px; }
+            .metric-num { font-size: 2rem; }
+            .section-title { font-size: clamp(1.6rem, 6vw, 2.2rem); }
+            .tut-tab { padding: 14px 14px 14px 18px; }
+            .tut-display { height: 340px; }
+            .tut-mac-bar { padding: 12px 16px; }
+            .tut-editor-body { padding: 16px; gap: 16px; }
+            .f-card { padding: 24px 20px; }
+            .section-header-row { margin-bottom: 40px; }
+        }
+
+        @media (max-width: 400px) {
+            .hero-headline { font-size: 1.85rem; }
+            .hero-badge { font-size: .7rem; }
+            .metric-num { font-size: 1.75rem; }
+            .tut-tab { padding: 12px 12px 12px 16px; }
         }
     </style>
 </head>
 <body>
-
-<!-- Read-Only Mobile Banner -->
-<div class="mobile-teaser">
-    ✨ Viewing on mobile. <span>Open on a desktop</span> to start building.
-</div>
 
 <div class="premium-bg">
     <div class="bg-grid-layer"></div>
@@ -505,7 +563,14 @@
 <div id="mouse-glow"></div>
 
 <nav id="nav">
-    <div class="logo">ProResume</div>
+    <a class="logo" href="#">
+   <div class="logo-mark">
+        <div class="logo-r-line logo-r-header"></div>
+        <div class="logo-r-line"></div>
+        <div class="logo-r-line logo-r-short"></div>
+    </div>
+    <span class="logo-text">CV<span>oice</span></span>
+</a>
     <div class="nav-actions">
         <a href="/auth.html" class="nav-login">Login</a>
         <a href="/auth.html" class="btn btn-primary">Get Started</a>
@@ -589,7 +654,7 @@
                     <div class="rc-section-label" style="margin-top:14px;">Experience</div>
                     <div class="rc-entry">
                         <div class="rc-entry-top">
-                            <span class="rc-entry-title">Full-Stack Developer</span>
+                            <span class="rc-entry-title">Full Stack Developer</span>
                             <span class="rc-entry-date">2023 – Present</span>
                         </div>
                         <ul class="rc-bullets">
@@ -639,7 +704,7 @@
         <div class="tut-sidebar">
             <div class="tut-tab active" id="tab-editor" onclick="switchTut('editor')">
                 <div class="tab-active-indicator"></div>
-                <div class="way-badge">1st Way</div>
+                <div class="way-badge">01</div>
                 <div class="tut-tab-text">
                     <strong>The Intelligent Editor</strong>
                     <span>Fill in your details. Watch your professional layout generate instantly. Perfect for ATS optimization.</span>
@@ -648,7 +713,7 @@
 
             <div class="tut-tab" id="tab-canvas" onclick="switchTut('canvas')">
                 <div class="tab-active-indicator"></div>
-                <div class="way-badge">2nd Way</div>
+                <div class="way-badge">02</div>
                 <div class="tut-tab-text">
                     <strong>Pro Customizer Canvas</strong>
                     <span>Total creative freedom. Drag, drop, resize, and position elements exactly like a high-end design tool.</span>
@@ -708,11 +773,20 @@
                 </div>
             </div>
 
-            <div class="tut-window" id="view-canvas">
+           <div class="tut-window" id="view-canvas">
                 <div class="tut-mac-bar">
                     <div class="tut-dot r"></div><div class="tut-dot y"></div><div class="tut-dot g"></div>
                 </div>
-                
+
+                <div class="canvas-mobile-notice">
+                    <div class="cmn-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path stroke-linecap="round" d="M8 21h8M12 17v4"/></svg>
+                    </div>
+                    <div class="cmn-badge">Desktop Only</div>
+                    <div class="cmn-title">Pro Customizer Canvas<br>requires a larger screen</div>
+                    <div class="cmn-desc">The full drag, drop & resize experience is optimized for desktop and laptop. Visit CVision on a bigger screen to unlock it.</div>
+                </div>
+
                 <div class="tut-canvas-body">
                     <svg class="tut-cursor" id="cv-cursor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.42c.45 0 .67-.54.35-.85L6.35 3.35a.5.5 0 0 0-.85.35Z" fill="#1C1417" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round"/>
@@ -731,7 +805,7 @@
                         <div class="tc-doc" id="cv-doc">
                             <div class="tc-el tc-shape" id="cv-shape"></div>
                             <div class="tc-el tc-name" id="cv-name">Shaurya Singh</div>
-                            <div class="tc-el tc-role" id="cv-role">Full-Stack Developer</div>
+                            <div class="tc-el tc-role" id="cv-role">Full Stack Developer</div>
                             
                             <div class="tc-fake-line" style="top: 130px; width: 60%"></div>
                             <div class="tc-fake-line" style="top: 150px; width: 80%"></div>
@@ -813,8 +887,8 @@
 </section>
 
 <footer>
-    <div class="footer-logo">ProResume</div>
-    <div class="footer-copy">© 2026 ProResume Builder. Built for professionals.</div>
+    <div class="footer-logo">CVision</div>
+    <div class="footer-copy">© 2026 CVision Builder. Built for professionals.</div>
 </footer>
 
 <script>
@@ -988,9 +1062,9 @@
         entries.forEach((e, i) => {
             if (e.isIntersecting) {
                 setTimeout(() => e.target.classList.add('visible'), i * 80);
-                if (e.target.id === 'tutorial' && window.innerWidth > 900) {
-                    if (!editorStarted) { runEditorAnim(); editorStarted = true; }
-                    if (!canvasStarted) { runCanvasAnim(); canvasStarted = true; }
+               if (e.target.id === 'tutorial') {
+                    if (!editorStarted) { loopEditor(); editorStarted = true; }
+                    if (!canvasStarted) { loopCanvas(); canvasStarted = true; }
                 }
                 io.unobserve(e.target);
             }
@@ -1068,7 +1142,7 @@
     // ── Live ATS Boot-up Counter ──
     window.addEventListener('load', () => {
         const scoreEl = document.getElementById('live-ats-score');
-        let current = 0, target = 98, step = target / (2000 / 16); 
+        let current = 0, target = 83, step = target / (2000 / 16); 
         setTimeout(() => {
             const updateCounter = () => {
                 current += step;
@@ -1121,7 +1195,7 @@
             input.classList.add('active'); // show caret
             
             // Type
-            const text = "FullStackDeveloper";
+            const text = "Full Stack Developer";
             for(let i=0; i<text.length; i++) {
                 if(activeTut !== 'editor') break;
                 typed.innerText += text[i]; prev.innerText += text[i];
@@ -1199,12 +1273,7 @@
         }
     }
 
-    if(window.innerWidth > 900) {
-        setTimeout(() => {
-            loopEditor();
-            loopCanvas();
-        }, 1000);
-    }
+   
 </script>
 </body>
 </html>

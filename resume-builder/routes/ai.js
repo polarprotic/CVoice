@@ -12,32 +12,32 @@ const MODELS = [
 ];
 
 router.post('/analyze', async (req, res) => {
-    const { jobTitle, resumeData } = req.body;
+    // Note: We still extract 'jobTitle' from req.body to match the frontend payload, 
+    // but we treat it as the 'jobDescription'.
+    const { jobTitle: jobDescription, resumeData } = req.body;
 
-   const prompt = `You are a ruthless, highly critical Technical Recruiter and strict ATS Expert. Your job is to provide a realistic, hard-hitting evaluation of the provided resume against real-world hiring standards.
+    const prompt = `You are an elite Technical Recruiter and ATS Expert.
         
-        USER'S GOAL / TARGET ROLE: "${jobTitle}"
+        TARGET JOB DESCRIPTION: 
+        "${jobDescription}"
+        
         USER'S RESUME: 
         ${resumeData}
 
-        INSTRUCTIONS: Perform a deep, critical audit of the resume and return exactly 3 scores (0-100) and 1 feedback string.
-        BE HIGHLY REALISTIC AND STRICT. An average resume should score between 40-65. Only exceptional, perfectly tailored resumes with quantifiable metrics should score 80+. Penalize heavily for missing keywords, generic phrasing, and weak impact.
-
-        1. "atsScore": Evaluate how machine-readable the layout and text are. Be strict: penalize complex formatting, missing standard sections (like Education or Experience), or lack of clear hierarchy.
-        2. "score": Evaluate the Job Match percentage. Be ruthless: if they lack the exact core skills required for "${jobTitle}", score them below 50. Do not give them the benefit of the doubt.
-        3. "grammarScore": Evaluate spelling, punctuation, and tense consistency.
-        4. "suggestions": Provide actionable, highly critical advice to fix the resume's flaws. Tell them exactly what keywords or metrics they are missing to improve their chances for the "${jobTitle}" role. Justify your critiques based on standard industry practices. Structure your response with clear section headers followed by bullet points. Use this exact format: each section starts with a header line in ALL CAPS followed by a colon, then bullet points below it starting with a dash (-). Do not use asterisks or markdown symbols anywhere.
+        INSTRUCTIONS: Perform a deep audit of the resume against the provided job description. Return exactly 3 scores (0-100) and 1 feedback string.
+        1. "atsScore": How machine-readable is the layout and text?
+        2. "score": Job match percentage. How relevant is the resume to the pasted job description?
+        3. "grammarScore": Spelling, punctuation, and tense consistency.
+        4. "suggestions": First, provide a clear justification for the job match score based on what is missing or aligns well. Then, give actionable, highly critical advice using **bolding** and bullet points to fix the resume flaws to better match the job description.
         
         CRITICAL: You must return ONLY a valid JSON object in this EXACT format. Do not use markdown blocks around the JSON.
         {
-          "atsScore": 62,
-          "score": 45,
-          "grammarScore": 88,
-          "suggestions": "STRENGTHS:\\n- Point one...\\nWEAKNESSES:\\n- Point two...\\nACTIONABLE FIXES:\\n- Point three..."
+          "atsScore": 85,
+          "score": 75,
+          "grammarScore": 95,
+          "suggestions": "Detailed justification and advice string here..."
         }
     `;
-
-    
 
     // Loop through the models until one succeeds
     for (const modelName of MODELS) {
@@ -119,6 +119,94 @@ router.post('/rewrite', async (req, res) => {
     // If all models fail
     console.error("❌ ALL REWRITE FALLBACK MODELS FAILED.");
     res.status(500).json({ error: "AI Connection Failed: Please try again in 60 seconds." });
+});
+
+// --- PDF RESUME PARSER ENDPOINT ---
+router.post('/parse-resume', async (req, res) => {
+    const { pdfBase64 } = req.body;
+
+    if (!pdfBase64) {
+        return res.status(400).json({ error: 'No PDF data provided.' });
+    }
+
+    const prompt = `Extract every piece of information from this resume PDF and return ONLY a single valid JSON object. No markdown, no backticks, no explanation — just raw JSON.
+
+Use this exact schema:
+{
+  "name": "",
+  "role": "",
+  "phone": "",
+  "email": "",
+  "linkedin": "",
+  "github": "",
+  "address": "",
+  "summary": "",
+  "education": [{"school":"","degree":"","date":"","location":""}],
+  "experience": [{"title":"","company":"","date":"","desc":"","link":"","linkText":"","linkType":"separate"}],
+  "projects": [{"title":"","tech":"","date":"","desc":"","link":"","liveLink":""}],
+  "techSkills": [{"cat":"","items":""}],
+  "achievements": [{"text":"","date":"","desc":"","link":"","linkText":"","linkType":"separate"}],
+  "certifications": [{"name":"","date":"","link":"","linkText":"","linkType":"separate"}],
+  "extracurricular": [{"org":"","role":"","date":"","desc":"","link":"","linkText":"","linkType":"separate"}],
+  "skills": "",
+  "languages": "",
+  "hobbies": "",
+  "coursework": ""
+}
+
+Rules:
+- Preserve ALL original wording — do not summarise or paraphrase.
+- experience[].desc and projects[].desc: format each bullet as a new line starting with "– " (en-dash + space).
+- techSkills: if the resume groups skills by category (Languages, Frameworks, etc.) use those as cat values. Otherwise one entry with cat="" and all skills comma-separated in items.
+- skills: only fill if the resume has a flat ungrouped skills list; otherwise leave "".
+- linkedin/github: include the full URL exactly as written.
+- coursework: comma-separated course names if a coursework section exists, otherwise "".
+- Return ONLY the JSON object — nothing before or after it.`;
+
+    for (const modelName of MODELS) {
+        try {
+            console.log(`\n⏳ Attempting PDF parse with model: [${modelName}]...`);
+
+            const model = genAI.getGenerativeModel({ model: modelName });
+
+            const result = await model.generateContent({
+                contents: [{
+                    role: 'user',
+                    parts: [
+                        {
+                            inlineData: {
+                                mimeType: 'application/pdf',
+                                data: pdfBase64
+                            }
+                        },
+                        { text: prompt }
+                    ]
+                }]
+            });
+
+            const text = result.response.text().trim();
+            console.log(`✅ PDF parse success using [${modelName}]!`);
+
+            // Strip accidental markdown fences
+            const clean = text
+                .replace(/^```json\s*/i, '')
+                .replace(/^```\s*/i, '')
+                .replace(/```\s*$/i, '')
+                .trim();
+
+            const jsonMatch = clean.match(/\{[\s\S]*\}/);
+            if (!jsonMatch) throw new Error('AI Format Error: Could not extract JSON from response.');
+
+            const parsed = JSON.parse(jsonMatch[0]);
+            return res.json(parsed);
+
+        } catch (error) {
+            console.error(`⚠️ PDF Parse Model [${modelName}] failed: ${error.message}`);
+        }
+    }
+
+    console.error('❌ ALL PDF PARSE FALLBACK MODELS FAILED.');
+    res.status(500).json({ error: 'AI Connection Failed: Could not parse the PDF. Please try again in 60 seconds.' });
 });
 
 module.exports = router;

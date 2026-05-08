@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | ProResume</title>
+    <title>Dashboard | CVision</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lato:wght@400;700&family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -111,14 +111,35 @@
         .logo {
             display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none;
         }
-        .logo-mark {
-            width: 32px; height: 32px; border-radius: 8px;
-            background: linear-gradient(135deg, var(--rose-muted), var(--rose));
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 14px var(--rose-glow);
-            flex-shrink: 0;
+       .logo-mark {
+            width: 26px; height: 34px;
+            background: #ffffff;
+            border: 1.5px solid rgba(212, 96, 126, 0.25);
+            border-radius: 3px 7px 3px 3px;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            gap: 3px; padding: 5px 5px 6px;
+            box-shadow: 0 3px 14px rgba(176, 64, 95, 0.4), 0 1px 3px rgba(0,0,0,0.2);
+            flex-shrink: 0; position: relative; overflow: hidden;
         }
-        .logo-mark svg { width: 16px; height: 16px; color: #fff; }
+        /* Dog-ear fold */
+        .logo-mark::before {
+            content: '';
+            position: absolute; top: 0; right: 0;
+            width: 8px; height: 8px;
+            background: linear-gradient(225deg, rgba(212,96,126,0.15) 50%, #ffffff 50%);
+            border-bottom-left-radius: 3px;
+            border-left: 1px solid rgba(212,96,126,0.2);
+            border-bottom: 1px solid rgba(212,96,126,0.2);
+        }
+        .logo-mark svg { display: none; }
+        .logo-r-line {
+            height: 3px; background: var(--rose);
+            border-radius: 3px; transform-origin: left;
+            animation: fillLine 1.5s infinite;
+        }
+        .logo-r-line.logo-r-header { height: 4px; background: var(--rose-light); width: 55%; animation-delay: 0s; }
+        .logo-r-line:nth-child(2) { width: 100%; animation-delay: 0.2s; }
+        .logo-r-line.logo-r-short  { width: 65%; animation-delay: 0.6s; background: #e5e7eb; opacity: 0.5; }
         .logo-text {
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 1.5rem; font-weight: 800;
@@ -268,13 +289,7 @@
         .tpl-desc { font-size: 0.75rem; color: var(--text-2); }
         .tpl-card.active .tpl-name { color: var(--rose-light); }
 
-        .active-dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            background: var(--rose-light);
-            box-shadow: 0 0 6px var(--rose-light);
-            flex-shrink: 0; opacity: 0; transition: opacity 0.25s;
-        }
-        .tpl-card.active .active-dot { opacity: 1; }
+        
 
         .sdivider { height: 1px; background: var(--border); margin: 6px 0; }
 
@@ -288,6 +303,9 @@
         .center-pane::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
         .tab-view { display: none; padding: 40px 48px 60px; flex-direction: column; gap: 24px; }
+        @media (max-width: 1100px) {
+            .tab-view.active { padding-bottom: 140px; }
+        }
         .tab-view.active { display: flex; animation: fadeSlide 0.35s var(--ease) forwards; }
 
         @keyframes fadeSlide { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
@@ -304,7 +322,7 @@
         .showcase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
         .showcase-card {
-            border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+            border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
             background: var(--surface); cursor: pointer;
             transition: all 0.3s var(--ease); position: relative;
         }
@@ -552,14 +570,13 @@
         .preview-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
         .preview-a4 {
-            width: 100%; max-width: 260px;
+            width: 100%; max-width: 300px;
             aspect-ratio: 1 / 1.414;
             border-radius: 6px; overflow: hidden;
             box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.4);
             border: 1px solid rgba(255,255,255,0.05);
             transition: all 0.4s var(--ease);
-            -webkit-mask-image: linear-gradient(to bottom, black 45%, transparent 100%);
-            mask-image: linear-gradient(to bottom, black 45%, transparent 100%);
+            
         }
         .preview-a4:hover { transform: scale(1.02); box-shadow: 0 28px 60px rgba(0,0,0,0.7); }
         .preview-a4 img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
@@ -590,17 +607,157 @@
         .btn-customize:hover { background: var(--surface-2); color: var(--text); border-color: var(--rose-rim); }
         .btn-customize svg { width: 14px; height: 14px; }
 
-        /* ─── RESPONSIVE ─── */
-        @media (max-width: 1100px) {
+      /* Mobile action bar — hidden on desktop */
+        .mobile-action-bar { display: none; }
+
+       /* ─── RESPONSIVE ─── */
+      @media (max-width: 1100px) {
             .body-grid { grid-template-columns: 220px 1fr; }
             .preview-pane { display: none; }
+            .btn-customize { display: none; }
+            .mobile-action-bar {
+                display: flex;
+                position: fixed;
+                bottom: 0; left: 0; right: 0;
+                padding: 12px 24px calc(14px + env(safe-area-inset-bottom));
+                background: rgba(8, 5, 7, 0.97);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                border-top: 1px solid var(--border);
+                flex-direction: column;
+                gap: 8px;
+                z-index: 900;
+                transform: translateY(110%);
+                transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .mobile-action-bar.visible { transform: translateY(0); }
+            .mobile-bar-label {
+                font-size: 0.66rem; font-weight: 700;
+                color: var(--text-2); letter-spacing: 1.5px; text-transform: uppercase;
+            }
+            .mobile-bar-name {
+                font-size: 1rem; font-weight: 800; color: var(--rose-light);
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            }
+            .mobile-bar-btns { display: flex; gap: 10px; }
+            .mobile-bar-btns .btn-editor { flex: 1; padding: 12px; font-size: 0.84rem; }
         }
+
         @media (max-width: 760px) {
-            .body-grid { grid-template-columns: 1fr; }
-            .sidebar { display: none; }
-            .header-tabs { position: static; transform: none; }
-            .tab-view { padding: 24px 20px 40px; }
-            .showcase-grid, .saved-grid { grid-template-columns: 1fr; }
+
+          /* ── Header: keep desktop layout intact, just reflow for small screens ── */
+          .header {
+            height: auto;
+            min-height: 56px;
+            flex-wrap: wrap;
+            padding: 8px 14px;
+            gap: 8px;
+          }
+          /* Logo stays left */
+          .logo { flex-shrink: 0; }
+          /* Tab strip drops to its own row below logo+pill */
+          .header-tabs {
+            position: static;
+            transform: none;
+            order: 3;         /* push below logo and pill */
+            width: 100%;
+            border-radius: 10px;
+            padding: 3px;
+            flex-shrink: 0;
+          }
+          .htab {
+            flex: 1;
+            padding: 8px 6px;
+            font-size: 0.82rem;
+            text-align: center;
+          }
+          /* Pill: hide the text label on very small screens */
+          @media (max-width: 420px) {
+            .pill-name { display: none; }
+            .user-pill { padding: 5px 10px 5px 5px; gap: 5px; }
+          }
+
+          /* ── Body layout ── */
+          .body-grid {
+            grid-template-columns: 1fr;
+            height: auto;
+            min-height: calc(100dvh - 112px);
+            overflow: visible;
+          }
+          .sidebar { display: none; }
+          .preview-pane { display: none; }
+          .center-pane { overflow-y: visible; height: auto; }
+
+          /* ── Tab content ── */
+          .tab-view { padding: 16px 12px 140px; gap: 14px; }
+
+          /* ── Showcase grid: single column, A4 aspect-ratio tall cards ── */
+          .showcase-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+          }
+        /* Shorter template images on mobile */
+          .sc-preview {
+            height: 160px;
+            aspect-ratio: unset;
+          }
+          /* Featured card: remove the span, match others */
+          #card-innovative {
+            grid-column: auto !important;
+          }
+         #card-innovative .sc-preview {
+            height: 160px !important;
+            aspect-ratio: unset;
+          }
+          /* Always show the Select overlay button on touch */
+          .sc-overlay {
+            opacity: 1;
+            background: linear-gradient(to bottom, transparent 70%, rgba(8,5,7,0.75) 100%);
+          }
+          /* Remove bottom fade on template images */
+          .sc-preview img {
+            -webkit-mask-image: none;
+            mask-image: none;
+          }
+          .showcase-card {
+            box-shadow: none !important;
+          }
+
+          /* ── Saved grid: single column ── */
+          .saved-grid { grid-template-columns: 1fr; gap: 12px; }
+          .saved-card { padding: 18px; }
+
+          /* ── Misc ── */
+          .section-label { font-size: 0.68rem; letter-spacing: 2px; }
+
+          /* ── Mobile bottom action bar ── */
+          .mobile-action-bar {
+            display: flex;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
+            background: rgba(8, 5, 7, 0.97);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid var(--border);
+            flex-direction: column;
+            gap: 8px;
+            z-index: 900;
+            transform: translateY(110%);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+          .mobile-action-bar.visible { transform: translateY(0); }
+          .mobile-bar-label {
+            font-size: 0.66rem; font-weight: 700;
+            color: var(--text-2); letter-spacing: 1.5px; text-transform: uppercase;
+          }
+          .mobile-bar-name {
+            font-size: 1rem; font-weight: 800; color: var(--rose-light);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+          }
+          .mobile-bar-btns { display: flex; gap: 10px; }
+          .mobile-bar-btns .btn-editor   { flex: 1; padding: 12px; font-size: 0.84rem; }
+          .mobile-bar-btns .btn-customize { flex: 1; padding: 12px; font-size: 0.84rem; }
         }
 
         /* ─── GLOBAL PAGE LOADER (matches auth.html) ─── */
@@ -655,6 +812,34 @@
 </head>
 <body>
 
+<div id="modal-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);z-index:99999;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s,visibility 0.3s;">
+  <div id="modal-box" style="background:linear-gradient(145deg,#1a0d13,#120a0f);border:1px solid rgba(212,96,126,0.2);border-radius:22px;padding:32px 28px 24px;width:90%;max-width:380px;box-shadow:0 40px 80px rgba(0,0,0,0.8);transform:translateY(16px) scale(0.96);transition:transform 0.3s cubic-bezier(0.16,1,0.3,1),opacity 0.3s;opacity:0;position:relative;overflow:hidden;">
+    <div id="modal-glow" style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:200px;height:200px;border-radius:50%;filter:blur(50px);opacity:0.15;pointer-events:none;"></div>
+    <div id="modal-icon" style="width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;z-index:1;"></div>
+    <div id="modal-title" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:800;color:#EDE5E8;margin-bottom:8px;position:relative;z-index:1;"></div>
+    <div id="modal-body" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.84rem;color:#9A7D87;line-height:1.65;margin-bottom:24px;position:relative;z-index:1;"></div>
+    <div id="modal-actions" style="display:flex;gap:8px;justify-content:flex-end;position:relative;z-index:1;"></div>
+  </div>
+</div>
+<div id="toast-rack" style="position:fixed;bottom:24px;right:24px;z-index:99998;display:flex;flex-direction:column;gap:10px;pointer-events:none;"></div>
+<style>
+#modal-overlay.show{opacity:1!important;visibility:visible!important}
+#modal-overlay.show #modal-box{transform:none!important;opacity:1!important}
+.modal-btn{padding:10px 20px;border-radius:11px;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.84rem;font-weight:700;cursor:pointer;transition:all 0.2s cubic-bezier(0.16,1,0.3,1)}
+.modal-btn:hover{transform:translateY(-1px)}
+.toast-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:16px;background:linear-gradient(145deg,#1a0d13,#120a0f);border:1px solid rgba(212,96,126,0.15);box-shadow:0 20px 50px rgba(0,0,0,0.6);pointer-events:all;min-width:280px;max-width:350px;animation:toastIn 0.35s cubic-bezier(0.16,1,0.3,1) forwards}
+.toast-item.out{animation:toastOut 0.22s ease forwards}
+@keyframes toastIn{from{opacity:0;transform:translateX(16px) scale(0.95)}to{opacity:1;transform:none}}
+@keyframes toastOut{from{opacity:1}to{opacity:0;transform:translateX(10px) scale(0.95)}}
+.toast-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.toast-dot.success{background:#22c55e;box-shadow:0 0 10px rgba(34,197,94,0.6)}
+.toast-dot.error{background:#ef4444;box-shadow:0 0 10px rgba(239,68,68,0.6)}
+.toast-dot.info{background:#D4607E;box-shadow:0 0 10px rgba(212,96,126,0.5)}
+.toast-title2{font-family:'Plus Jakarta Sans',sans-serif;font-size:0.84rem;font-weight:700;color:#EDE5E8;margin-bottom:2px}
+.toast-msg2{font-family:'Plus Jakarta Sans',sans-serif;font-size:0.78rem;color:#9A7D87;line-height:1.45}
+.toast-x{background:none;border:none;color:#5C4450;cursor:pointer;font-size:13px;padding:0;flex-shrink:0;transition:color 0.15s}
+.toast-x:hover{color:#EDE5E8}
+</style>
 <div class="bg-wrap">
     <div class="bg-orb bg-orb-1"></div>
     <div class="bg-orb bg-orb-2"></div>
@@ -667,15 +852,12 @@
 
     <header class="header">
         <a class="logo" href="#">
-            <div class="logo-mark">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                </svg>
+           <div class="logo-mark">
+                <div class="logo-r-line logo-r-header"></div>
+                <div class="logo-r-line"></div>
+                <div class="logo-r-line logo-r-short"></div>
             </div>
-            <span class="logo-text">Pro<span>Resume</span></span>
+            <span class="logo-text">CV<span>oice</span></span>
         </a>
 
         <nav class="header-tabs" role="tablist">
@@ -720,7 +902,7 @@
                     <div class="tpl-name">Technical Executive</div>
                     <div class="tpl-desc">High-density layout</div>
                 </div>
-                <div class="active-dot"></div>
+                
             </div>
 
             <div class="tpl-card" id="stpl-minimal" onclick="selectTemplate('minimal')" tabindex="0">
@@ -729,7 +911,7 @@
                     <div class="tpl-name">Sleek Minimalist</div>
                     <div class="tpl-desc">Elegance in typography</div>
                 </div>
-                <div class="active-dot"></div>
+                
             </div>
 
             <div class="tpl-card" id="stpl-modern" onclick="selectTemplate('modern')" tabindex="0">
@@ -738,7 +920,7 @@
                     <div class="tpl-name">Contemporary</div>
                     <div class="tpl-desc">Visual hierarchy & flair</div>
                 </div>
-                <div class="active-dot"></div>
+                
             </div>
 
             <div class="tpl-card" id="stpl-attorney" onclick="selectTemplate('attorney')" tabindex="0">
@@ -747,7 +929,7 @@
                     <div class="tpl-name">Traditional Corporate</div>
                     <div class="tpl-desc">Built for formal roles</div>
                 </div>
-                <div class="active-dot"></div>
+                
             </div>
 
             <div class="tpl-card" id="stpl-innovative" onclick="selectTemplate('innovative')" tabindex="0">
@@ -756,8 +938,10 @@
                     <div class="tpl-name">Executive Innovative</div>
                     <div class="tpl-desc">Max content density</div>
                 </div>
-                <div class="active-dot"></div>
+                
             </div>
+
+            
 
             <div class="sdivider"></div>
             <span class="sidebar-section-label">Actions</span>
@@ -845,8 +1029,8 @@
                         </div>
                     </div>
 
-                    <div class="showcase-card" id="card-innovative" data-tag="Featured" onclick="selectTemplate('innovative')" style="grid-column: 1 / -1;">
-                        <div class="sc-preview" style="height:200px;">
+                <div class="showcase-card" id="card-innovative" data-tag="Featured" onclick="selectTemplate('innovative')">
+                        <div class="sc-preview">
                             <img src="5th.png" alt="Executive Innovative">
                             <div class="sc-overlay">
                                 <button class="sc-select-btn" onclick="event.stopPropagation(); selectTemplate('innovative')">
@@ -861,12 +1045,38 @@
                         </div>
                     </div>
 
+                   
+
                 </div>
             </div>
 
             <!-- SAVED RESUMES TAB -->
             <div class="tab-view" id="view-saved">
                 <div class="section-label">YOUR SAVED ARCHIVES</div>
+
+                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                  <div style="flex:1; min-width:180px; position:relative;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input id="search-name" type="text" placeholder="Search by name…" oninput="filterResumes()" style="width:100%; padding:9px 12px 9px 36px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; font-size:0.84rem; outline:none; transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--rose-rim)'" onblur="this.style.borderColor='var(--border)'">
+                  </div>
+                  <select id="search-type" onchange="filterResumes()" style="padding:9px 32px 9px 12px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; font-size:0.84rem; outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235C4450' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;); background-repeat:no-repeat; background-position:right 11px center; transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--rose-rim)'" onblur="this.style.borderColor='var(--border)'">
+                    <option value="">All Types</option>
+                    <option value="academic">Technical Executive</option>
+                    <option value="minimal">Sleek Minimalist</option>
+                    <option value="modern">Contemporary Creative</option>
+                    <option value="attorney">Traditional Corporate</option>
+                    <option value="innovative">Executive Innovative</option>
+        
+                    <option value="custom">Customised Layout</option>
+                  </select>
+                  <select id="search-sort" onchange="filterResumes()" style="padding:9px 32px 9px 12px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; font-size:0.84rem; outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235C4450' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;); background-repeat:no-repeat; background-position:right 11px center; transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--rose-rim)'" onblur="this.style.borderColor='var(--border)'">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="az">A → Z</option>
+                    <option value="za">Z → A</option>
+                  </select>
+                </div>
+
                 <div class="saved-grid" id="saved-container">
                     <div class="skeleton-card">
                         <div class="sk-doc-wrap">
@@ -946,10 +1156,7 @@
             </div>
 
             <div class="preview-active hidden" id="preview-active">
-                <div class="preview-top-bar">
-                    <span class="preview-name" id="preview-name">Technical Executive</span>
-                    <span class="preview-tag" id="preview-tag">Selected</span>
-                </div>
+                
                 <div class="preview-scroll">
                     <div class="preview-a4" id="preview-a4">
                         <img src="1st.png" alt="Preview" id="preview-img">
@@ -996,7 +1203,62 @@
 </template>
 
 <script>
-    /* ─── Mouse glow ─── */
+    /* ─── Modal & Toast System ─── */
+let _modalResolve = null;
+function showModal({type='info',title,body,buttons}){
+    const overlay=document.getElementById('modal-overlay');
+    const icon=document.getElementById('modal-icon');
+    const glow=document.getElementById('modal-glow');
+    const titleEl=document.getElementById('modal-title');
+    const bodyEl=document.getElementById('modal-body');
+    const actions=document.getElementById('modal-actions');
+    const cfg={
+        info:{bg:'rgba(212,96,126,0.15)',border:'rgba(212,96,126,0.3)',glowColor:'#B0405F',svg:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4607E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'},
+        danger:{bg:'rgba(239,68,68,0.12)',border:'rgba(239,68,68,0.3)',glowColor:'#ef4444',svg:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>'},
+        success:{bg:'rgba(34,197,94,0.12)',border:'rgba(34,197,94,0.3)',glowColor:'#22c55e',svg:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'},
+    };
+    const c=cfg[type]||cfg.info;
+    icon.style.cssText=`width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;z-index:1;background:${c.bg};border:1px solid ${c.border};box-shadow:0 4px 16px ${c.bg};`;
+    icon.innerHTML=c.svg;
+    glow.style.background=c.glowColor;
+    titleEl.textContent=title||'';
+    bodyEl.textContent=body||'';
+    actions.innerHTML='';
+    (buttons||[]).forEach(btn=>{
+        const el=document.createElement('button');
+        el.className='modal-btn';
+        el.textContent=btn.label;
+        el.style.cssText=btn.style;
+        el.onclick=()=>{overlay.classList.remove('show');if(_modalResolve){_modalResolve(btn.value);_modalResolve=null;}};
+        actions.appendChild(el);
+    });
+    overlay.classList.add('show');
+    return new Promise(r=>{_modalResolve=r;});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('modal-overlay').addEventListener('click',function(e){
+        if(e.target===this){this.classList.remove('show');if(_modalResolve){_modalResolve(false);_modalResolve=null;}}
+    });
+});
+function showAlert(title,body,type){
+    return showModal({type:type||'info',title,body,buttons:[{label:'Got it',value:true,style:'background:linear-gradient(135deg,#7A2D43,#B0405F);color:#fff;border:none;box-shadow:0 4px 14px rgba(176,64,95,0.4);'}]});
+}
+function showConfirm(title,body){
+    return showModal({type:'danger',title,body,buttons:[
+        {label:'Cancel',value:false,style:'background:rgba(255,255,255,0.05);color:#9A7D87;border:1px solid rgba(255,255,255,0.08);'},
+        {label:'Delete',value:true,style:'background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.25);'}
+    ]});
+}
+function showToast(type,title,msg){
+    const rack=document.getElementById('toast-rack');
+    const item=document.createElement('div');
+    item.className='toast-item';
+    item.innerHTML=`<div class="toast-dot ${type}"></div><div style="flex:1"><div class="toast-title2">${title}</div>${msg?`<div class="toast-msg2">${msg}</div>`:''}</div><button class="toast-x" onclick="this.parentElement.classList.add('out');setTimeout(()=>this.parentElement.remove(),240)">✕</button>`;
+    rack.appendChild(item);
+    setTimeout(()=>{item.classList.add('out');setTimeout(()=>item.remove(),240);},4000);
+}
+
+/* ─── Mouse glow ─── */
     const glow = document.getElementById('mouse-glow');
     window.addEventListener('mousemove', e => { glow.style.opacity='1'; glow.style.left=e.clientX+'px'; glow.style.top=e.clientY+'px'; });
     window.addEventListener('mouseleave', () => glow.style.opacity='0');
@@ -1010,6 +1272,7 @@
         modern:     { name: 'Contemporary Creative',  tag: 'Visual',    img: '3rd.png', desc: 'Two-column visual design with a dark sidebar — perfect for creative and design roles.' },
         attorney:   { name: 'Traditional Corporate',  tag: 'Formal',    img: '4th.png', desc: 'Bordered, formal layout suited for law, finance, and executive corporate applications.' },
         innovative: { name: 'Executive Innovative',   tag: 'Featured',  img: '5th.png', desc: 'Maximum content density with a modern blue accent — ideal for C-suite and director-level roles.' },
+        
     };
 
     const TEMPLATE_DISPLAY_NAMES = {
@@ -1092,11 +1355,15 @@
         // Right preview pane
         document.getElementById('preview-idle').classList.add('hidden');
         document.getElementById('preview-active').classList.remove('hidden');
-        document.getElementById('preview-name').textContent = meta.name;
-        document.getElementById('preview-tag').textContent = meta.tag;
         document.getElementById('preview-img').src = meta.img;
         document.getElementById('preview-img').alt = meta.name;
-        document.getElementById('preview-desc').textContent = meta.desc;
+      document.getElementById('preview-desc').textContent = meta.desc;
+
+        // Mobile bottom bar
+        const mBar = document.getElementById('mobile-action-bar');
+        const mName = document.getElementById('mobile-bar-name');
+        if (mName) mName.textContent = meta.name;
+        if (mBar) mBar.classList.add('visible');
     }
 
    function showPageLoader(text, url) {
@@ -1187,14 +1454,7 @@ function sendToCustomizer() {
         container.innerHTML = buildSkeletonLoader(2);
 
         try {
-            // Try both API endpoint formats for compatibility
-            let res = await fetch(`http://localhost:5000/api/resume/user/${userId}`);
-
-            // Fallback to query param style if first fails
-            if (!res.ok) {
-                res = await fetch(`http://localhost:5000/api/resume?userId=${userId}`);
-            }
-
+          let res = await fetch(`/api/resume?userId=${userId}`);
             if (!res.ok) throw new Error(`Server responded with ${res.status}`);
 
             const payload = await res.json();
@@ -1225,7 +1485,7 @@ function sendToCustomizer() {
 
                 // Template type display name
                 const tplType = resume.templateType || resume.templateSpecificInputs?.templateType || 'standard';
-                tpl.querySelector('.js-meta').textContent = (TEMPLATE_DISPLAY_NAMES[tplType] || tplType) + ' Engine';
+                tpl.querySelector('.js-meta').textContent = (TEMPLATE_DISPLAY_NAMES[tplType] || tplType);
 
                 // Date
                 const d = new Date(resume.updatedAt || resume.createdAt);
@@ -1242,13 +1502,14 @@ function sendToCustomizer() {
                 // Delete
                 tpl.querySelector('.js-del').onclick = async (e) => {
                     e.stopPropagation();
-                    if (!confirm('Delete this resume? This cannot be undone.')) return;
+                  const confirmed = await showConfirm('Delete Resume?','This resume will be permanently deleted and cannot be recovered.');
+                    if (!confirmed) return;
                     try {
-                        const delRes = await fetch(`http://localhost:5000/api/resume/${resume._id}`, { method: 'DELETE' });
+                      const delRes = await fetch(`/api/resume/${resume._id}`, { method: 'DELETE' });
                         if (delRes.ok) {
                             const cardEl = document.getElementById(`resume-card-${resume._id}`);
                             if (cardEl) cardEl.remove();
-                            // If container is now empty, show empty state
+                            showToast('success','Deleted','Resume removed successfully.');
                             const remaining = document.querySelectorAll('#saved-container .saved-card');
                             if (remaining.length === 0) {
                                 document.getElementById('saved-container').innerHTML = `
@@ -1259,10 +1520,10 @@ function sendToCustomizer() {
                                     </div>`;
                             }
                         } else {
-                            alert('Failed to delete resume.');
+                            showAlert('Delete Failed','The server could not delete this resume. Please try again.','info');
                         }
                     } catch {
-                        alert('Error connecting to server.');
+                        showAlert('Connection Error','Could not reach the server. Please check your connection.','info');
                     }
                 };
 
@@ -1299,8 +1560,143 @@ function sendToCustomizer() {
         // Pre-load saved resumes in background
         fetchSavedResumes();
 
-        if (window.lucide) lucide.createIcons();
+       if (window.lucide) lucide.createIcons();
     });
+
+    /* ─── All loaded resumes (for client-side filtering) ─── */
+    let _allResumes = [];
+
+    /* ─── Override fetchSavedResumes to also store raw data ─── */
+    const _origFetch = fetchSavedResumes;
+    async function fetchSavedResumes() {
+        const userId = localStorage.getItem('userId');
+        const token  = localStorage.getItem('token');
+        const container = document.getElementById('saved-container');
+        if (!container) return;
+
+        if (!token || !userId) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></div>
+                    <div class="empty-title">Not signed in</div>
+                    <div class="empty-sub">Please log in to view your saved resumes.</div>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = buildSkeletonLoader(2);
+
+        try {
+            let res = await fetch(`/api/resume?userId=${userId}`);
+            if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+            const payload = await res.json();
+            _allResumes = Array.isArray(payload) ? payload : (payload.data || []);
+            renderResumes(_allResumes);
+        } catch (err) {
+            console.error('Error fetching resumes:', err);
+            container.innerHTML = '<p class="error-state">Connection error — is your server running?</p>';
+        }
+    }
+
+    /* ─── Render a list of resumes into the grid ─── */
+    function renderResumes(resumes) {
+        const container = document.getElementById('saved-container');
+        container.innerHTML = '';
+
+        if (resumes.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></div>
+                    <div class="empty-title">No resumes match</div>
+                    <div class="empty-sub">Try a different search or filter.</div>
+                </div>`;
+            return;
+        }
+
+       const isMobile = window.matchMedia('(pointer: coarse)').matches;
+
+        resumes.forEach((resume, i) => {
+            const tpl  = document.getElementById('saved-tpl').content.cloneNode(true);
+            const card = tpl.querySelector('.saved-card');
+            card.id = `resume-card-${resume._id}`;
+            card.style.animationDelay = (i * 0.08) + 's';
+
+            tpl.querySelector('.js-title').textContent = resume.personalInfo?.name || 'Untitled Resume';
+
+            const tplType = resume.templateType || resume.templateSpecificInputs?.templateType || 'standard';
+            tpl.querySelector('.js-meta').textContent = (TEMPLATE_DISPLAY_NAMES[tplType] || tplType);
+
+            const d = new Date(resume.updatedAt || resume.createdAt);
+            tpl.querySelector('.js-date').textContent = 'Updated ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+            const isCustom = tplType === 'custom' || resume.templateSpecificInputs?.isCustom;
+            const openBtn = tpl.querySelector('.js-open');
+
+            if (isMobile && isCustom) {
+                openBtn.textContent = '🖥 Open on Desktop';
+                openBtn.style.opacity = '0.6';
+                openBtn.style.cursor = 'default';
+                openBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    showAlert('Desktop Required','This customised resume uses the canvas editor which needs a larger screen. Please open it on a desktop.','info');
+                };
+            } else {
+                openBtn.textContent = 'Open Workspace';
+                openBtn.onclick = () => {
+                    window.location.href = isCustom
+                        ? `customize.html?id=${resume._id}`
+                        : `editor.html?id=${resume._id}`;
+                };
+            }
+
+            tpl.querySelector('.js-del').onclick = async (e) => {
+                e.stopPropagation();
+               const confirmed = await showConfirm('Delete Resume?','This resume will be permanently deleted and cannot be recovered.');
+                if (!confirmed) return;
+                try {
+                    const delRes = await fetch(`/api/resume/${resume._id}`, { method: 'DELETE' });
+                    if (delRes.ok) {
+                        _allResumes = _allResumes.filter(r => r._id !== resume._id);
+                        filterResumes();
+                        showToast('success','Deleted','Resume removed successfully.');
+                    } else {
+                        showAlert('Delete Failed','The server could not delete this resume. Please try again.','info');
+                    }
+                } catch {
+                    showAlert('Connection Error','Could not reach the server. Please check your connection.','info');
+                }
+            };
+
+            container.appendChild(tpl);
+        });
+    }
+
+    /* ─── Filter + sort ─── */
+    function filterResumes() {
+        const query = (document.getElementById('search-name')?.value || '').toLowerCase().trim();
+        const type  = document.getElementById('search-type')?.value || '';
+        const sort  = document.getElementById('search-sort')?.value || 'newest';
+
+        let results = _allResumes.filter(r => {
+            const name    = (r.personalInfo?.name || '').toLowerCase();
+            const tplType = r.templateType || r.templateSpecificInputs?.templateType || '';
+            const nameOk  = !query || name.includes(query);
+            const typeOk  = !type  || tplType === type;
+            return nameOk && typeOk;
+        });
+
+        results = [...results].sort((a, b) => {
+            if (sort === 'newest') return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt);
+            if (sort === 'oldest') return new Date(a.updatedAt || a.createdAt) - new Date(b.updatedAt || b.createdAt);
+            const na = (a.personalInfo?.name || '').toLowerCase();
+            const nb = (b.personalInfo?.name || '').toLowerCase();
+            if (sort === 'az') return na.localeCompare(nb);
+            if (sort === 'za') return nb.localeCompare(na);
+            return 0;
+        });
+
+        renderResumes(results);
+    }
 </script>
 
 <!-- dashboard.js is loaded last so it can override fetchSavedResumes if needed -->
@@ -1316,5 +1712,18 @@ function sendToCustomizer() {
     </div>
     <div class="loader-text" id="loader-text">Opening Editor...</div>
 </div>
+<!-- Mobile bottom action bar -->
+<div class="mobile-action-bar" id="mobile-action-bar">
+  <div class="mobile-bar-label">Selected Template</div>
+  <div class="mobile-bar-name" id="mobile-bar-name">Technical Executive</div>
+  <div class="mobile-bar-btns">
+    <button class="btn-editor" onclick="generateResume()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      Open Editor
+    </button>
+   
+  </div>
+</div>
+
 </body>
 </html>

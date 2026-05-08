@@ -113,7 +113,7 @@ async function fetchSavedResumes() {
                 || 'standard';
             const metaEl = tpl.querySelector('.js-meta');
             if (metaEl) {
-                metaEl.textContent = (TEMPLATE_DISPLAY_NAMES[tplType] || tplType) + ' Engine';
+                metaEl.textContent = (TEMPLATE_DISPLAY_NAMES[tplType] || tplType);
             }
 
             // Date

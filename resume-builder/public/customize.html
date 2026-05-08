@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProResume | Pro Customizer</title>
+    <title>CVision | Pro Customizer</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;700;800&family=Josefin+Sans:wght@300;400;600;700&family=Lato:wght@300;400;700;900&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Merriweather:wght@300;400;700&family=Montserrat:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Raleway:wght@300;400;600;700;800&family=Roboto+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -254,6 +254,18 @@
         .btn-style:hover { background: rgba(196,85,118,0.1); border-color: var(--rose-light); color: var(--rose-light); }
         .btn-style.active { background: var(--rose); border-color: transparent; color: white; }
 
+       input[type="range"].vertical-range {
+            -webkit-appearance: auto;
+            appearance: auto;
+            writing-mode: horizontal-tb;
+            direction: ltr;
+            width: 90px;
+            height: auto;
+            cursor: pointer;
+            accent-color: var(--rose-light);
+            margin: 0 2px;
+        }
+
         /* ── ELEMENTS ── */
         .element {
             position: absolute; min-width: 2px; min-height: 2px; display: flex;
@@ -412,7 +424,13 @@
             width: 8px; height: 8px; border-radius: 50%;
             background: var(--rose-light); animation: pulse 1s infinite;
         }
-        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+       @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+        @keyframes fillLine {
+            0%   { transform: scaleX(0); opacity: 0.3; }
+            50%  { transform: scaleX(1); opacity: 1;   }
+            100% { transform: scaleX(0); opacity: 0.3; }
+        }
 
         /* Multi-selection info panel */
         #multi-selection-info {
@@ -432,7 +450,15 @@
 
 <header class="studio-header">
     <div class="header-left">
-        <div class="logo">Pro<span>Resume</span></div>
+        <a class="logo" href="dashboard.html" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+          <div class="logo-mark" style="width:22px; height:28px; background:#ffffff; border:1.5px solid rgba(196,85,118,0.25); border-radius:3px 6px 3px 3px; display:flex; flex-direction:column; justify-content:flex-end; gap:2px; padding:4px 4px 5px; box-shadow:0 3px 14px rgba(158,59,86,0.4); flex-shrink:0; position:relative; overflow:hidden;">
+            <div style="position:absolute; top:0; right:0; width:7px; height:7px; background:linear-gradient(225deg, rgba(196,85,118,0.15) 50%, #ffffff 50%); border-bottom-left-radius:3px; border-left:1px solid rgba(196,85,118,0.2); border-bottom:1px solid rgba(196,85,118,0.2);"></div>
+            <div style="height:3px; background:var(--rose-light); border-radius:3px; width:55%; transform-origin:left; animation:fillLine 1.5s infinite 0s;"></div>
+            <div style="height:2px; background:var(--rose-light); border-radius:3px; width:100%; opacity:0.7; transform-origin:left; animation:fillLine 1.5s infinite 0.2s;"></div>
+            <div style="height:2px; background:#e5e7eb; border-radius:3px; width:65%; opacity:0.4; transform-origin:left; animation:fillLine 1.5s infinite 0.6s;"></div>
+          </div>
+          <span style="font-size:1.1rem; font-weight:800; letter-spacing:-0.5px; color:var(--text-main);">CV<span style="color:var(--rose-light);">oice</span></span>
+        </a>
     </div>
     <div class="header-center">
         <input type="text" id="doc-name-input" class="doc-name-input" value="Untitled Design" placeholder="Name your resume...">
@@ -682,12 +708,17 @@
                     </select>
                 </div>
 
-                <div class="prop-row">
+               <div class="prop-row">
                     <label>Font Size</label>
-                    <input type="number" id="font-size" 
-                           oninput="if(event.inputType !== 'insertText' && event.inputType !== 'deleteContentBackward') applyTextFormat('fontSizePx', this.value, false)" 
-                           onkeydown="if(event.key === 'Enter') applyTextFormat('fontSizePx', this.value, true)"
-                           onchange="saveState()">
+                    <div style="display:flex;align-items:center;gap:5px;">
+                        <input type="range" class="vertical-range" id="font-size-range" min="6" max="120" step="1" value="13"
+                               oninput="document.getElementById('font-size').value=this.value; applyTextFormat('fontSizePx', this.value, false)"
+                               onchange="saveState()">
+                        <input type="number" id="font-size" min="1" max="300" style="width:60px;"
+                               oninput="document.getElementById('font-size-range').value=this.value; if(event.inputType !== 'insertText' && event.inputType !== 'deleteContentBackward') applyTextFormat('fontSizePx', this.value, false)"
+                               onkeydown="if(event.key === 'Enter') applyTextFormat('fontSizePx', this.value, true)"
+                               onchange="saveState()">
+                    </div>
                 </div>
                 <div class="prop-row">
                     <label>Line Height</label>
@@ -776,6 +807,29 @@
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
                     Revert to Color
                 </button>
+            </div>
+
+           <div id="shape-border-controls" class="prop-group" style="display:none;">
+                <div class="section-label-row"><span class="sl">Border</span><div class="sl-line"></div></div>
+                <div class="prop-row">
+                    <label>Color</label>
+                    <input type="color" class="color-circle" id="border-color-picker" value="#000000" oninput="updateBorderColor(this.value)" onchange="saveState()">
+                </div>
+                <div class="prop-row">
+                    <label>Width (px)</label>
+                    <input type="number" id="border-width" min="0" max="20" value="0" oninput="updateBorderWidth(this.value)" onchange="saveState()">
+                </div>
+                <div class="prop-row">
+                    <label>Radius</label>
+                    <div style="display:flex;align-items:center;gap:5px;">
+                        <input type="range" class="vertical-range" id="border-radius-range" min="0" max="100" step="1" value="0"
+                               oninput="document.getElementById('border-radius').value=this.value; updateBorderRadius(this.value)"
+                               onchange="saveState()">
+                        <input type="number" id="border-radius" min="0" max="100" value="0" style="width:60px;"
+                               oninput="document.getElementById('border-radius-range').value=this.value; updateBorderRadius(this.value)"
+                               onchange="saveState()">
+                    </div>
+                </div>
             </div>
 
             <div id="color-controls" class="prop-group">
@@ -882,7 +936,8 @@
     }
 
     // ── CLEAR CANVAS ──
-    function clearCanvas() {
+   function clearCanvas() {
+        if (!confirm('🗑️ Clear the entire canvas?\n\nThis cannot be undone.')) return;
         const page = document.getElementById('page-1');
         if (page) page.innerHTML = '';
         deselectAll(null);
@@ -1078,6 +1133,7 @@
         document.getElementById('controls').style.display = 'block';
         document.getElementById('text-controls').style.display = 'none';
         document.getElementById('shape-fill-controls').style.display = 'none';
+        document.getElementById('shape-border-controls').style.display = 'none';
         document.getElementById('color-controls').style.display = 'block';
 
         document.getElementById('elem-width').value = el.offsetWidth;
@@ -1090,11 +1146,19 @@
             syncToolbar();
         } else if (el.classList.contains('shape-element')) {
             document.getElementById('shape-fill-controls').style.display = 'block';
+            document.getElementById('shape-border-controls').style.display = 'block';
             if (el.style.backgroundImage && el.style.backgroundImage !== 'none') {
                 document.getElementById('color-controls').style.display = 'none';
             } else {
                 document.getElementById('color-picker').value = rgbToHex(window.getComputedStyle(el).backgroundColor);
             }
+            const computedShape = window.getComputedStyle(el);
+            const bw = parseInt(computedShape.borderWidth) || 0;
+            document.getElementById('border-width').value = bw;
+            document.getElementById('border-color-picker').value = bw > 0 ? rgbToHex(computedShape.borderColor) : '#000000';
+            const br = parseInt(computedShape.borderRadius) || 0;
+            document.getElementById('border-radius').value = br;
+            document.getElementById('border-radius-range').value = br;
         }
         document.getElementById('opacity-slider').value = window.getComputedStyle(el).opacity || 1;
     }
@@ -1145,8 +1209,11 @@
             ulBtn.classList.toggle('active', isUl);
             olBtn.classList.toggle('active', isOl);
         }
-        if (document.activeElement !== document.getElementById('font-size'))
-            document.getElementById('font-size').value = parseInt(computed.fontSize);
+        if (document.activeElement !== document.getElementById('font-size')) {
+            const fsVal = parseInt(computed.fontSize);
+            document.getElementById('font-size').value = fsVal;
+            document.getElementById('font-size-range').value = fsVal;
+        }
         if (document.activeElement !== document.getElementById('line-height'))
             document.getElementById('line-height').value = computed.lineHeight !== 'normal' ? (parseFloat(computed.lineHeight) / parseFloat(computed.fontSize)).toFixed(1) : 1.5;
         if (document.activeElement !== document.getElementById('letter-spacing'))
@@ -1309,10 +1376,28 @@
         }
     }
 
-    function deleteSelected() {
+   function deleteSelected() {
         if (selectedElement) { selectedElement.remove(); deselectAll(null); saveState(); }
     }
 
+    // ── BORDER CONTROLS ──
+    function updateBorderColor(val) {
+        if (!selectedElement) return;
+        const bw = parseInt(selectedElement.style.borderWidth) || 0;
+        if (bw === 0) { selectedElement.style.borderWidth = '1px'; document.getElementById('border-width').value = 1; }
+        selectedElement.style.borderColor = val;
+        selectedElement.style.borderStyle = 'solid';
+    }
+    function updateBorderWidth(val) {
+        if (!selectedElement) return;
+        selectedElement.style.borderWidth = val + 'px';
+        selectedElement.style.borderStyle = parseInt(val) > 0 ? 'solid' : 'none';
+        selectedElement.style.borderColor = document.getElementById('border-color-picker').value;
+    }
+    function updateBorderRadius(val) {
+        if (!selectedElement) return;
+        selectedElement.style.borderRadius = val + 'px';
+    }
     // ── SMART SNAP GUIDES ──
     function calculateSnap(el, newLeft, newTop, newWidth, newHeight) {
         const threshold = 5;
@@ -1693,8 +1778,12 @@
             }
         }
 
+        const isInspectorFocused = document.activeElement &&
+            (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT' || document.activeElement.tagName === 'TEXTAREA') &&
+            document.getElementById('inspector').contains(document.activeElement);
+
         // Delete
-        if ((e.key === 'Delete' || e.key === 'Backspace') && !isTyping) {
+        if ((e.key === 'Delete' || e.key === 'Backspace') && !isTyping && !isInspectorFocused) {
             e.preventDefault();
             if (isMultiMode()) {
                 deleteMultiSelected();
@@ -1704,7 +1793,7 @@
         }
 
         // Arrow keys
-        if (!isTyping && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+       if (!isTyping && !isInspectorFocused && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
             if (!selectedElement && multiSelected.length === 0) return;
             e.preventDefault();
             const step = e.shiftKey ? 10 : 1;
@@ -1793,7 +1882,7 @@
         const existingId = urlParams.get("id");
         const payload = {
             userId, resumeId: existingId,
-            personalInfo: { name: docName, email: "custom@proresume.com" },
+            personalInfo: { name: docName, email: "custom@CVision.com" },
             templateType: "custom",
             templateSpecificInputs: {
                 htmlContent: document.getElementById('page-1').innerHTML,

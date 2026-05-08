@@ -16,8 +16,8 @@ const resumeSchema = new mongoose.Schema({
   templateType: { 
     type: String, 
     required: true,
-    // 🚨 UPDATED: Added 'custom' to the allowed list below 🚨
-    enum: ['academic', 'minimal', 'modern', 'attorney', 'timeline', 'creative', 'custom'] 
+    // 🚨 FIX: Added 'innovative' to the allowed list 🚨
+    enum: ['academic', 'minimal', 'modern', 'attorney', 'timeline', 'creative', 'custom', 'innovative']
   },
 
   templateSpecificInputs: {

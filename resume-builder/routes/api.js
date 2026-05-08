@@ -73,5 +73,16 @@ router.delete('/resume/:id', async (req, res) => {
 
 
 
+// --- PUBLIC STATS ---
+router.get('/stats', async (req, res) => {
+    try {
+        const User = require('../models/User');
+        const totalUsers = await User.countDocuments();
+        res.json({ totalUsers });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch stats' });
+    }
+});
+
 module.exports = router;
 
