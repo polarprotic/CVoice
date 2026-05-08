@@ -1715,18 +1715,16 @@
 #preview-wrap {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 32px 10px; /* Increased top padding to push past the navbar */
+    padding: 16px 8px;
     align-items: flex-start;
     justify-content: flex-start;
   }
 
   .resume-page {
-    zoom: 0.5; /* Safe fallback */
-    zoom: calc((100vw - 32px) / 794); /* Dynamically scales the 794px A4 page to fit the exact mobile screen width minus margins */
+    zoom: 0.43;
     transform: none;
     transform-origin: top center;
-    margin-top: 16px; /* Extra breathing room below the navbar */
-    margin-bottom: 40px; /* Added bottom margin so scrolling past the end feels natural */
+    margin-bottom: 0;
     margin-left: auto;
     margin-right: auto;
   }
