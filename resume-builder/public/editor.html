@@ -1769,7 +1769,7 @@
     display: none;
   }
 
-  #preview-wrap {
+ #preview-wrap {
     position: fixed;
     top: 88px;
     left: 0;
@@ -1777,33 +1777,31 @@
     bottom: 0;
     margin-top: 0;
     height: calc(100vh - 88px) !important;
-    padding: 20px 10px;
+    padding: 32px 0 80px;
     z-index: 30;
     background-color: #0A0608;
-    /* Hidden off-screen to the right by default */
+    /* Slide animation */
     transform: translateX(100%);
     transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    /* Perfect Mobile Centering */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: center; 
+    justify-content: flex-start; 
   }
 
   #preview-wrap.mobile-visible {
     transform: translateX(0);
   }
 
-#preview-wrap {
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 16px 8px;
-    align-items: flex-start;
-    justify-content: flex-start;
-  }
-
   .resume-page {
-    zoom: 0.43;
-    transform: none;
+    zoom: 0.44; /* Safe fallback for older mobile browsers */
+    zoom: calc(100vw / 820); /* Dynamic scaling */
+    transform: none !important;
     transform-origin: top center;
-    margin-bottom: 0;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
   }
 }
 
@@ -1865,7 +1863,7 @@
     display: none;
   }
 
-  #preview-wrap {
+#preview-wrap {
     position: fixed;
     top: 88px;
     left: 0;
@@ -1873,15 +1871,15 @@
     bottom: 0;
     margin-top: 0;
     height: calc(100vh - 88px) !important;
-    padding: 24px 16px;
+    padding: 32px 0px 80px;
     z-index: 30;
     background-color: #0A0608;
     transform: translateX(100%);
     transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
     overflow-y: auto;
     overflow-x: hidden;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center; /* Horizontally centers the template perfectly */
+    justify-content: flex-start; /* Anchors it to the top so nothing gets cut off */
   }
 
   #preview-wrap.mobile-visible {
@@ -1889,7 +1887,7 @@
   }
 
   .resume-page {
-    zoom: 0.62;
+    zoom: calc(100vw / 840); /* Ultimate responsiveness: dynamic math fits ANY tablet width */
     transform: none;
     transform-origin: top center;
     margin-bottom: 24px;
