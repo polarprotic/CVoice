@@ -943,6 +943,14 @@
 
             
 
+            <div class="tpl-card" id="stpl-classic" onclick="selectTemplate('classic')" tabindex="0">
+                <div class="tpl-thumb"><img src="6th.png" alt="Classic Academic"></div>
+                <div class="tpl-info">
+                    <div class="tpl-name">Classic Academic</div>
+                    <div class="tpl-desc">Indian academic format</div>
+                </div>
+            </div>
+
             <div class="sdivider"></div>
             <span class="sidebar-section-label">Actions</span>
 
@@ -1029,7 +1037,7 @@
                         </div>
                     </div>
 
-                <div class="showcase-card" id="card-innovative" data-tag="Featured" onclick="selectTemplate('innovative')">
+              <div class="showcase-card" id="card-innovative" data-tag="Featured" onclick="selectTemplate('innovative')">
                         <div class="sc-preview">
                             <img src="5th.png" alt="Executive Innovative">
                             <div class="sc-overlay">
@@ -1045,7 +1053,21 @@
                         </div>
                     </div>
 
-                   
+                    <div class="showcase-card" id="card-classic" data-tag="Academic" onclick="selectTemplate('classic')">
+                        <div class="sc-preview">
+                            <img src="6th.png" alt="Classic Academic">
+                            <div class="sc-overlay">
+                                <button class="sc-select-btn" onclick="event.stopPropagation(); selectTemplate('classic')">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="sc-footer">
+                            <div class="sc-name">Classic Academic</div>
+                            <div class="sc-tag">Academic</div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -1066,7 +1088,7 @@
                     <option value="modern">Contemporary Creative</option>
                     <option value="attorney">Traditional Corporate</option>
                     <option value="innovative">Executive Innovative</option>
-        
+                    <option value="classic">Classic Academic</option>
                     <option value="custom">Customised Layout</option>
                   </select>
                   <select id="search-sort" onchange="filterResumes()" style="padding:9px 32px 9px 12px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; font-size:0.84rem; outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235C4450' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;); background-repeat:no-repeat; background-position:right 11px center; transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--rose-rim)'" onblur="this.style.borderColor='var(--border)'">
@@ -1272,7 +1294,7 @@ function showToast(type,title,msg){
         modern:     { name: 'Contemporary Creative',  tag: 'Visual',    img: '3rd.png', desc: 'Two-column visual design with a dark sidebar — perfect for creative and design roles.' },
         attorney:   { name: 'Traditional Corporate',  tag: 'Formal',    img: '4th.png', desc: 'Bordered, formal layout suited for law, finance, and executive corporate applications.' },
         innovative: { name: 'Executive Innovative',   tag: 'Featured',  img: '5th.png', desc: 'Maximum content density with a modern blue accent — ideal for C-suite and director-level roles.' },
-        
+        classic:    { name: 'Classic Academic',        tag: 'Academic',  img: '6th.png', desc: 'Traditional tabular layout used in Indian academia — ideal for students and fresh graduates.' },
     };
 
     const TEMPLATE_DISPLAY_NAMES = {
@@ -1281,6 +1303,7 @@ function showToast(type,title,msg){
         'modern':     'Contemporary Creative',
         'attorney':   'Traditional Corporate',
         'innovative': 'Executive Innovative',
+        'classic':    'Classic Academic',
         'custom':     'Customised Layout'
     };
 

@@ -17,7 +17,7 @@ const resumeSchema = new mongoose.Schema({
     type: String, 
     required: true,
     // 🚨 FIX: Added 'innovative' to the allowed list 🚨
-    enum: ['academic', 'minimal', 'modern', 'attorney', 'timeline', 'creative', 'custom', 'innovative']
+    enum: ['academic', 'minimal', 'modern', 'attorney', 'timeline', 'creative', 'custom', 'innovative', 'classic']
   },
 
   templateSpecificInputs: {
