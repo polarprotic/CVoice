@@ -7,8 +7,8 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // 🚨 Array of models to try in order of priority
 const MODELS = [
     "gemini-2.5-flash",
-    "gemini-2.5-flash-lite-preview-06-17",
-    "gemini-1.5-flash"
+    "gemini-2.5-flash-lite",
+    "gemini-3-flash-preview" // Note: preview models can sometimes have different strictness!
 ];
 
 router.post('/analyze', async (req, res) => {
@@ -141,18 +141,13 @@ Use this exact schema:
   "github": "",
   "address": "",
   "summary": "",
-  "gender": "",
-  "age": "",
-  "education": [{"school":"","degree":"","date":"","location":"","performance":"","rank":""}],
-  "experience": [{"title":"","company":"","date":"","desc":"","note":"","link":"","linkText":"","linkType":"separate"}],
+  "education": [{"school":"","degree":"","date":"","location":""}],
+  "experience": [{"title":"","company":"","date":"","desc":"","link":"","linkText":"","linkType":"separate"}],
   "projects": [{"title":"","tech":"","date":"","desc":"","link":"","liveLink":""}],
   "techSkills": [{"cat":"","items":""}],
   "achievements": [{"text":"","date":"","desc":"","link":"","linkText":"","linkType":"separate"}],
   "certifications": [{"name":"","date":"","link":"","linkText":"","linkType":"separate"}],
   "extracurricular": [{"org":"","role":"","date":"","desc":"","link":"","linkText":"","linkType":"separate"}],
-  "leadership": [{"title":"","subtitle":"","date":"","desc":""}],
-  "initiatives": [{"title":"","subtitle":"","desc":""}],
-  "ecCategories": [{"cat":"","items":""}],
   "skills": "",
   "languages": "",
   "hobbies": "",
@@ -162,25 +157,10 @@ Use this exact schema:
 Rules:
 - Preserve ALL original wording — do not summarise or paraphrase.
 - experience[].desc and projects[].desc: format each bullet as a new line starting with "– " (en-dash + space).
-- experience[].note: fill only if the resume has an italic note or LOR mention below the bullets for that role, otherwise "".
-- education[].performance: fill with CGPA, percentage, or score if present, otherwise "".
-- education[].rank: fill with rank or position if present, otherwise "".
-
-FIELD ROUTING — follow these rules strictly, do NOT put everything in extracurricular:
-- leadership[]: MUST be filled for any named formal position held (Secretary, President, Vice-Captain, Event Head, Coordinator, Core Member with authority, Club Head, etc.). Each entry gets title, subtitle (brief descriptor in parentheses if present), date, and desc formatted as bullet lines starting with "– ".
-- initiatives[]: MUST be filled for student-led projects, social activities, campaigns, olympiads, or initiatives presented to external bodies (government, NGOs, universities). Each entry gets title, subtitle, and desc formatted as bullet lines starting with "– ".
-- ecCategories[]: MUST be filled when the resume has a grouped extracurricular section with category labels (Sports, Public Speaking, Research & Editorial, Business Competitions, etc.). Each category becomes one entry: cat = category name, items = all bullet lines under it joined with newlines starting with "– ". Do NOT flatten these into extracurricular[].
-- extracurricular[]: ONLY use for simple club memberships or activities that are NOT a leadership position, NOT an initiative, and NOT part of a categorised EC section. If leadership/initiatives/ecCategories already cover the content, leave extracurricular as [].
-
-- techSkills: if the resume groups skills by category (Languages, Frameworks, Tools, etc.) extract each group as a separate entry with cat = group name and items = comma-separated skills. Otherwise one entry with cat="" and all skills comma-separated in items.
-- achievements[]: fill with standalone awards, ranks, competitive exam results, scholarships, and certifications listed as achievements. Use text for the achievement name and date for the year.
-- certifications[]: fill only for formal certification programs with an issuing body (Oracle, Coursera, NPTEL, etc.).
-- skills: only fill if the resume has a completely flat ungrouped skills list with no category labels; otherwise leave "".
-- linkedin/github: include the full URL exactly as written. If only a username is given, prefix with the correct base URL.
-- coursework: comma-separated course names if a relevant coursework section exists, otherwise "".
-- gender/age: fill only if explicitly stated in the resume header or personal info section, otherwise "".
-- summary: extract the objective or profile summary verbatim if present, otherwise "".
-- hobbies/languages: fill from interests or languages section if present, otherwise "".
+- techSkills: if the resume groups skills by category (Languages, Frameworks, etc.) use those as cat values. Otherwise one entry with cat="" and all skills comma-separated in items.
+- skills: only fill if the resume has a flat ungrouped skills list; otherwise leave "".
+- linkedin/github: include the full URL exactly as written.
+- coursework: comma-separated course names if a coursework section exists, otherwise "".
 - Return ONLY the JSON object — nothing before or after it.`;
 
     for (const modelName of MODELS) {
