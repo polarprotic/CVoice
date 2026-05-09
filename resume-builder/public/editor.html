@@ -2326,15 +2326,6 @@
       <div id="initiatives-fields" data-show="classic"></div>
 
       <div class="section-header" data-show="classic" data-display="flex">
-        Societies Table
-        <div style="display:flex; gap:6px;">
-          <button class="btn-add" onclick="addSocietiesRow()">+ Add Row</button>
-          <button class="btn-add" onclick="addSocietiesCol()">+ Add Col</button>
-        </div>
-      </div>
-      <div id="societies-table-fields" data-show="classic"></div>
-
-      <div class="section-header" data-show="classic" data-display="flex">
         EC Activity Categories
         <button class="btn-add" onclick="add('ecCategories')">+ Add Cat</button>
       </div>
@@ -2976,18 +2967,11 @@
           items: "– **Winner** in **Bharatiya Vidya Bhavan Debating** Competition from amongst **400+ students**\n– Secured **2nd position twice in Elocution** from **350+** and **60+ students** respectively; represented school in several events\n– Participated in **SRCC – University of Edinburgh INDO UK** Intercultural Exchange Program **representing SRCC**" },
         { cat: "Research & Editorial",
           items: "– Wrote **'Report on Indian Economy'** analysing trends and events, identifying economic happenings and policies, assessing their impact and **forecasting future trends**\n– **Editor** of LinkedIn page of Placement Cell (reach of **7750+ connections**) ideating and innovating strategic campaigns" },
-        
+        { cat: "Societies '18 (Designation/Wing)",
+  items: "|Economics Society|Cognizance|Youth Conference|Placement Cell|Youth Parliament\n|Executive member of Organizing and Spons. Wing|Junior Executive Member|Corporate Communications|Public Relations & Brand Management|Organizing and Marketing" },
 { cat: "Social Endeavours",
           items: "Looked after **3 orphanages** with **20+ children**, conducted weekly classes (primary school) ensuring good grades. **Tutored Social skills** aiding them to **build their career**; constantly in contact with 3 of them – providing career **assistance**" }
       ],
-      societiesTable: {
-        cat: "Societies '18 (Designation/Wing)",
-        rows: [
-          ["Economics Society","Cognizance","Youth Conference","Placement Cell","Youth Parliament"],
-          ["Executive member of Organizing and Spons. Wing","Junior Executive Member","Corporate Communications","Public Relations & Brand Management","Organizing and Marketing"]
-        ]
-      },
-      
       role: "", linkedin: "", github: "", address: "", summary: "",
       skills: "", languages: "", hobbies: "", coursework: "",
       projects: [], techSkills: [], certifications: [], extracurricular: [],
@@ -3006,8 +2990,7 @@
         coursework: "", certifications: [], extracurricular: [],
        skillLevels: [], references: [],
         leadership: [], initiatives: [], ecCategories: [],
-societiesTable: { cat: "", rows: [] },
-gender: "", age: "",
+        gender: "", age: "",
         _touched: {} 
       };
     }
@@ -3102,8 +3085,7 @@ gender: "", age: "",
         ts.leadership = ts.leadership || [];
         ts.initiatives = ts.initiatives || [];
         ts.ecCategories = ts.ecCategories || [];
-ts.societiesTable = ts.societiesTable || { cat: "", rows: [] };
-ts.gender = ts.gender || "";
+        ts.gender = ts.gender || "";
         ts.age = ts.age || "";
       }
 
@@ -3477,42 +3459,6 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
         <label style="font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Description (one point per line)</label>
         <textarea placeholder="Developed a model for..." oninput="state.initiatives[${i}].desc=this.value; render()">${esc(item.desc)}</textarea>
       </div>`).join("");
-  }
-   
-  if (document.getElementById("societies-table-fields")) {
-    const stData = state.societiesTable || { cat: "", rows: [] };
-    const numCols = stData.rows.length > 0 ? stData.rows[0].length : 0;
-    let sHtml = `<div class="dynamic-item">`;
-    sHtml += `<label style="font-size:10.5px;font-weight:700;color:#7a6e84;margin-bottom:5px;letter-spacing:0.5px;text-transform:uppercase;display:block;">Category Label</label>`;
-    sHtml += `<input placeholder="e.g. Societies '18 (Designation/Wing)" value="${esc(stData.cat)}" oninput="templateStates[currentTemplate].societiesTable.cat=this.value; templateStates[currentTemplate]._touched['societiesTable']=true; render();" style="margin-bottom:10px;">`;
-    if (stData.rows.length > 0 && numCols > 0) {
-      sHtml += `<div style="overflow-x:auto;">`;
-      // Column header row
-      sHtml += `<div style="display:flex;gap:3px;margin-bottom:3px;min-width:max-content;">`;
-      sHtml += `<div style="width:24px;flex-shrink:0;"></div>`;
-      for (let j = 0; j < numCols; j++) {
-        sHtml += `<div style="flex:1;min-width:72px;display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <span style="font-size:9px;color:#705460;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;">Col ${j+1}</span>
-          <button onclick="removeSocietiesCol(${j})" title="Remove column" style="background:rgba(239,68,68,0.08);color:rgba(239,68,68,0.6);border:1px solid rgba(239,68,68,0.2);border-radius:4px;width:20px;height:20px;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">✕</button>
-        </div>`;
-      }
-      sHtml += `<div style="width:28px;flex-shrink:0;"></div></div>`;
-      // Data rows
-      stData.rows.forEach((row, i) => {
-        sHtml += `<div style="display:flex;gap:3px;margin-bottom:3px;align-items:center;min-width:max-content;">`;
-        sHtml += `<span style="font-size:9px;color:#705460;font-weight:700;width:24px;flex-shrink:0;text-align:center;">R${i+1}</span>`;
-        row.forEach((cell, j) => {
-          sHtml += `<input style="flex:1;min-width:72px;padding:6px 7px;font-size:11.5px;" placeholder="Cell" value="${esc(cell)}" oninput="templateStates[currentTemplate].societiesTable.rows[${i}][${j}]=this.value; templateStates[currentTemplate]._touched['societiesTable']=true; render();">`;
-        });
-        sHtml += `<button onclick="removeSocietiesRow(${i})" style="background:rgba(239,68,68,0.08);color:rgba(239,68,68,0.6);border:1px solid rgba(239,68,68,0.2);border-radius:6px;width:26px;height:26px;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;">✕</button>`;
-        sHtml += `</div>`;
-      });
-      sHtml += `</div>`;
-    } else {
-      sHtml += `<div style="text-align:center;padding:14px 0;color:#705460;font-size:11.5px;font-style:italic;border:1px dashed rgba(255,255,255,0.08);border-radius:6px;margin-top:4px;">Click "+ Add Row" above to start building the table</div>`;
-    }
-    sHtml += `</div>`;
-    document.getElementById("societies-table-fields").innerHTML = sHtml;
   }
 
   if (document.getElementById("ec-cat-fields")) {
@@ -4478,73 +4424,25 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
             `).join('')}
             ` : ''}
 
-           ${(() => {
-              const ecRows = state.ecCategories || [];
-              const st = state.societiesTable;
-              const hasTable = !!(st && st.cat && st.rows && st.rows.length > 0);
-              if (!ecRows.length && !hasTable) return '';
-              // Insert societies before the last ecCategory so order is preserved
-              const insertAt = hasTable ? Math.max(0, ecRows.length - 1) : -1;
-              const stRow = hasTable ? `<tr>
-                <th>${esc(st.cat)}</th>
-                <td style="padding:0;vertical-align:top;overflow:hidden;"><table style="width:calc(100% + 2px);border-collapse:collapse;margin:-1px;">${st.rows.map(row=>`<tr>${row.map(cell=>`<td style="border:1px solid #000;padding:2px 4px;text-align:center;vertical-align:middle;font-size:10.5px;">${formatText(cell)}</td>`).join('')}</tr>`).join('')}</table></td>
-              </tr>` : '';
-              let rows = '';
-              ecRows.forEach((ec, idx) => {
-                if (idx === insertAt) rows += stRow;
-                rows += `<tr>
-                  <th>${esc(ec.cat)}</th>
-                  ${(() => {
-                    if (!ec.items) return '<td></td>';
-                    const lines = ec.items.trim().split('\n').filter(l => l.trim());
-                    if (lines.some(l => l.trim().startsWith('|'))) {
-                      return `<td style="padding:0;vertical-align:top;overflow:hidden;"><table style="width:calc(100% + 2px);border-collapse:collapse;margin:-1px;">${lines.map(l=>`<tr>${l.trim().replace(/^\|/,'').split('|').map(c=>`<td style="border:1px solid #000;padding:2px 4px;text-align:center;vertical-align:middle;font-size:10.5px;">${formatText(c.trim())}</td>`).join('')}</tr>`).join('')}</table></td>`;
-                    }
-                    return `<td><ul>${_cd(ec.items)}</ul></td>`;
-                  })()}
-                </tr>`;
-              });
-              if (insertAt >= ecRows.length) rows += stRow;
-              return `<div class="c-section-title">EXTRA CURRICULAR ACTIVITIES AND ACHIEVEMENTS</div>
-              <table class="ec-table">${rows}</table>`;
-            })()}
+            ${(state.ecCategories && state.ecCategories.length > 0) ? `
+            <div class="c-section-title">EXTRA CURRICULAR ACTIVITIES AND ACHIEVEMENTS</div>
+            <table class="ec-table">
+              ${state.ecCategories.map(ec => `<tr>
+                <th>${esc(ec.cat)}</th>
+               ${(() => {
+  if (!ec.items) return '<td></td>';
+  const lines = ec.items.trim().split('\n').filter(l => l.trim());
+  if (lines.some(l => l.trim().startsWith('|'))) {
+    return `<td style="padding:0; vertical-align:top; overflow:hidden;"><table style="width:calc(100% + 2px);border-collapse:collapse;margin:-1px;">${lines.map(l=>`<tr>${l.trim().replace(/^\|/,'').split('|').map(c=>`<td style="border:1px solid #000;padding:2px 4px;text-align:center;vertical-align:middle;font-size:10.5px;">${formatText(c.trim())}</td>`).join('')}</tr>`).join('')}</table></td>`;
+  }
+  return `<td><ul>${_cd(ec.items)}</ul></td>`;
+})()}
+              </tr>`).join('')}
+            </table>
+            ` : ''}
           `;
         }
         })(previewState);
-      }
-
-      function addSocietiesRow() {
-        const ts = templateStates[currentTemplate];
-        if (!ts.societiesTable) ts.societiesTable = { cat: "", rows: [] };
-        const numCols = ts.societiesTable.rows.length > 0 ? ts.societiesTable.rows[0].length : 3;
-        ts.societiesTable.rows.push(Array(numCols).fill(""));
-        ts._touched['societiesTable'] = true;
-        renderInputs(); render();
-      }
-      function removeSocietiesRow(i) {
-        const ts = templateStates[currentTemplate];
-        ts.societiesTable.rows.splice(i, 1);
-        ts._touched['societiesTable'] = true;
-        renderInputs(); render();
-      }
-      function addSocietiesCol() {
-        const ts = templateStates[currentTemplate];
-        if (!ts.societiesTable) ts.societiesTable = { cat: "", rows: [] };
-        if (ts.societiesTable.rows.length === 0) {
-          ts.societiesTable.rows.push(Array(3).fill(""));
-          ts.societiesTable.rows.push(Array(3).fill(""));
-        } else {
-          ts.societiesTable.rows.forEach(row => row.push(""));
-        }
-        ts._touched['societiesTable'] = true;
-        renderInputs(); render();
-      }
-      function removeSocietiesCol(j) {
-        const ts = templateStates[currentTemplate];
-        if (!ts.societiesTable || !ts.societiesTable.rows.length) return;
-        ts.societiesTable.rows.forEach(row => row.splice(j, 1));
-        ts._touched['societiesTable'] = true;
-        renderInputs(); render();
       }
 
       async function rewriteText(event, type, index = null) {
