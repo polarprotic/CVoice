@@ -1389,11 +1389,18 @@ function showToast(type,title,msg){
         if (mBar) mBar.classList.add('visible');
     }
 
-   function showPageLoader(text, url) {
+  function showPageLoader(text, url) {
     document.getElementById('loader-text').textContent = text;
     document.getElementById('global-loader').classList.add('active');
     setTimeout(() => { window.location.href = url; }, 500);
 }
+
+// Hide loader when browser restores page from back/forward cache
+window.addEventListener('pageshow', function(e) {
+    if (e.persisted) {
+        document.getElementById('global-loader').classList.remove('active');
+    }
+});
 
 function generateResume() {
     if (!currentTemplate) return;

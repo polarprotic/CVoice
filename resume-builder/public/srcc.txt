@@ -1216,7 +1216,9 @@
         color: #000 !important;
         background: #fff !important;
       }
-      .tmpl-classic, .tmpl-classic * {
+      .tmpl-classic, .tmpl-classic *,
+      .tmpl-classic table, .tmpl-classic th, .tmpl-classic td,
+      .tmpl-classic h1, .tmpl-classic li, .tmpl-classic div {
         font-family: 'Times New Roman', Times, serif !important;
         white-space: normal !important;
       }
@@ -1444,6 +1446,12 @@
           min-height: 297mm !important;
           page-break-after: always;
         }
+      }
+
+      @keyframes fillLine {
+        0%   { transform: scaleX(0); opacity: 0.3; }
+        50%  { transform: scaleX(1); opacity: 1;   }
+        100% { transform: scaleX(0); opacity: 0.3; }
       }
 
       @keyframes fadeInWelcome {
@@ -2004,7 +2012,15 @@
 
    <nav class="editor-nav">
   <div style="flex:1; display:flex; align-items:center;">
-    <div class="logo">Pro<span>Resume</span></div>
+    <a href="dashboard.html" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+  <div class="logo-mark" style="width:22px; height:28px; background:#ffffff; border:1.5px solid rgba(196,85,118,0.25); border-radius:3px 6px 3px 3px; display:flex; flex-direction:column; justify-content:flex-end; gap:2px; padding:4px 4px 5px; box-shadow:0 3px 14px rgba(158,59,86,0.4); flex-shrink:0; position:relative; overflow:hidden;">
+    <div style="position:absolute; top:0; right:0; width:7px; height:7px; background:linear-gradient(225deg, rgba(196,85,118,0.15) 50%, #ffffff 50%); border-bottom-left-radius:3px; border-left:1px solid rgba(196,85,118,0.2); border-bottom:1px solid rgba(196,85,118,0.2);"></div>
+    <div style="height:3px; background:var(--rose-light); border-radius:3px; width:55%; transform-origin:left; animation:fillLine 1.5s infinite 0s;"></div>
+    <div style="height:2px; background:var(--rose-light); border-radius:3px; width:100%; opacity:0.7; transform-origin:left; animation:fillLine 1.5s infinite 0.2s;"></div>
+    <div style="height:2px; background:#e5e7eb; border-radius:3px; width:65%; opacity:0.4; transform-origin:left; animation:fillLine 1.5s infinite 0.6s;"></div>
+  </div>
+  <span style="font-size:1.1rem; font-weight:800; letter-spacing:-0.5px; color:var(--text-main);">CV<span style="color:var(--rose-light);">oice</span></span>
+</a>
   </div>
 
   <div style="flex:1; display:flex; justify-content:center; align-items:center;">
@@ -2168,7 +2184,7 @@
         </div>
       </div>
 
-      <div class="section-header" data-show="academic,minimal,modern,attorney,innovative,classic" data-display="flex">
+    <div class="section-header" data-show="academic,minimal,modern,attorney,innovative,classic" data-display="flex">
         Education
         <button class="btn-add" onclick="add('education')">+ Add Entry</button>
       </div>
@@ -2286,7 +2302,7 @@
         />
       </div>
 
-     <div class="section-header" data-show="minimal,attorney,innovative,classic" data-display="flex">
+   <div class="section-header" data-show="minimal,attorney,innovative,classic" data-display="flex">
         Achievements
         <button class="btn-add" onclick="add('achievements')">+ Add Entry</button>
       </div>
@@ -2900,7 +2916,7 @@
       references: []
     };
 
-   const SAMPLE_DATA_classic = {
+    const SAMPLE_DATA_classic = {
       name: "ANANTHA VARSHITHA CHERUKURI",
       gender: "Female", age: "19",
       phone: "+91-91107-73647", email: "anantha.varshitha@gmail.com",
@@ -2951,7 +2967,9 @@
           items: "– **Winner** in **Bharatiya Vidya Bhavan Debating** Competition from amongst **400+ students**\n– Secured **2nd position twice in Elocution** from **350+** and **60+ students** respectively; represented school in several events\n– Participated in **SRCC – University of Edinburgh INDO UK** Intercultural Exchange Program **representing SRCC**" },
         { cat: "Research & Editorial",
           items: "– Wrote **'Report on Indian Economy'** analysing trends and events, identifying economic happenings and policies, assessing their impact and **forecasting future trends**\n– **Editor** of LinkedIn page of Placement Cell (reach of **7750+ connections**) ideating and innovating strategic campaigns" },
-        { cat: "Social Endeavours",
+        { cat: "Societies '18 (Designation/Wing)",
+  items: "|Economics Society|Cognizance|Youth Conference|Placement Cell|Youth Parliament\n|Executive member of Organizing and Spons. Wing|Junior Executive Member|Corporate Communications|Public Relations & Brand Management|Organizing and Marketing" },
+{ cat: "Social Endeavours",
           items: "Looked after **3 orphanages** with **20+ children**, conducted weekly classes (primary school) ensuring good grades. **Tutored Social skills** aiding them to **build their career**; constantly in contact with 3 of them – providing career **assistance**" }
       ],
       role: "", linkedin: "", github: "", address: "", summary: "",
@@ -2970,7 +2988,7 @@
         education: [], experience: [], projects: [], techSkills: [],
         achievements: [], skills: "", languages: "", hobbies: "",
         coursework: "", certifications: [], extracurricular: [],
-        skillLevels: [], references: [],
+       skillLevels: [], references: [],
         leadership: [], initiatives: [], ecCategories: [],
         gender: "", age: "",
         _touched: {} 
@@ -3062,7 +3080,7 @@
         ts.hobbies = ts.hobbies || "";
         ts.summary = ts.summary || "";
         ts.refs = ts.refs || "";
-        ts.skillLevels = ts.skillLevels || [];
+       ts.skillLevels = ts.skillLevels || [];
         ts.references = ts.references || [];
         ts.leadership = ts.leadership || [];
         ts.initiatives = ts.initiatives || [];
@@ -3128,7 +3146,7 @@
       function add(type) {
         normalizeState();
         state._touched[type] = true; 
-        if (type === "experience")
+       if (type === "experience")
           state.experience.push({ title: "", company: "", date: "", desc: "", link: "", linkText: "", linkType: "separate", note: "" });
         if (type === "education")
           state.education.push({ school: "", degree: "", date: "", location: "", performance: "", rank: "" });
@@ -3144,7 +3162,7 @@
           state.extracurricular.push({ org: "", role: "", date: "", desc: "", link: "", linkText: "", linkType: "separate" });
         if (type === "skillLevels")
           state.skillLevels.push({ name: "", level: "50" });
-        if (type === "references")
+       if (type === "references")
           state.references.push({ name: "", role: "", company: "" });
         if (type === "leadership")
           state.leadership.push({ title: "", subtitle: "", date: "", desc: "" });
@@ -3170,7 +3188,7 @@
           "This will remove all content for the current template. Other templates are not affected.",
           "Yes, clear"
         );
-       if (ok) {
+        if (ok) {
           templateStates[currentTemplate] = freshTemplateState();
           const _clearSampleMap = { academic: SAMPLE_DATA_academic, minimal: SAMPLE_DATA_minimal, modern: SAMPLE_DATA_modern, attorney: SAMPLE_DATA_attorney, innovative: SAMPLE_DATA_innovative, classic: SAMPLE_DATA_classic };
           const _clearSample = _clearSampleMap[currentTemplate] || SAMPLE_DATA_academic;
@@ -3265,14 +3283,15 @@ function updateImageUI() {
   document.getElementById("in-github").value = state.github;
   document.getElementById("in-address").value = state.address;
   document.getElementById("in-summary").value = state.summary;
- if (document.getElementById("in-refs")) document.getElementById("in-refs").value = state.refs;
-  if (document.getElementById("in-gender")) document.getElementById("in-gender").value = state.gender || '';
-  if (document.getElementById("in-age")) document.getElementById("in-age").value = state.age || '';
+  if (document.getElementById("in-refs")) document.getElementById("in-refs").value = state.refs;
   document.getElementById("in-skills").value = state.skills;
   if (document.getElementById("in-languages")) document.getElementById("in-languages").value = state.languages;
   document.getElementById("in-hobbies").value = state.hobbies;
   if (document.getElementById("in-coursework")) document.getElementById("in-coursework").value = state.coursework || '';
  
+ if (document.getElementById("in-gender")) document.getElementById("in-gender").value = state.gender || '';
+  if (document.getElementById("in-age")) document.getElementById("in-age").value = state.age || '';
+
   document.getElementById("edu-fields").innerHTML = state.education
     .map((item, i) => `
     <div class="dynamic-item">
@@ -3292,7 +3311,7 @@ function updateImageUI() {
       <div class="form-grid" style="margin-bottom:8px"><input placeholder="Company" value="${esc(item.company)}" oninput="state.experience[${i}].company=this.value; render()"><input placeholder="Dates" value="${esc(item.date)}" oninput="state.experience[${i}].date=this.value; render()"></div>
       <div class="label-row" style="margin-top:8px;"><label style="font-size:12px; color:#a094a0;">Description</label><button class="btn-ai" onclick="rewriteText(event, 'experience', ${i})">✨ Enhance</button></div>
       <textarea placeholder="Description (Supports multiline for bullets and **bold** text)" oninput="state.experience[${i}].desc=this.value; render()">${esc(item.desc)}</textarea>
-      ${currentTemplate === 'classic' ? `<label style="margin-top:8px; font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Italic Note (shown below bullets)</label><textarea placeholder="e.g. Received LOR from Associate Director for..." oninput="state.experience[${i}].note=this.value; render()" style="min-height:45px;">${esc(item.note||'')}</textarea>` : ''}
+     ${currentTemplate === 'classic' ? `<label style="margin-top:8px; font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Italic Note (shown below bullets)</label><textarea placeholder="e.g. Received LOR from Associate Director for..." oninput="state.experience[${i}].note=this.value; render()" style="min-height:45px;">${esc(item.note||'')}</textarea>` : ''}
       <div class="form-grid" style="margin-top: 10px;">
         ${buildLinkTypeToggle('experience', i, item.linkType)}
       </div>
@@ -3347,13 +3366,13 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
         <button class="btn-del" onclick="remove('achievements', ${i})" title="Remove">✕</button>
         <input placeholder="Event / Achievement Name (supports **bold**)" value="${esc(item.text || '')}" oninput="state.achievements[${i}].text=this.value; render();" style="margin-bottom:8px;">
         ${currentTemplate !== 'academic' ? `<input placeholder="Date (e.g. Jan 2024)" value="${esc(item.date || '')}" oninput="state.achievements[${i}].date=this.value; render();" style="margin-bottom:8px;">` : ''}
-        <textarea placeholder="Description (optional) — shown after a dash if filled" oninput="state.achievements[${i}].desc=this.value; render();" style="min-height:55px; margin-bottom:8px;">${esc(item.desc || '')}</textarea>
+       ${currentTemplate !== 'classic' ? `<textarea placeholder="Description (optional) — shown after a dash if filled" oninput="state.achievements[${i}].desc=this.value; render();" style="min-height:55px; margin-bottom:8px;">${esc(item.desc || '')}</textarea>
         <div class="form-grid">
           ${buildLinkTypeToggle('achievements', i, item.linkType)}
         </div>
         <div class="form-grid">
           ${buildLinkFields('achievements', i, item, 'https://...', 'e.g. Certificate, View')}
-        </div>
+        </div>` : ''}
       </div>`;
     }).join("");
  
@@ -3417,7 +3436,7 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
     `).join("");
   }
  
- if (document.getElementById("leadership-fields")) {
+  if (document.getElementById("leadership-fields")) {
     document.getElementById("leadership-fields").innerHTML = (state.leadership || []).map((item, i) => `
       <div class="dynamic-item">
         <button class="btn-del" onclick="remove('leadership', ${i})" title="Remove">✕</button>
@@ -3426,8 +3445,8 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
           <input placeholder="Subtitle / Note (shown in brackets)" value="${esc(item.subtitle)}" oninput="state.leadership[${i}].subtitle=this.value; render()">
           <input placeholder="Date" value="${esc(item.date)}" oninput="state.leadership[${i}].date=this.value; render()">
         </div>
-        <label style="font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Bullet Points (start lines with –)</label>
-        <textarea placeholder="– Led a team of 50+ members..." oninput="state.leadership[${i}].desc=this.value; render()">${esc(item.desc)}</textarea>
+        <label style="font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Description (one point per line)</label>
+        <textarea placeholder="Led a team of 50+ members..." oninput="state.leadership[${i}].desc=this.value; render()">${esc(item.desc)}</textarea>
       </div>`).join("");
   }
 
@@ -3436,9 +3455,9 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
       <div class="dynamic-item">
         <button class="btn-del" onclick="remove('initiatives', ${i})" title="Remove">✕</button>
         <input placeholder="Initiative Title" value="${esc(item.title)}" oninput="state.initiatives[${i}].title=this.value; render()" style="margin-bottom:8px">
-        <input placeholder="Subtitle (shown in brackets, e.g. presented to Government of...)" value="${esc(item.subtitle)}" oninput="state.initiatives[${i}].subtitle=this.value; render()" style="margin-bottom:8px">
-        <label style="font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Description (start with – for bullets, else plain text)</label>
-        <textarea placeholder="– Developed a model..." oninput="state.initiatives[${i}].desc=this.value; render()">${esc(item.desc)}</textarea>
+        <input placeholder="Subtitle (e.g. presented to Government of...)" value="${esc(item.subtitle)}" oninput="state.initiatives[${i}].subtitle=this.value; render()" style="margin-bottom:8px">
+        <label style="font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Description (one point per line)</label>
+        <textarea placeholder="Developed a model for..." oninput="state.initiatives[${i}].desc=this.value; render()">${esc(item.desc)}</textarea>
       </div>`).join("");
   }
 
@@ -3447,8 +3466,8 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
       <div class="dynamic-item">
         <button class="btn-del" onclick="remove('ecCategories', ${i})" title="Remove">✕</button>
         <input placeholder="Category Name (e.g. Sports, Research & Editorial)" value="${esc(item.cat)}" oninput="state.ecCategories[${i}].cat=this.value; render()" style="margin-bottom:8px">
-        <label style="font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Items (start lines with – for bullet list, else plain text)</label>
-        <textarea placeholder="– 1st position in..." oninput="state.ecCategories[${i}].items=this.value; render()" style="min-height:90px;">${esc(item.items)}</textarea>
+        <label style="font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Items (one per line)</label>
+        <textarea placeholder="1st position in..." oninput="state.ecCategories[${i}].items=this.value; render()" style="min-height:90px;">${esc(item.items)}</textarea>
       </div>`).join("");
   }
 
@@ -4332,13 +4351,13 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
               </div>
             </div>
           `;
-        } else if (state.template === "classic") {
+       } else if (state.template === "classic") {
           const _cd = (txt) => {
             if (!txt) return "";
             return txt.split('\n').map(l => l.trim()).filter(l => l)
               .map(l => `<li>${formatText(l.replace(/^[-–•]\s*/, ''))}</li>`).join('');
           };
-          const _cBlock = (txt) => txt && txt.trim().split('\n').some(l => /^[-–•]/.test(l.trim()));
+          const _cBlock = (txt) => !!(txt && txt.trim());
 
           p.innerHTML = `
             <div class="c-header">
@@ -4366,10 +4385,10 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
             </table>
             ` : ''}
 
-            ${achievements.length > 0 ? `<ul>${achievements.map(a => {
+           ${achievements.length > 0 ? `<ul>${achievements.map(a => {
               const txt = typeof a === 'string' ? a : (a.text || '');
-              const dt  = (typeof a === 'object' && a.date) ? `<span style="float:right;">${esc(a.date)}</span>` : '';
-              return `<li>${formatText(txt)}${dt}</li>`;
+              const dt  = (typeof a === 'object' && a.date) ? `<span style="white-space:nowrap; flex-shrink:0; margin-left:12px;">${esc(a.date)}</span>` : '';
+             return `<li><div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="flex:1;">${formatText(txt)}</span>${dt}</div></li>`;
             }).join('')}</ul>` : ''}
 
             ${experience.length > 0 ? `
@@ -4401,7 +4420,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
               <div class="c-item-header" style="justify-content:flex-start;">
                 ${esc(ini.title)}${ini.subtitle ? ` <span class="light" style="margin-left:4px;">(${esc(ini.subtitle)})</span>` : ''}
               </div>
-              ${_cBlock(ini.desc) ? `<ul>${_cd(ini.desc)}</ul>` : `<div class="c-text-block">${formatText(ini.desc)}</div>`}
+              ${ini.desc ? `<ul>${_cd(ini.desc)}</ul>` : ''}
             `).join('')}
             ` : ''}
 
@@ -4410,7 +4429,14 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
             <table class="ec-table">
               ${state.ecCategories.map(ec => `<tr>
                 <th>${esc(ec.cat)}</th>
-                <td>${_cBlock(ec.items) ? `<ul>${_cd(ec.items)}</ul>` : `<div style="text-align:left;">${formatText(ec.items)}</div>`}</td>
+               ${(() => {
+  if (!ec.items) return '<td></td>';
+  const lines = ec.items.trim().split('\n').filter(l => l.trim());
+  if (lines.some(l => l.trim().startsWith('|'))) {
+    return `<td style="padding:0; vertical-align:top; overflow:hidden;"><table style="width:calc(100% + 2px);border-collapse:collapse;margin:-1px;">${lines.map(l=>`<tr>${l.trim().replace(/^\|/,'').split('|').map(c=>`<td style="border:1px solid #000;padding:2px 4px;text-align:center;vertical-align:middle;font-size:10.5px;">${formatText(c.trim())}</td>`).join('')}</tr>`).join('')}</table></td>`;
+  }
+  return `<td><ul>${_cd(ec.items)}</ul></td>`;
+})()}
               </tr>`).join('')}
             </table>
             ` : ''}
