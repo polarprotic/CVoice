@@ -4502,8 +4502,15 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
 
       async function saveResumeToDB() {
   const userId = localStorage.getItem("userId");
+
+  if (!userId) {
+    showToast("info", "Login Required", "Please log in to save your resume.");
+    setTimeout(() => { window.location.href = "/auth.html"; }, 1800);
+    return;
+  }
+
   const urlParams = new URLSearchParams(window.location.search);
- const existingResumeId = urlParams.get("id") || urlParams.get("resumeId");
+  const existingResumeId = urlParams.get("id") || urlParams.get("resumeId");
  
   // Validate using current template's data
   if (!state.name || !state.email) {
