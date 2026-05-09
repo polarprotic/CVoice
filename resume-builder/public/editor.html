@@ -1207,6 +1207,83 @@
       .tmpl-innovative .dot { width: 6px; height: 6px; border-radius: 50%; background: #3b82f6; }
       .tmpl-innovative .dot.empty { background: #e5e7eb; }
 
+      /* --- TEMPLATE 6: CLASSIC INDIAN ACADEMIC --- */
+      .tmpl-classic {
+        padding: 10mm;
+        font-family: 'Times New Roman', Times, serif !important;
+        font-size: 10.5px;
+        line-height: 1.15;
+        color: #000 !important;
+        background: #fff !important;
+      }
+      .tmpl-classic, .tmpl-classic *,
+      .tmpl-classic table, .tmpl-classic th, .tmpl-classic td,
+      .tmpl-classic h1, .tmpl-classic li, .tmpl-classic div {
+        font-family: 'Times New Roman', Times, serif !important;
+        white-space: normal !important;
+      }
+      .tmpl-classic .c-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        border-bottom: 1.5px solid #000;
+        padding-bottom: 2px;
+        margin-bottom: 3px;
+      }
+      .tmpl-classic .c-header h1 {
+        font-size: 17.5px;
+        font-weight: bold;
+        letter-spacing: 0.2px;
+        margin: 0;
+      }
+      .tmpl-classic .c-header p { font-size: 10.5px; margin: 0; }
+      .tmpl-classic .c-section-title {
+        background-color: #1a254f;
+        color: #ffffff !important;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 2px 4px;
+        border: 1px solid #000;
+        margin-top: 4px;
+        margin-bottom: 2px;
+        font-size: 10.5px;
+      }
+      .tmpl-classic table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        margin-bottom: 2px;
+        font-size: 10.5px;
+      }
+      .tmpl-classic th, .tmpl-classic td {
+        border: 1px solid #000;
+        padding: 1px 3px;
+        text-align: center;
+        vertical-align: middle;
+        color: #000 !important;
+        font-size: 10.5px;
+      }
+      .tmpl-classic ul { margin: 0 0 2px 16px; padding: 0; }
+      .tmpl-classic li { text-align: justify; margin-bottom: 1px; font-size: 10.5px; }
+      .tmpl-classic .c-item-header {
+        background-color: #e8e8e8;
+        border: 1px solid #000;
+        padding: 1px 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2px;
+        margin-bottom: 1px;
+        font-weight: bold;
+        font-size: 10.5px;
+      }
+      .tmpl-classic .c-item-header .light { font-weight: normal; font-style: italic; }
+      .tmpl-classic .c-text-block { margin-left: 2px; margin-bottom: 2px; text-align: justify; font-size: 10.5px; }
+      .tmpl-classic .c-italic { font-style: italic; margin-left: 2px; margin-bottom: 2px; font-size: 10.5px; }
+      .tmpl-classic .ec-table th { font-weight: bold; width: 18%; vertical-align: top; }
+      .tmpl-classic .ec-table td { text-align: left; vertical-align: top; padding: 2px 4px; }
+      .tmpl-classic .ec-table ul { margin-bottom: 0; }
+
       /* --- PREVIEW PANEL FIXES --- */
       #preview,
       #preview * {
@@ -2056,6 +2133,14 @@
           />
         </div>
 
+        <div data-show="classic">
+          <label>Gender</label>
+          <input type="text" id="in-gender" oninput="update('gender', this.value)" placeholder="e.g. Female" />
+        </div>
+        <div data-show="classic">
+          <label>Age</label>
+          <input type="text" id="in-age" oninput="update('age', this.value)" placeholder="e.g. 19 years" />
+        </div>
         <div data-show="academic,minimal,modern,attorney,innovative">
           <label>LinkedIn</label>
           <div style="display:flex; gap:6px; align-items:stretch;">
@@ -2099,23 +2184,23 @@
         </div>
       </div>
 
-      <div class="section-header" data-show="academic,minimal,modern,attorney,innovative" data-display="flex">
+    <div class="section-header" data-show="academic,minimal,modern,attorney,innovative,classic" data-display="flex">
         Education
         <button class="btn-add" onclick="add('education')">+ Add Entry</button>
       </div>
-      <div id="edu-fields" data-show="academic,minimal,modern,attorney,innovative"></div>
+      <div id="edu-fields" data-show="academic,minimal,modern,attorney,innovative,classic"></div>
 
       <div
         class="section-header"
-        data-show="academic,minimal,modern,attorney,innovative"
+        data-show="academic,minimal,modern,attorney,innovative,classic"
         data-display="flex"
       >
-        Work Experience
+        Work Experience / Internship
         <button class="btn-add" onclick="add('experience')">+ Add Entry</button>
       </div>
       <div
         id="exp-fields"
-        data-show="academic,minimal,modern,attorney,innovative"
+        data-show="academic,minimal,modern,attorney,innovative,classic"
       ></div>
 
       <div data-show="minimal">
@@ -2217,7 +2302,7 @@
         />
       </div>
 
-     <div class="section-header" data-show="minimal,attorney,innovative" data-display="flex">
+   <div class="section-header" data-show="minimal,attorney,innovative,classic" data-display="flex">
         Achievements
         <button class="btn-add" onclick="add('achievements')">+ Add Entry</button>
       </div>
@@ -2226,7 +2311,34 @@
         <button class="btn-add" onclick="add('achievements')">+ Add Entry</button>
       </div>
       
-      <div id="achieve-fields" data-show="academic,minimal,attorney,innovative"></div>
+      <div id="achieve-fields" data-show="academic,minimal,attorney,innovative,classic"></div>
+
+      <div class="section-header" data-show="classic" data-display="flex">
+        Leadership Positions
+        <button class="btn-add" onclick="add('leadership')">+ Add Entry</button>
+      </div>
+      <div id="leadership-fields" data-show="classic"></div>
+
+      <div class="section-header" data-show="classic" data-display="flex">
+        Student Initiatives
+        <button class="btn-add" onclick="add('initiatives')">+ Add Entry</button>
+      </div>
+      <div id="initiatives-fields" data-show="classic"></div>
+
+      <div class="section-header" data-show="classic" data-display="flex">
+        Societies Table
+        <div style="display:flex; gap:6px;">
+          <button class="btn-add" onclick="addSocietiesRow()">+ Add Row</button>
+          <button class="btn-add" onclick="addSocietiesCol()">+ Add Col</button>
+        </div>
+      </div>
+      <div id="societies-table-fields" data-show="classic"></div>
+
+      <div class="section-header" data-show="classic" data-display="flex">
+        EC Activity Categories
+        <button class="btn-add" onclick="add('ecCategories')">+ Add Cat</button>
+      </div>
+      <div id="ec-cat-fields" data-show="classic"></div>
 
       <div class="section-header">Analyse your resume</div>
       <div class="form-grid" style="margin-bottom: 18px;">
@@ -2574,7 +2686,7 @@
         initAll();
     });
 
-   const TEMPLATES = ["academic", "minimal", "modern", "attorney", "innovative"];
+   const TEMPLATES = ["academic", "minimal", "modern", "attorney", "innovative", "classic"];
 
     const SAMPLE_DATA_academic = {
       name: "FIRST LAST",
@@ -2813,6 +2925,77 @@
       references: []
     };
 
+    const SAMPLE_DATA_classic = {
+      name: "SHAURYA SINGH",
+      gender: "Male", age: "21",
+      phone: "+91-8368093386", email: "singhshaurya2.7182@gmail.com",
+      education: [
+        { school: "Shri Ram College of Commerce, DU", degree: "B. Com. (Hons.), DU",        date: "2017-2020",  location: "", performance: "CGPA 9.05",  rank: "Top 4.12% of Dept." },
+        { school: "Bhavans Sri Ramakrishna Vidyalaya",  degree: "AISSCE, Class XII (CBSE)",  date: "2016-2017",  location: "", performance: "97.20%",     rank: "School Topper" },
+        { school: "D. A. V Public School",              degree: "AISSCE, Class X (CBSE)",    date: "2014-2015",  location: "", performance: "CGPA 10",     rank: "-" },
+        { school: "ICAI",                               degree: "CA - CPT",                  date: "June 2017",  location: "", performance: "185/200",     rank: "Distinction" }
+      ],
+      achievements: [
+        { text: "**Recipient** of **Brij M. K. Rao Scholarship** among **4000+ students** for consistent **All Round performance & Academic Excellence**", date: "(2017)", desc: "", linkType: "separate" },
+        { text: "Out of **550+** students secured **Rank 2** (Sem 5), **Rank 9** (Sem 4) and **Rank 10** (Sem 1) in College Department", date: "(2019)", desc: "", linkType: "separate" },
+        { text: "Completed **Data Analytics and Visualization internship** (Sept '18) involving **data analysis, numerical processing and data visualization**", date: "(2018)", desc: "", linkType: "separate" },
+        { text: "Conferred **Best Student Award & Award of Excellence** among **400+ students** for exemplary leadership skills & organisational acumen", date: "(2013,15)", desc: "", linkType: "separate" },
+        { text: "Secured **96% in NSE** Academy's **Financial Markets** (Beginners' Module) of NCFM providing an understanding of **Capital Markets**", date: "(2018)", desc: "", linkType: "separate" }
+      ],
+      experience: [
+        { title: "D. E. SHAW INDIA PVT LTD – FINANCIAL RESEARCH / DATA ANALYTICS", company: "Investment Management Co.", date: "June–July '19",
+          desc: "– **Live Project:** Analysed sales & production data of **Automobile Industry** using activities (**Moving Averages, Indexation, Benchmarking** etc.) to assess **effect of economic variables**\n– **Assisted** in **Investment Management** decisions, facilitating **algorithm development for automatic trading** (Data Confidential)\n– Drafted comprehensive report on **Macro economic framework of India; analysing major happenings and trends**",
+          note: "Received LOR from Associate Director for commendable work in analysing the Economy and presenting the report to Fundamental Research team",
+          link: "", linkText: "", linkType: "separate" },
+        { title: "FINACPLUS – FINANCIAL AND CAPITAL MARKET ANALYST", company: "Start-up by Directors of Standard & Poor", date: "June–July '18",
+          desc: "– **Extracted, structured & analysed** Financial data of **50+ American Companies**, converting these to **Capital Market Intelligence**\n– **Voluntarily developed an automated excel model (reducing time to analyse data by more than 50%)** consisting automation of **simplified work flow solutions**. Worked on 10-K & 10-Q statements (from US-SEC)",
+          note: "", link: "", linkText: "", linkType: "separate" }
+      ],
+      leadership: [
+        { title: "SECRETARY, THE PLACEMENT CELL, SRCC", subtitle: "7 member team, highest authority stratum for top level decision making of the Cell", date: "2019–Present",
+          desc: "– **Assembled & leading III tier team with 75+ members** to ensure **synergistic conjunction of 100+ Recruiters & 1600+ Student community**\n– **Architected 'Placement Policy 2019-20'** (**major changes** incorporated), **identifying problems** and **streamlining solutions to increase Recruiter satisfaction & Student welfare**\n– **Synergizing 6 departments:** Corporate Comm. | Grievance Redress | Finance & Strategy | Public Relations & Brand Mgmt. | Training | Website" },
+        { title: "EVENT HEAD, ANTHROPOS KAPITAL, BUSINESS CONCLAVE, SRCC", subtitle: "the most unique of its kind competition in the country", date: "2018-19",
+          desc: "– **Selected** from pool of **70+ candidates** to direct **12 members**, part of **India's largest** undergraduate management fest\n– An exclusive **HR, PR and Crisis Management event** with **social media reach of 20,000+** and **400+ registrations** from **across the country**\n– Drafted consulting case studies, built **crisis situations, ideated** comprehensive rounds & **collaborated** with esteemed organisations (HBR etc.)" },
+        { title: "SCHOOL VICE-CAPTAIN, D. A. V PUBLIC SCHOOL", subtitle: "elected on public mandate", date: "2014-15",
+          desc: "– **Spearheaded** cabinet with **50+ members**; responsible to act as **liaison between 3500+ students**, faculty and student community\n– **Hosted events** such as Sports Day, Annual Day with **300+ participants**, embarked culture of Clubs & Societies\n– **Curated Campaigns** such as Green Ganesha, Share your Knowledge Club, Plant One, Save Water, Save it Earn it campaign etc." }
+      ],
+      initiatives: [
+        { title: "LAKE CLEANING WATER PURIFICATION MODEL", subtitle: "presented to Government of Telangana",
+          desc: "– Worked on and **developed a model (cost lesser than 30%)** for **purification of Hyacinth** in lakes; **Cleaned 2 lakes** in Hyderabad\n– Implemented model to carry out **HSL Campaign** by CEE and HMDA. **Presented model** and **won** in **Science Exhibition of JNTUI**" },
+        { title: "NATIONAL ECONOMICS OLYMPIAD, THE ECONOMICS SOCIETY, SRCC", subtitle: "first Olympiad in this field in the country",
+          desc: "External volunteer in **Ideation and Execution of Olympiad** (Online) with **2200 registrations** from **200 schools** in 2 Rounds" },
+        { title: "REVOLUTIONIZATION OF INITIATION TO RECRUITERS", subtitle: "first of its kind in the 22+ year old Cell",
+          desc: "**Pioneered** mechanism for **strategic** release of placement **data**, promoting informed decisions among Companies (**Increased** reach by **3000+ of PC**)" }
+      ],
+      ecCategories: [
+        { cat: "Business Plan & Case Study Competitions",
+          items: "– **1st position** in Guesstimation 2019: **300+ participants**; **IIT Kharagpur, Vinod Gupta School of Management** (Purvodaya)\n– **2nd position** in Should 2.0 **Case Study Challenge**: **200+ participants and 100+ colleges**; organised by **DTU in 2019**\n– **2nd position** in Inter School Commerce Fest – Kshitij **(Business Plan Competition)**\n– **Finalist** in Consilium '19 (NSIT), Biznest (SRCC), Ipso Pacto (Case Competition of EDC, SRCC)" },
+        { cat: "Sports",
+          items: "– Adjudged **1st** in **Long Jump** (Girls) at DAV **National Sports** among **100+** participants (Cluster Level South U-19 age group)\n– Adjudged **3rd** in **100 mts** (Girls) **Sprint** at DAV **National Sports** among **50+** schools (Cluster Level South U-19)\n– **Consistently won awards** in 100 mts & 200 mts Sprint, Kho-Kho, 4×100 mts relay across **5 years**" },
+        { cat: "Public Speaking & International Exposure",
+          items: "– **Winner** in **Bharatiya Vidya Bhavan Debating** Competition from amongst **400+ students**\n– Secured **2nd position twice in Elocution** from **350+** and **60+ students** respectively; represented school in several events\n– Participated in **SRCC – University of Edinburgh INDO UK** Intercultural Exchange Program **representing SRCC**" },
+        { cat: "Research & Editorial",
+          items: "– Wrote **'Report on Indian Economy'** analysing trends and events, identifying economic happenings and policies, assessing their impact and **forecasting future trends**\n– **Editor** of LinkedIn page of Placement Cell (reach of **7750+ connections**) ideating and innovating strategic campaigns" },
+        
+{ cat: "Social Endeavours",
+          items: "Looked after **3 orphanages** with **20+ children**, conducted weekly classes (primary school) ensuring good grades. **Tutored Social skills** aiding them to **build their career**; constantly in contact with 3 of them – providing career **assistance**" }
+      ],
+      societiesTable: {
+        cat: "Societies '18 (Designation/Wing)",
+        rows: [
+          ["Economics Society","Cognizance","Youth Conference","Placement Cell","Youth Parliament"],
+          ["Executive member of Organizing and Spons. Wing","Junior Executive Member","Corporate Communications","Public Relations & Brand Management","Organizing and Marketing"]
+        ]
+      },
+      
+      role: "", linkedin: "", github: "", address: "", summary: "",
+      skills: "", languages: "", hobbies: "", coursework: "",
+      projects: [], techSkills: [], certifications: [], extracurricular: [],
+      skillLevels: [], references: [],
+      linkedinDisplay: "label", githubDisplay: "label",
+      photo: "", refs: ""
+    };
+
     function freshTemplateState() {
       return {
         photo: "", name: "", role: "", email: "", phone: "", address: "",
@@ -2821,7 +3004,10 @@
         education: [], experience: [], projects: [], techSkills: [],
         achievements: [], skills: "", languages: "", hobbies: "",
         coursework: "", certifications: [], extracurricular: [],
-        skillLevels: [], references: [],
+       skillLevels: [], references: [],
+        leadership: [], initiatives: [], ecCategories: [],
+societiesTable: { cat: "", rows: [] },
+gender: "", age: "",
         _touched: {} 
       };
     }
@@ -2911,8 +3097,14 @@
         ts.hobbies = ts.hobbies || "";
         ts.summary = ts.summary || "";
         ts.refs = ts.refs || "";
-        ts.skillLevels = ts.skillLevels || [];
+       ts.skillLevels = ts.skillLevels || [];
         ts.references = ts.references || [];
+        ts.leadership = ts.leadership || [];
+        ts.initiatives = ts.initiatives || [];
+        ts.ecCategories = ts.ecCategories || [];
+ts.societiesTable = ts.societiesTable || { cat: "", rows: [] };
+ts.gender = ts.gender || "";
+        ts.age = ts.age || "";
       }
 
       function esc(str) {
@@ -2972,10 +3164,10 @@
       function add(type) {
         normalizeState();
         state._touched[type] = true; 
-        if (type === "experience")
-          state.experience.push({ title: "", company: "", date: "", desc: "", link: "", linkText: "", linkType: "separate" });
+       if (type === "experience")
+          state.experience.push({ title: "", company: "", date: "", desc: "", link: "", linkText: "", linkType: "separate", note: "" });
         if (type === "education")
-          state.education.push({ school: "", degree: "", date: "", location: "" });
+          state.education.push({ school: "", degree: "", date: "", location: "", performance: "", rank: "" });
         if (type === "projects")
           state.projects.push({ title: "", tech: "", link: "", liveLink: "", desc: "" });
         if (type === "techSkills")
@@ -2988,8 +3180,14 @@
           state.extracurricular.push({ org: "", role: "", date: "", desc: "", link: "", linkText: "", linkType: "separate" });
         if (type === "skillLevels")
           state.skillLevels.push({ name: "", level: "50" });
-        if (type === "references")
+       if (type === "references")
           state.references.push({ name: "", role: "", company: "" });
+        if (type === "leadership")
+          state.leadership.push({ title: "", subtitle: "", date: "", desc: "" });
+        if (type === "initiatives")
+          state.initiatives.push({ title: "", subtitle: "", desc: "" });
+        if (type === "ecCategories")
+          state.ecCategories.push({ cat: "", items: "" });
         
         renderInputs();
         render();
@@ -3010,8 +3208,10 @@
         );
         if (ok) {
           templateStates[currentTemplate] = freshTemplateState();
-          Object.keys(SAMPLE_DATA_academic).forEach(k => {
-             templateStates[currentTemplate]._touched[k] = true;
+          const _clearSampleMap = { academic: SAMPLE_DATA_academic, minimal: SAMPLE_DATA_minimal, modern: SAMPLE_DATA_modern, attorney: SAMPLE_DATA_attorney, innovative: SAMPLE_DATA_innovative, classic: SAMPLE_DATA_classic };
+          const _clearSample = _clearSampleMap[currentTemplate] || SAMPLE_DATA_academic;
+          Object.keys(_clearSample).forEach(k => {
+            templateStates[currentTemplate]._touched[k] = true;
           });
           renderInputs();
           render();
@@ -3107,6 +3307,9 @@ function updateImageUI() {
   document.getElementById("in-hobbies").value = state.hobbies;
   if (document.getElementById("in-coursework")) document.getElementById("in-coursework").value = state.coursework || '';
  
+ if (document.getElementById("in-gender")) document.getElementById("in-gender").value = state.gender || '';
+  if (document.getElementById("in-age")) document.getElementById("in-age").value = state.age || '';
+
   document.getElementById("edu-fields").innerHTML = state.education
     .map((item, i) => `
     <div class="dynamic-item">
@@ -3114,6 +3317,7 @@ function updateImageUI() {
       <input placeholder="School / College" value="${esc(item.school)}" oninput="state.education[${i}].school=this.value; render()" style="margin-bottom:8px">
       <input placeholder="Degree / Details" value="${esc(item.degree)}" oninput="state.education[${i}].degree=this.value; render()" style="margin-bottom:8px">
       <div class="form-grid"><input placeholder="Dates" value="${esc(item.date)}" oninput="state.education[${i}].date=this.value; render()">${currentTemplate !== 'academic' ? `<input placeholder="Location" value="${esc(item.location)}" oninput="state.education[${i}].location=this.value; render()">` : ''}</div>
+      ${currentTemplate === 'classic' ? `<div class="form-grid" style="margin-top:8px;"><input placeholder="Performance (e.g. CGPA 9.05)" value="${esc(item.performance||'')}" oninput="state.education[${i}].performance=this.value; render()"><input placeholder="Rank / Position" value="${esc(item.rank||'')}" oninput="state.education[${i}].rank=this.value; render()"></div>` : ''}
     </div>`)
     .join("");
  
@@ -3125,6 +3329,7 @@ function updateImageUI() {
       <div class="form-grid" style="margin-bottom:8px"><input placeholder="Company" value="${esc(item.company)}" oninput="state.experience[${i}].company=this.value; render()"><input placeholder="Dates" value="${esc(item.date)}" oninput="state.experience[${i}].date=this.value; render()"></div>
       <div class="label-row" style="margin-top:8px;"><label style="font-size:12px; color:#a094a0;">Description</label><button class="btn-ai" onclick="rewriteText(event, 'experience', ${i})">✨ Enhance</button></div>
       <textarea placeholder="Description (Supports multiline for bullets and **bold** text)" oninput="state.experience[${i}].desc=this.value; render()">${esc(item.desc)}</textarea>
+     ${currentTemplate === 'classic' ? `<label style="margin-top:8px; font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Italic Note (shown below bullets)</label><textarea placeholder="e.g. Received LOR from Associate Director for..." oninput="state.experience[${i}].note=this.value; render()" style="min-height:45px;">${esc(item.note||'')}</textarea>` : ''}
       <div class="form-grid" style="margin-top: 10px;">
         ${buildLinkTypeToggle('experience', i, item.linkType)}
       </div>
@@ -3179,13 +3384,13 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
         <button class="btn-del" onclick="remove('achievements', ${i})" title="Remove">✕</button>
         <input placeholder="Event / Achievement Name (supports **bold**)" value="${esc(item.text || '')}" oninput="state.achievements[${i}].text=this.value; render();" style="margin-bottom:8px;">
         ${currentTemplate !== 'academic' ? `<input placeholder="Date (e.g. Jan 2024)" value="${esc(item.date || '')}" oninput="state.achievements[${i}].date=this.value; render();" style="margin-bottom:8px;">` : ''}
-        <textarea placeholder="Description (optional) — shown after a dash if filled" oninput="state.achievements[${i}].desc=this.value; render();" style="min-height:55px; margin-bottom:8px;">${esc(item.desc || '')}</textarea>
+       ${currentTemplate !== 'classic' ? `<textarea placeholder="Description (optional) — shown after a dash if filled" oninput="state.achievements[${i}].desc=this.value; render();" style="min-height:55px; margin-bottom:8px;">${esc(item.desc || '')}</textarea>
         <div class="form-grid">
           ${buildLinkTypeToggle('achievements', i, item.linkType)}
         </div>
         <div class="form-grid">
           ${buildLinkFields('achievements', i, item, 'https://...', 'e.g. Certificate, View')}
-        </div>
+        </div>` : ''}
       </div>`;
     }).join("");
  
@@ -3249,6 +3454,77 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
     `).join("");
   }
  
+  if (document.getElementById("leadership-fields")) {
+    document.getElementById("leadership-fields").innerHTML = (state.leadership || []).map((item, i) => `
+      <div class="dynamic-item">
+        <button class="btn-del" onclick="remove('leadership', ${i})" title="Remove">✕</button>
+        <input placeholder="Position Title" value="${esc(item.title)}" oninput="state.leadership[${i}].title=this.value; render()" style="margin-bottom:8px">
+        <div class="form-grid" style="margin-bottom:8px">
+          <input placeholder="Subtitle / Note (shown in brackets)" value="${esc(item.subtitle)}" oninput="state.leadership[${i}].subtitle=this.value; render()">
+          <input placeholder="Date" value="${esc(item.date)}" oninput="state.leadership[${i}].date=this.value; render()">
+        </div>
+        <label style="font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Description (one point per line)</label>
+        <textarea placeholder="Led a team of 50+ members..." oninput="state.leadership[${i}].desc=this.value; render()">${esc(item.desc)}</textarea>
+      </div>`).join("");
+  }
+
+  if (document.getElementById("initiatives-fields")) {
+    document.getElementById("initiatives-fields").innerHTML = (state.initiatives || []).map((item, i) => `
+      <div class="dynamic-item">
+        <button class="btn-del" onclick="remove('initiatives', ${i})" title="Remove">✕</button>
+        <input placeholder="Initiative Title" value="${esc(item.title)}" oninput="state.initiatives[${i}].title=this.value; render()" style="margin-bottom:8px">
+        <input placeholder="Subtitle (e.g. presented to Government of...)" value="${esc(item.subtitle)}" oninput="state.initiatives[${i}].subtitle=this.value; render()" style="margin-bottom:8px">
+        <label style="font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Description (one point per line)</label>
+        <textarea placeholder="Developed a model for..." oninput="state.initiatives[${i}].desc=this.value; render()">${esc(item.desc)}</textarea>
+      </div>`).join("");
+  }
+   
+  if (document.getElementById("societies-table-fields")) {
+    const stData = state.societiesTable || { cat: "", rows: [] };
+    const numCols = stData.rows.length > 0 ? stData.rows[0].length : 0;
+    let sHtml = `<div class="dynamic-item">`;
+    sHtml += `<label style="font-size:10.5px;font-weight:700;color:#7a6e84;margin-bottom:5px;letter-spacing:0.5px;text-transform:uppercase;display:block;">Category Label</label>`;
+    sHtml += `<input placeholder="e.g. Societies '18 (Designation/Wing)" value="${esc(stData.cat)}" oninput="templateStates[currentTemplate].societiesTable.cat=this.value; templateStates[currentTemplate]._touched['societiesTable']=true; render();" style="margin-bottom:10px;">`;
+    if (stData.rows.length > 0 && numCols > 0) {
+      sHtml += `<div style="overflow-x:auto;">`;
+      // Column header row
+      sHtml += `<div style="display:flex;gap:3px;margin-bottom:3px;min-width:max-content;">`;
+      sHtml += `<div style="width:24px;flex-shrink:0;"></div>`;
+      for (let j = 0; j < numCols; j++) {
+        sHtml += `<div style="flex:1;min-width:72px;display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <span style="font-size:9px;color:#705460;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;">Col ${j+1}</span>
+          <button onclick="removeSocietiesCol(${j})" title="Remove column" style="background:rgba(239,68,68,0.08);color:rgba(239,68,68,0.6);border:1px solid rgba(239,68,68,0.2);border-radius:4px;width:20px;height:20px;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">✕</button>
+        </div>`;
+      }
+      sHtml += `<div style="width:28px;flex-shrink:0;"></div></div>`;
+      // Data rows
+      stData.rows.forEach((row, i) => {
+        sHtml += `<div style="display:flex;gap:3px;margin-bottom:3px;align-items:center;min-width:max-content;">`;
+        sHtml += `<span style="font-size:9px;color:#705460;font-weight:700;width:24px;flex-shrink:0;text-align:center;">R${i+1}</span>`;
+        row.forEach((cell, j) => {
+          sHtml += `<input style="flex:1;min-width:72px;padding:6px 7px;font-size:11.5px;" placeholder="Cell" value="${esc(cell)}" oninput="templateStates[currentTemplate].societiesTable.rows[${i}][${j}]=this.value; templateStates[currentTemplate]._touched['societiesTable']=true; render();">`;
+        });
+        sHtml += `<button onclick="removeSocietiesRow(${i})" style="background:rgba(239,68,68,0.08);color:rgba(239,68,68,0.6);border:1px solid rgba(239,68,68,0.2);border-radius:6px;width:26px;height:26px;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;">✕</button>`;
+        sHtml += `</div>`;
+      });
+      sHtml += `</div>`;
+    } else {
+      sHtml += `<div style="text-align:center;padding:14px 0;color:#705460;font-size:11.5px;font-style:italic;border:1px dashed rgba(255,255,255,0.08);border-radius:6px;margin-top:4px;">Click "+ Add Row" above to start building the table</div>`;
+    }
+    sHtml += `</div>`;
+    document.getElementById("societies-table-fields").innerHTML = sHtml;
+  }
+
+  if (document.getElementById("ec-cat-fields")) {
+    document.getElementById("ec-cat-fields").innerHTML = (state.ecCategories || []).map((item, i) => `
+      <div class="dynamic-item">
+        <button class="btn-del" onclick="remove('ecCategories', ${i})" title="Remove">✕</button>
+        <input placeholder="Category Name (e.g. Sports, Research & Editorial)" value="${esc(item.cat)}" oninput="state.ecCategories[${i}].cat=this.value; render()" style="margin-bottom:8px">
+        <label style="font-size:12px; color:#a094a0; display:block; margin-bottom:4px;">Items (one per line)</label>
+        <textarea placeholder="1st position in..." oninput="state.ecCategories[${i}].items=this.value; render()" style="min-height:90px;">${esc(item.items)}</textarea>
+      </div>`).join("");
+  }
+
   // Sync link-display toggle buttons
   const liBtn = document.getElementById('linkedin-display-btn');
   if (liBtn) liBtn.textContent = (state.linkedinDisplay === 'url') ? 'URL' : 'Label';
@@ -3291,7 +3567,7 @@ document.getElementById("tech-skill-fields").innerHTML = (currentTemplate === 'a
         normalizeState();
         
         const previewState = {};
-       const _sampleMap = { academic: SAMPLE_DATA_academic, minimal: SAMPLE_DATA_minimal, modern: SAMPLE_DATA_modern, attorney: SAMPLE_DATA_attorney, innovative: SAMPLE_DATA_innovative };
+       const _sampleMap = { academic: SAMPLE_DATA_academic, minimal: SAMPLE_DATA_minimal, modern: SAMPLE_DATA_modern, attorney: SAMPLE_DATA_attorney, innovative: SAMPLE_DATA_innovative, classic: SAMPLE_DATA_classic };
         const _activeSample = _sampleMap[currentTemplate] || SAMPLE_DATA_academic;
         Object.keys(_activeSample).forEach(k => {
           previewState[k] = state._touched[k] ? state[k] : _activeSample[k];
@@ -4129,8 +4405,146 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
               </div>
             </div>
           `;
+       } else if (state.template === "classic") {
+          const _cd = (txt) => {
+            if (!txt) return "";
+            return txt.split('\n').map(l => l.trim()).filter(l => l)
+              .map(l => `<li>${formatText(l.replace(/^[-–•]\s*/, ''))}</li>`).join('');
+          };
+          const _cBlock = (txt) => !!(txt && txt.trim());
+
+          p.innerHTML = `
+            <div class="c-header">
+              <h1>${esc(state.name)}</h1>
+              <p>${[state.gender, state.age ? (isNaN(parseInt(state.age)) ? state.age : parseInt(state.age) + ' years') : '', state.phone, state.email].filter(Boolean).join(' | ')}</p>
+            </div>
+
+            ${education.length > 0 ? `
+            <div class="c-section-title">EDUCATIONAL QUALIFICATIONS AND ACADEMIC ACHIEVEMENTS</div>
+            <table>
+              <tr>
+                <th style="width:22%;">Course / Examination</th>
+                <th style="width:14%;">Year</th>
+                <th style="width:34%;">Institution</th>
+                <th style="width:15%;">Performance</th>
+                <th style="width:15%;">Rank</th>
+              </tr>
+              ${education.map(e => `<tr>
+                <td>${esc(e.degree)}</td>
+                <td>${esc(e.date)}</td>
+                <td>${esc(e.school)}</td>
+                <td>${esc(e.performance || '')}</td>
+                <td>${esc(e.rank || '')}</td>
+              </tr>`).join('')}
+            </table>
+            ` : ''}
+
+           ${achievements.length > 0 ? `<ul>${achievements.map(a => {
+              const txt = typeof a === 'string' ? a : (a.text || '');
+              const dt  = (typeof a === 'object' && a.date) ? `<span style="white-space:nowrap; flex-shrink:0; margin-left:12px;">${esc(a.date)}</span>` : '';
+             return `<li><div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="flex:1;">${formatText(txt)}</span>${dt}</div></li>`;
+            }).join('')}</ul>` : ''}
+
+            ${experience.length > 0 ? `
+            <div class="c-section-title">INTERNSHIP</div>
+            ${experience.map(e => `
+              <div class="c-item-header">
+                <span>${esc(e.title)}${e.company ? ` <span class="light">(${esc(e.company)})</span>` : ''}</span>
+                <span style="font-weight:normal;">(${esc(e.date)})</span>
+              </div>
+              <ul>${_cd(e.desc)}</ul>
+              ${e.note ? `<div class="c-italic">${formatText(e.note)}</div>` : ''}
+            `).join('')}
+            ` : ''}
+
+            ${(state.leadership && state.leadership.length > 0) ? `
+            <div class="c-section-title">LEADERSHIP POSITIONS</div>
+            ${state.leadership.map(l => `
+              <div class="c-item-header">
+                <span>${esc(l.title)}${l.subtitle ? ` <span class="light">(${esc(l.subtitle)})</span>` : ''}</span>
+                <span style="font-weight:normal;">${esc(l.date)}</span>
+              </div>
+              <ul>${_cd(l.desc)}</ul>
+            `).join('')}
+            ` : ''}
+
+            ${(state.initiatives && state.initiatives.length > 0) ? `
+            <div class="c-section-title">STUDENT INITIATIVES AND SOCIAL ACTIVITIES</div>
+            ${state.initiatives.map(ini => `
+              <div class="c-item-header" style="justify-content:flex-start;">
+                ${esc(ini.title)}${ini.subtitle ? ` <span class="light" style="margin-left:4px;">(${esc(ini.subtitle)})</span>` : ''}
+              </div>
+              ${ini.desc ? `<ul>${_cd(ini.desc)}</ul>` : ''}
+            `).join('')}
+            ` : ''}
+
+           ${(() => {
+              const ecRows = state.ecCategories || [];
+              const st = state.societiesTable;
+              const hasTable = !!(st && st.cat && st.rows && st.rows.length > 0);
+              if (!ecRows.length && !hasTable) return '';
+              // Insert societies before the last ecCategory so order is preserved
+              const insertAt = hasTable ? Math.max(0, ecRows.length - 1) : -1;
+              const stRow = hasTable ? `<tr>
+                <th>${esc(st.cat)}</th>
+                <td style="padding:0;vertical-align:top;overflow:hidden;"><table style="width:calc(100% + 2px);border-collapse:collapse;margin:-1px;">${st.rows.map(row=>`<tr>${row.map(cell=>`<td style="border:1px solid #000;padding:2px 4px;text-align:center;vertical-align:middle;font-size:10.5px;">${formatText(cell)}</td>`).join('')}</tr>`).join('')}</table></td>
+              </tr>` : '';
+              let rows = '';
+              ecRows.forEach((ec, idx) => {
+                if (idx === insertAt) rows += stRow;
+                rows += `<tr>
+                  <th>${esc(ec.cat)}</th>
+                  ${(() => {
+                    if (!ec.items) return '<td></td>';
+                    const lines = ec.items.trim().split('\n').filter(l => l.trim());
+                    if (lines.some(l => l.trim().startsWith('|'))) {
+                      return `<td style="padding:0;vertical-align:top;overflow:hidden;"><table style="width:calc(100% + 2px);border-collapse:collapse;margin:-1px;">${lines.map(l=>`<tr>${l.trim().replace(/^\|/,'').split('|').map(c=>`<td style="border:1px solid #000;padding:2px 4px;text-align:center;vertical-align:middle;font-size:10.5px;">${formatText(c.trim())}</td>`).join('')}</tr>`).join('')}</table></td>`;
+                    }
+                    return `<td><ul>${_cd(ec.items)}</ul></td>`;
+                  })()}
+                </tr>`;
+              });
+              if (insertAt >= ecRows.length) rows += stRow;
+              return `<div class="c-section-title">EXTRA CURRICULAR ACTIVITIES AND ACHIEVEMENTS</div>
+              <table class="ec-table">${rows}</table>`;
+            })()}
+          `;
         }
         })(previewState);
+      }
+
+      function addSocietiesRow() {
+        const ts = templateStates[currentTemplate];
+        if (!ts.societiesTable) ts.societiesTable = { cat: "", rows: [] };
+        const numCols = ts.societiesTable.rows.length > 0 ? ts.societiesTable.rows[0].length : 3;
+        ts.societiesTable.rows.push(Array(numCols).fill(""));
+        ts._touched['societiesTable'] = true;
+        renderInputs(); render();
+      }
+      function removeSocietiesRow(i) {
+        const ts = templateStates[currentTemplate];
+        ts.societiesTable.rows.splice(i, 1);
+        ts._touched['societiesTable'] = true;
+        renderInputs(); render();
+      }
+      function addSocietiesCol() {
+        const ts = templateStates[currentTemplate];
+        if (!ts.societiesTable) ts.societiesTable = { cat: "", rows: [] };
+        if (ts.societiesTable.rows.length === 0) {
+          ts.societiesTable.rows.push(Array(3).fill(""));
+          ts.societiesTable.rows.push(Array(3).fill(""));
+        } else {
+          ts.societiesTable.rows.forEach(row => row.push(""));
+        }
+        ts._touched['societiesTable'] = true;
+        renderInputs(); render();
+      }
+      function removeSocietiesCol(j) {
+        const ts = templateStates[currentTemplate];
+        if (!ts.societiesTable || !ts.societiesTable.rows.length) return;
+        ts.societiesTable.rows.forEach(row => row.splice(j, 1));
+        ts._touched['societiesTable'] = true;
+        renderInputs(); render();
       }
 
       async function rewriteText(event, type, index = null) {
@@ -4278,7 +4692,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
       const templateLabels = {
         academic: 'Technical Executive', minimal: 'Sleek Minimalist',
         modern: 'Contemporary Creative', attorney: 'Traditional Corporate',
-        innovative: 'Executive Innovative'
+        innovative: 'Executive Innovative', classic: 'Classic Academic'
       };
       const trigger = document.getElementById('template-select-trigger');
       const menu = document.getElementById('template-select-menu');
@@ -4309,7 +4723,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
   const _labels2 = {
     academic: 'Technical Executive', minimal: 'Sleek Minimalist',
     modern: 'Contemporary Creative', attorney: 'Traditional Corporate',
-    innovative: 'Executive Innovative'
+    innovative: 'Executive Innovative', classic: 'Classic Academic'
   };
   const _tr2 = document.getElementById('template-select-trigger');
   const _mn2 = document.getElementById('template-select-menu');
@@ -4686,10 +5100,11 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
 
           const scalarFields = [
             'name','role','phone','email','linkedin','github',
-            'address','summary','skills','languages','hobbies','coursework'
+            'address','summary','skills','languages','hobbies','coursework',
+            'gender','age'
           ];
           scalarFields.forEach(f => {
-            if (extracted[f] !== undefined && extracted[f] !== null) {
+            if (extracted[f] !== undefined && extracted[f] !== null && String(extracted[f]).trim() !== '') {
               state[f] = String(extracted[f]);
               state._touched[f] = true;
             }
@@ -4697,7 +5112,8 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
 
           const arrayFields = [
             'education','experience','projects','techSkills',
-            'achievements','certifications','extracurricular'
+            'achievements','certifications','extracurricular',
+            'leadership','initiatives','ecCategories'
           ];
           arrayFields.forEach(f => {
             if (Array.isArray(extracted[f]) && extracted[f].length > 0) {
@@ -4705,6 +5121,93 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
               state._touched[f] = true;
             }
           });
+
+          // ── Smart routing: if AI dumped leadership/EC content into extracurricular,
+          //    redistribute it to the correct arrays so all templates render properly ──
+          const hasLeadership   = (state.leadership   || []).length > 0;
+          const hasInitiatives  = (state.initiatives  || []).length > 0;
+          const hasEcCategories = (state.ecCategories || []).length > 0;
+          const extraArr        = state.extracurricular || [];
+
+          if (extraArr.length > 0) {
+            const remainingExtra   = [];
+            const spillLeadership  = [];
+            const spillInitiatives = [];
+            const spillEcCats      = {};
+
+            const leadershipKeywords = /\b(secretary|president|vice.?captain|captain|head|coordinator|convener|chair|director|lead|founder|editor|officer|manager|representative|incharge|in.charge)\b/i;
+            const initiativeKeywords = /\b(initiative|project|campaign|olympiad|social|community|welfare|ngo|government|presented|lake|purification|model|research)\b/i;
+            const ecCategoryKeywords = /\b(sports|competition|debate|elocution|public.?speaking|quiz|fest|cultural|technical|business|case.?study|hackathon|workshop|research|editorial|international)\b/i;
+
+            extraArr.forEach(item => {
+              const combined = ((item.org || '') + ' ' + (item.role || '') + ' ' + (item.desc || '')).toLowerCase();
+
+              if (!hasLeadership && leadershipKeywords.test(combined)) {
+                // Promote to leadership
+                spillLeadership.push({
+                  title:    item.org    || '',
+                  subtitle: item.role   || '',
+                  date:     item.date   || '',
+                  desc:     item.desc   || ''
+                });
+              } else if (!hasInitiatives && initiativeKeywords.test(combined)) {
+                // Promote to initiatives
+                spillInitiatives.push({
+                  title:    item.org    || '',
+                  subtitle: item.role   || '',
+                  desc:     item.desc   || ''
+                });
+              } else if (!hasEcCategories && ecCategoryKeywords.test(combined)) {
+                // Group into ecCategories by role/org as category name
+                const cat = item.role || item.org || 'Extracurricular';
+                if (!spillEcCats[cat]) spillEcCats[cat] = [];
+                spillEcCats[cat].push(item.desc || item.org || '');
+              } else {
+                remainingExtra.push(item);
+              }
+            });
+
+            if (spillLeadership.length > 0) {
+              state.leadership = [...(state.leadership || []), ...spillLeadership];
+              state._touched['leadership'] = true;
+            }
+            if (spillInitiatives.length > 0) {
+              state.initiatives = [...(state.initiatives || []), ...spillInitiatives];
+              state._touched['initiatives'] = true;
+            }
+            if (Object.keys(spillEcCats).length > 0) {
+              const newCats = Object.entries(spillEcCats).map(([cat, items]) => ({
+                cat,
+                items: items.join('\n')
+              }));
+              state.ecCategories = [...(state.ecCategories || []), ...newCats];
+              state._touched['ecCategories'] = true;
+            }
+
+            // Only keep genuinely misc items in extracurricular
+            state.extracurricular  = remainingExtra;
+            state._touched['extracurricular'] = true;
+          }
+
+          // ── If techSkills came back as a single blob, split into proper categories ──
+          const ts = state.techSkills || [];
+          if (ts.length === 1 && ts[0].cat === '' && ts[0].items && ts[0].items.includes(':')) {
+            const lines = ts[0].items.split(/[,\n]/).map(s => s.trim()).filter(Boolean);
+            const grouped = {};
+            let currentCat = 'Skills';
+            lines.forEach(line => {
+              if (line.endsWith(':')) {
+                currentCat = line.slice(0, -1).trim();
+              } else {
+                if (!grouped[currentCat]) grouped[currentCat] = [];
+                grouped[currentCat].push(line);
+              }
+            });
+            if (Object.keys(grouped).length > 1) {
+              state.techSkills = Object.entries(grouped).map(([cat, items]) => ({ cat, items: items.join(', ') }));
+              state._touched['techSkills'] = true;
+            }
+          }
 
           /* Sync display toggle buttons to "label" */
           state.linkedinDisplay = 'label';
@@ -4722,9 +5225,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
           console.error('PDF Import Error:', err);
           overlay.classList.remove('visible');
 
-          if (err.message.includes('JSON') || err.message.includes('parse')) {
-            showToast('error', 'Parse Error', 'AI returned unexpected data. Please try again.');
-          } else if (err.message.includes('fetch') || err.message.includes('network') || err.message.includes('Failed to fetch')) {
+          if (err.message.includes('fetch') || err.message.includes('network') || err.message.includes('Failed to fetch')) {
             showToast('error', 'Connection Error', 'Cannot reach the server. Is it running on port 5000?');
           } else {
             showToast('error', 'Import Failed', err.message || 'Something went wrong.');
