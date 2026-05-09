@@ -9,7 +9,8 @@ const MODELS = [
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite-preview-06-17",
     "gemini-1.5-flash",
-    "gemini-3-flash-preview"
+    "gemini-3-flash-preview",
+     "gemini-2.5-Pro",
 ];
 
 router.post('/analyze', async (req, res) => {
