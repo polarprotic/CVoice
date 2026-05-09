@@ -2545,7 +2545,7 @@
           if (!response.ok) throw new Error("Server responded with an error");
 
           const data = await response.json();
-          console.log("📥 AI Data:", data);
+          // console.log("📥 AI Data:", data);
 
           if (resultArea) resultArea.style.display = "block";
 
@@ -2628,8 +2628,8 @@
   }
 }
       } catch (err) {
-          console.error("Audit Error:", err);
-          showToast("error","Connection Failed","Could not reach the AI server.");
+          // console.error("Audit Error:", err);
+          showToast("error","Analysis Failed","Something went wrong. Please try again.");
       } finally {
           if (btn) {
               btn.innerText = "Analyse";
@@ -4492,8 +4492,8 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
                   render();
               }
           } catch (err) {
-              console.error("AI Enhance Error:", err);
-              showToast("error","Enhancement Failed","Make sure your server is running on port 5000.");
+              // console.error("AI Enhance Error:", err);
+              showToast("error","Enhancement Failed","Something went wrong. Please try again.");
           } finally {
               btn.innerHTML = originalHTML;
               btn.disabled = false;
@@ -4548,8 +4548,8 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
       showToast("error", "Server Error", result.error || "Something went wrong.");
     }
   } catch (error) {
-    console.error("Save error:", error);
-    showToast("error", "Network Error", "Is your server running on port 5000?");
+    // console.error("Save error:", error);
+    showToast("error", "Network Error", "Could not save. Please check your connection and try again.");
   }
 }
 
@@ -5120,11 +5120,11 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
           showToast('success', 'Resume Imported!', `Fields populated from "${file.name}".`);
 
         } catch (err) {
-          console.error('PDF Import Error:', err);
+          // console.error('PDF Import Error:', err);
           overlay.classList.remove('visible');
 
           if (err.message.includes('fetch') || err.message.includes('network') || err.message.includes('Failed to fetch')) {
-            showToast('error', 'Connection Error', 'Cannot reach the server. Is it running on port 5000?');
+            showToast('error', 'Connection Error', 'Could not connect. Please check your connection and try again.');
           } else {
             showToast('error', 'Import Failed', err.message || 'Something went wrong.');
           }
