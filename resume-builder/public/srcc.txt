@@ -1792,18 +1792,17 @@
 #preview-wrap {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 16px 8px;
-    align-items: flex-start;
+    padding: 24px 0 48px;
+    align-items: center;
     justify-content: flex-start;
   }
 
   .resume-page {
-    zoom: 0.43;
+    zoom: 0.47;
     transform: none;
     transform-origin: top center;
-    margin-bottom: 0;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
+    flex-shrink: 0;
   }
 }
 
@@ -1873,14 +1872,14 @@
     bottom: 0;
     margin-top: 0;
     height: calc(100vh - 88px) !important;
-    padding: 24px 16px;
+   padding: 28px 0 48px;
     z-index: 30;
     background-color: #0A0608;
     transform: translateX(100%);
     transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
     overflow-y: auto;
     overflow-x: hidden;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-start;
   }
 
@@ -1889,12 +1888,11 @@
   }
 
   .resume-page {
-    zoom: 0.62;
+    zoom: 0.88;
     transform: none;
     transform-origin: top center;
-    margin-bottom: 24px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
+    flex-shrink: 0;
   }
 }
 
@@ -2012,7 +2010,7 @@
 
    <nav class="editor-nav">
   <div style="flex:1; display:flex; align-items:center;">
-    <a href="dashboard.html" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+    <a href="index.html" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
   <div class="logo-mark" style="width:22px; height:28px; background:#ffffff; border:1.5px solid rgba(196,85,118,0.25); border-radius:3px 6px 3px 3px; display:flex; flex-direction:column; justify-content:flex-end; gap:2px; padding:4px 4px 5px; box-shadow:0 3px 14px rgba(158,59,86,0.4); flex-shrink:0; position:relative; overflow:hidden;">
     <div style="position:absolute; top:0; right:0; width:7px; height:7px; background:linear-gradient(225deg, rgba(196,85,118,0.15) 50%, #ffffff 50%); border-bottom-left-radius:3px; border-left:1px solid rgba(196,85,118,0.2); border-bottom:1px solid rgba(196,85,118,0.2);"></div>
     <div style="height:3px; background:var(--rose-light); border-radius:3px; width:55%; transform-origin:left; animation:fillLine 1.5s infinite 0s;"></div>
@@ -2545,7 +2543,7 @@
           if (!response.ok) throw new Error("Server responded with an error");
 
           const data = await response.json();
-          console.log("📥 AI Data:", data);
+          // console.log("📥 AI Data:", data);
 
           if (resultArea) resultArea.style.display = "block";
 
@@ -2628,8 +2626,8 @@
   }
 }
       } catch (err) {
-          console.error("Audit Error:", err);
-          showToast("error","Connection Failed","Could not reach the AI server.");
+          // console.error("Audit Error:", err);
+          showToast("error","Analysis Failed","Something went wrong. Please try again.");
       } finally {
           if (btn) {
               btn.innerText = "Analyse";
@@ -2917,9 +2915,9 @@
     };
 
     const SAMPLE_DATA_classic = {
-      name: "ANANTHA VARSHITHA CHERUKURI",
-      gender: "Female", age: "19",
-      phone: "+91-91107-73647", email: "anantha.varshitha@gmail.com",
+      name: "SHAURYA SINGH",
+      gender: "Male", age: "21",
+      phone: "+91-8368093386", email: "singhshaurya2.7182@gmail.com",
       education: [
         { school: "Shri Ram College of Commerce, DU", degree: "B. Com. (Hons.), DU",        date: "2017-2020",  location: "", performance: "CGPA 9.05",  rank: "Top 4.12% of Dept." },
         { school: "Bhavans Sri Ramakrishna Vidyalaya",  degree: "AISSCE, Class XII (CBSE)",  date: "2016-2017",  location: "", performance: "97.20%",     rank: "School Topper" },
@@ -4492,8 +4490,8 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
                   render();
               }
           } catch (err) {
-              console.error("AI Enhance Error:", err);
-              showToast("error","Enhancement Failed","Make sure your server is running on port 5000.");
+              // console.error("AI Enhance Error:", err);
+              showToast("error","Enhancement Failed","Something went wrong. Please try again.");
           } finally {
               btn.innerHTML = originalHTML;
               btn.disabled = false;
@@ -4502,8 +4500,15 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
 
       async function saveResumeToDB() {
   const userId = localStorage.getItem("userId");
+
+  if (!userId) {
+    showToast("info", "Login Required", "Please log in to save your resume.");
+    setTimeout(() => { window.location.href = "/auth.html"; }, 1800);
+    return;
+  }
+
   const urlParams = new URLSearchParams(window.location.search);
- const existingResumeId = urlParams.get("id") || urlParams.get("resumeId");
+  const existingResumeId = urlParams.get("id") || urlParams.get("resumeId");
  
   // Validate using current template's data
   if (!state.name || !state.email) {
@@ -4548,8 +4553,8 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
       showToast("error", "Server Error", result.error || "Something went wrong.");
     }
   } catch (error) {
-    console.error("Save error:", error);
-    showToast("error", "Network Error", "Is your server running on port 5000?");
+    // console.error("Save error:", error);
+    showToast("error", "Network Error", "Could not save. Please check your connection and try again.");
   }
 }
 
@@ -4998,10 +5003,11 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
 
           const scalarFields = [
             'name','role','phone','email','linkedin','github',
-            'address','summary','skills','languages','hobbies','coursework'
+            'address','summary','skills','languages','hobbies','coursework',
+            'gender','age'
           ];
           scalarFields.forEach(f => {
-            if (extracted[f] !== undefined && extracted[f] !== null) {
+            if (extracted[f] !== undefined && extracted[f] !== null && String(extracted[f]).trim() !== '') {
               state[f] = String(extracted[f]);
               state._touched[f] = true;
             }
@@ -5009,7 +5015,8 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
 
           const arrayFields = [
             'education','experience','projects','techSkills',
-            'achievements','certifications','extracurricular'
+            'achievements','certifications','extracurricular',
+            'leadership','initiatives','ecCategories'
           ];
           arrayFields.forEach(f => {
             if (Array.isArray(extracted[f]) && extracted[f].length > 0) {
@@ -5017,6 +5024,93 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
               state._touched[f] = true;
             }
           });
+
+          // ── Smart routing: if AI dumped leadership/EC content into extracurricular,
+          //    redistribute it to the correct arrays so all templates render properly ──
+          const hasLeadership   = (state.leadership   || []).length > 0;
+          const hasInitiatives  = (state.initiatives  || []).length > 0;
+          const hasEcCategories = (state.ecCategories || []).length > 0;
+          const extraArr        = state.extracurricular || [];
+
+          if (extraArr.length > 0) {
+            const remainingExtra   = [];
+            const spillLeadership  = [];
+            const spillInitiatives = [];
+            const spillEcCats      = {};
+
+            const leadershipKeywords = /\b(secretary|president|vice.?captain|captain|head|coordinator|convener|chair|director|lead|founder|editor|officer|manager|representative|incharge|in.charge)\b/i;
+            const initiativeKeywords = /\b(initiative|project|campaign|olympiad|social|community|welfare|ngo|government|presented|lake|purification|model|research)\b/i;
+            const ecCategoryKeywords = /\b(sports|competition|debate|elocution|public.?speaking|quiz|fest|cultural|technical|business|case.?study|hackathon|workshop|research|editorial|international)\b/i;
+
+            extraArr.forEach(item => {
+              const combined = ((item.org || '') + ' ' + (item.role || '') + ' ' + (item.desc || '')).toLowerCase();
+
+              if (!hasLeadership && leadershipKeywords.test(combined)) {
+                // Promote to leadership
+                spillLeadership.push({
+                  title:    item.org    || '',
+                  subtitle: item.role   || '',
+                  date:     item.date   || '',
+                  desc:     item.desc   || ''
+                });
+              } else if (!hasInitiatives && initiativeKeywords.test(combined)) {
+                // Promote to initiatives
+                spillInitiatives.push({
+                  title:    item.org    || '',
+                  subtitle: item.role   || '',
+                  desc:     item.desc   || ''
+                });
+              } else if (!hasEcCategories && ecCategoryKeywords.test(combined)) {
+                // Group into ecCategories by role/org as category name
+                const cat = item.role || item.org || 'Extracurricular';
+                if (!spillEcCats[cat]) spillEcCats[cat] = [];
+                spillEcCats[cat].push(item.desc || item.org || '');
+              } else {
+                remainingExtra.push(item);
+              }
+            });
+
+            if (spillLeadership.length > 0) {
+              state.leadership = [...(state.leadership || []), ...spillLeadership];
+              state._touched['leadership'] = true;
+            }
+            if (spillInitiatives.length > 0) {
+              state.initiatives = [...(state.initiatives || []), ...spillInitiatives];
+              state._touched['initiatives'] = true;
+            }
+            if (Object.keys(spillEcCats).length > 0) {
+              const newCats = Object.entries(spillEcCats).map(([cat, items]) => ({
+                cat,
+                items: items.join('\n')
+              }));
+              state.ecCategories = [...(state.ecCategories || []), ...newCats];
+              state._touched['ecCategories'] = true;
+            }
+
+            // Only keep genuinely misc items in extracurricular
+            state.extracurricular  = remainingExtra;
+            state._touched['extracurricular'] = true;
+          }
+
+          // ── If techSkills came back as a single blob, split into proper categories ──
+          const ts = state.techSkills || [];
+          if (ts.length === 1 && ts[0].cat === '' && ts[0].items && ts[0].items.includes(':')) {
+            const lines = ts[0].items.split(/[,\n]/).map(s => s.trim()).filter(Boolean);
+            const grouped = {};
+            let currentCat = 'Skills';
+            lines.forEach(line => {
+              if (line.endsWith(':')) {
+                currentCat = line.slice(0, -1).trim();
+              } else {
+                if (!grouped[currentCat]) grouped[currentCat] = [];
+                grouped[currentCat].push(line);
+              }
+            });
+            if (Object.keys(grouped).length > 1) {
+              state.techSkills = Object.entries(grouped).map(([cat, items]) => ({ cat, items: items.join(', ') }));
+              state._touched['techSkills'] = true;
+            }
+          }
 
           /* Sync display toggle buttons to "label" */
           state.linkedinDisplay = 'label';
@@ -5031,13 +5125,11 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
           showToast('success', 'Resume Imported!', `Fields populated from "${file.name}".`);
 
         } catch (err) {
-          console.error('PDF Import Error:', err);
+          // console.error('PDF Import Error:', err);
           overlay.classList.remove('visible');
 
-          if (err.message.includes('JSON') || err.message.includes('parse')) {
-            showToast('error', 'Parse Error', 'AI returned unexpected data. Please try again.');
-          } else if (err.message.includes('fetch') || err.message.includes('network') || err.message.includes('Failed to fetch')) {
-            showToast('error', 'Connection Error', 'Cannot reach the server. Is it running on port 5000?');
+          if (err.message.includes('fetch') || err.message.includes('network') || err.message.includes('Failed to fetch')) {
+            showToast('error', 'Connection Error', 'Could not connect. Please check your connection and try again.');
           } else {
             showToast('error', 'Import Failed', err.message || 'Something went wrong.');
           }
@@ -5143,6 +5235,29 @@ window.addEventListener('load', () => {
     }
   });
 });
+
+/* ── Dynamic mobile preview zoom: fills 95% of viewport width ── */
+(function () {
+  const A4_PX = 794; // 210mm at 96 dpi
+  function syncZoom() {
+    const page = document.getElementById('preview');
+    if (!page) return;
+    const vw = window.innerWidth;
+    if (vw <= 1024) {
+      page.style.zoom = ((vw * 0.95) / A4_PX).toFixed(4);
+      page.style.transform = 'none';
+      page.style.margin = 'auto';
+      page.style.flexShrink = '0';
+    } else {
+      page.style.zoom = '';
+      page.style.transform = '';
+      page.style.margin = '';
+      page.style.flexShrink = '';
+    }
+  }
+  window.addEventListener('load', syncZoom);
+  window.addEventListener('resize', syncZoom);
+})();
     </script>
   </body>
 </html>
