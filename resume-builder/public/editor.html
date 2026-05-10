@@ -4713,9 +4713,11 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
           const origTransform  = preview.style.transform;
           const origTransition = preview.style.transition;
           const origMarginB    = preview.style.marginBottom;
+          const origZoom       = preview.style.zoom;
           preview.style.transform    = "none";
           preview.style.transition   = "none";
           preview.style.marginBottom = "0";
+          preview.style.zoom         = "";
 
           /* Two rAF callbacks — browser fully reflows before we measure */
           await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -4931,6 +4933,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
           preview.style.transform    = origTransform;
           preview.style.transition   = origTransition;
           preview.style.marginBottom = origMarginB;
+          preview.style.zoom         = origZoom;
 
           btn.innerHTML = origHTML;
           btn.disabled  = false;
@@ -5236,28 +5239,7 @@ window.addEventListener('load', () => {
   });
 });
 
-/* ── Dynamic mobile preview zoom: fills 95% of viewport width ── */
-(function () {
-  const A4_PX = 794; // 210mm at 96 dpi
-  function syncZoom() {
-    const page = document.getElementById('preview');
-    if (!page) return;
-    const vw = window.innerWidth;
-    if (vw <= 1024) {
-      page.style.zoom = ((vw * 0.95) / A4_PX).toFixed(4);
-      page.style.transform = 'none';
-      page.style.margin = 'auto';
-      page.style.flexShrink = '0';
-    } else {
-      page.style.zoom = '';
-      page.style.transform = '';
-      page.style.margin = '';
-      page.style.flexShrink = '';
-    }
-  }
-  window.addEventListener('load', syncZoom);
-  window.addEventListener('resize', syncZoom);
-})();
+
     </script>
   </body>
 </html>
