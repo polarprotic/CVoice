@@ -1792,18 +1792,17 @@
 #preview-wrap {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 16px 8px;
-    align-items: flex-start;
+    padding: 24px 0 48px;
+    align-items: center;
     justify-content: flex-start;
   }
 
   .resume-page {
-    zoom: 0.43;
+    zoom: 0.47;
     transform: none;
     transform-origin: top center;
-    margin-bottom: 0;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
+    flex-shrink: 0;
   }
 }
 
@@ -1873,14 +1872,14 @@
     bottom: 0;
     margin-top: 0;
     height: calc(100vh - 88px) !important;
-    padding: 24px 16px;
+   padding: 28px 0 48px;
     z-index: 30;
     background-color: #0A0608;
     transform: translateX(100%);
     transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
     overflow-y: auto;
     overflow-x: hidden;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-start;
   }
 
@@ -1889,12 +1888,11 @@
   }
 
   .resume-page {
-    zoom: 0.62;
+    zoom: 0.88;
     transform: none;
     transform-origin: top center;
-    margin-bottom: 24px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
+    flex-shrink: 0;
   }
 }
 
@@ -5237,6 +5235,29 @@ window.addEventListener('load', () => {
     }
   });
 });
+
+/* ── Dynamic mobile preview zoom: fills 95% of viewport width ── */
+(function () {
+  const A4_PX = 794; // 210mm at 96 dpi
+  function syncZoom() {
+    const page = document.getElementById('preview');
+    if (!page) return;
+    const vw = window.innerWidth;
+    if (vw <= 1024) {
+      page.style.zoom = ((vw * 0.95) / A4_PX).toFixed(4);
+      page.style.transform = 'none';
+      page.style.margin = 'auto';
+      page.style.flexShrink = '0';
+    } else {
+      page.style.zoom = '';
+      page.style.transform = '';
+      page.style.margin = '';
+      page.style.flexShrink = '';
+    }
+  }
+  window.addEventListener('load', syncZoom);
+  window.addEventListener('resize', syncZoom);
+})();
     </script>
   </body>
 </html>
