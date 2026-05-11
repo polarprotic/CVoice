@@ -50,7 +50,7 @@ router.post('/analyze', async (req, res) => {
             const result = await model.generateContent(prompt);
             const text = result.response.text();
             
-            console.log(`✅ Success using [${modelName}]!`);
+            // console.log(`✅ Success using [${modelName}]!`);
             
             const jsonMatch = text.match(/\{[\s\S]*\}/);
             
@@ -63,12 +63,12 @@ router.post('/analyze', async (req, res) => {
 
         } catch (error) {
             // Catch the error (like a 429 Quota limit) and log it, letting the loop continue to the next model
-            console.error(`⚠️ Model [${modelName}] failed: ${error.message}`);
+            // console.error(`⚠️ Model [${modelName}] failed: ${error.message}`);
         }
     }
 
     // 🚨 If the code reaches this point, ALL models in the array failed
-    console.error("❌ ALL FALLBACK MODELS FAILED.");
+    // console.error("❌ ALL FALLBACK MODELS FAILED.");
     res.status(500).json({ 
         score: 0, 
         atsScore: 0, 
