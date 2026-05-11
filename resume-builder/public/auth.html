@@ -1081,7 +1081,11 @@ body.signup-mode .resume-preview-overlay {
             const okIcon  = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
             const box = document.getElementById(boxId);
             if (!box) return;
-            box.innerHTML = `${type === 'error' ? errIcon : okIcon}<span>${msg}</span>`;
+            const span = document.createElement('span');
+span.textContent = msg;
+box.innerHTML = type === 'error' ? errIcon : okIcon;
+box.appendChild(span);
+box.className = `notification-box ${type}`;
             box.className = `notification-box ${type}`;
             setTimeout(() => { box.classList.add('hidden'); box.classList.remove(type); }, 4000);
         }
@@ -1099,8 +1103,8 @@ body.signup-mode .resume-preview-overlay {
             const nd = document.getElementById('rp-name');
             const av = document.getElementById('rp-avatar');
             if (v) {
-                nd.innerHTML = v; nd.classList.remove('ph');
-                av.textContent = getInitials(v);
+    nd.textContent = v; nd.classList.remove('ph');
+    av.textContent = getInitials(v);
             } else {
                 nd.innerHTML = 'Your name here<span class="su-cursor"></span>'; nd.classList.add('ph');
                 av.textContent = '?';
