@@ -810,10 +810,52 @@
     100% { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
 }
 .loader-text {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700; color: var(--text);
-    letter-spacing: 1px; font-size: 1rem;
-}
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700; color: var(--text);
+            letter-spacing: 1px; font-size: 1rem;
+        }
+
+        /* ─── MOBILE SWIPE TABS ─── */
+        @media (max-width: 760px) {
+            .swipe-track {
+                display: flex;
+                width: 200%;
+                transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+                will-change: transform;
+            }
+            .swipe-track > .tab-view {
+                width: 50%;
+                flex-shrink: 0;
+                display: flex !important; /* always rendered, position controls visibility */
+                opacity: 1 !important;
+                animation: none !important;
+            }
+            .center-pane {
+                overflow: hidden;
+            }
+            /* Swipe indicator dots */
+            .swipe-dots {
+                display: flex;
+                justify-content: center;
+                gap: 7px;
+                padding: 10px 0 4px;
+                flex-shrink: 0;
+            }
+            .swipe-dot {
+                width: 6px; height: 6px;
+                border-radius: 50%;
+                background: var(--border);
+                transition: background 0.3s, transform 0.3s;
+            }
+            .swipe-dot.active {
+                background: var(--rose-light);
+                transform: scale(1.4);
+            }
+        }
+        @media (min-width: 761px) {
+            .swipe-track { display: contents; }
+            .swipe-dots  { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -974,7 +1016,16 @@
         <!-- ─── CENTER PANE ─── -->
         <main class="center-pane">
 
-            <!-- TEMPLATES TAB -->
+            <!-- Swipe dots (mobile only) -->
+        <div class="swipe-dots" id="swipe-dots">
+            <div class="swipe-dot active" id="dot-0"></div>
+            <div class="swipe-dot" id="dot-1"></div>
+        </div>
+
+        <!-- Swipe track wraps both tab views on mobile -->
+        <div class="swipe-track" id="swipe-track">
+
+        <!-- TEMPLATES TAB -->
             <div class="tab-view active" id="view-templates">
                 <div class="section-label">CHOOSE A BASELINE</div>
                 <div class="showcase-grid">
@@ -1157,7 +1208,9 @@
                         <div class="sk-bar btn"></div>
                     </div>
                 </div>
-            </div>
+           </div>
+
+        </div><!-- /swipe-track -->
 
         </main>
 
@@ -1706,6 +1759,116 @@ function sendToCustomizer() {
             container.appendChild(tpl);
         });
     }
+
+   /* ─── Mobile swipe between tabs ─── */
+    (function initSwipe() {
+        const isMobileBreak = () => window.innerWidth <= 760;
+        const track   = document.getElementById('swipe-track');
+        const dot0    = document.getElementById('dot-0');
+        const dot1    = document.getElementById('dot-1');
+        const htabs   = [
+            document.getElementById('htab-templates'),
+            document.getElementById('htab-saved'),
+        ];
+        let currentIdx = 0;
+        let touchStartX = 0, touchStartY = 0;
+        let dragging = false, dragDeltaX = 0;
+        const SWIPE_THRESHOLD = 50;
+
+        function goToTab(idx, fromSwipe) {
+            if (!isMobileBreak()) return;
+            currentIdx = idx;
+
+            // Snap track
+            track.style.transition = 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1)';
+            track.style.transform  = `translateX(${idx === 0 ? '0%' : '-50%'})`;
+
+            // Sync header tabs
+            htabs.forEach((b, i) => b.classList.toggle('active', i === idx));
+
+            // Sync dots
+            dot0.classList.toggle('active', idx === 0);
+            dot1.classList.toggle('active', idx === 1);
+
+            // Sync tab-view active class (needed for non-swipe usage)
+            document.getElementById('view-templates').classList.toggle('active', idx === 0);
+            document.getElementById('view-saved').classList.toggle('active', idx === 1);
+
+            if (idx === 1 && fromSwipe) fetchSavedResumes();
+        }
+
+        // Patch switchTab to also move the track on mobile
+        const _origSwitchTab = window.switchTab;
+        window.switchTab = function(id, e) {
+            if (e) e.preventDefault();
+            if (isMobileBreak()) {
+                goToTab(id === 'templates' ? 0 : 1, false);
+                if (id === 'saved') fetchSavedResumes();
+                return;
+            }
+            // Desktop: original behaviour
+            document.querySelectorAll('.htab').forEach(b => b.classList.remove('active'));
+            document.getElementById('htab-' + id).classList.add('active');
+            document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + id).classList.add('active');
+            if (id === 'saved') fetchSavedResumes();
+        };
+
+        // Touch handlers on the center pane
+        const pane = document.querySelector('.center-pane');
+
+        pane.addEventListener('touchstart', function(e) {
+            if (!isMobileBreak()) return;
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            dragging = false;
+            dragDeltaX = 0;
+            track.style.transition = 'none';
+        }, { passive: true });
+
+        pane.addEventListener('touchmove', function(e) {
+            if (!isMobileBreak()) return;
+            const dx = e.touches[0].clientX - touchStartX;
+            const dy = e.touches[0].clientY - touchStartY;
+
+            // Only hijack clearly horizontal swipes
+            if (!dragging && Math.abs(dy) > Math.abs(dx)) return;
+            dragging = true;
+            dragDeltaX = dx;
+
+            // Live drag: offset from current snap point
+            const basePercent = currentIdx === 0 ? 0 : -50;
+            // dx in px → percent of track width (track is 200vw)
+            const pct = (dx / (window.innerWidth * 2)) * 100;
+            const clamped = Math.max(-50, Math.min(0, basePercent + pct));
+            track.style.transform = `translateX(${clamped}%)`;
+        }, { passive: true });
+
+        pane.addEventListener('touchend', function() {
+            if (!isMobileBreak() || !dragging) return;
+            dragging = false;
+            if (dragDeltaX < -SWIPE_THRESHOLD && currentIdx === 0) {
+                goToTab(1, true);
+            } else if (dragDeltaX > SWIPE_THRESHOLD && currentIdx === 1) {
+                goToTab(0, false);
+            } else {
+                // Snap back
+                goToTab(currentIdx, false);
+            }
+        });
+
+        // Dot click
+        dot0.addEventListener('click', () => goToTab(0, false));
+        dot1.addEventListener('click', () => goToTab(1, false));
+
+        // Re-init on resize
+        window.addEventListener('resize', () => {
+            if (!isMobileBreak()) {
+                track.style.transform = '';
+                track.style.transition = '';
+            }
+        });
+    })();
 
     /* ─── Filter + sort ─── */
     function filterResumes() {
