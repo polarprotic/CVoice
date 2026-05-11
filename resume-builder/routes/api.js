@@ -6,7 +6,7 @@ const Resume = require('../models/Resume'); // Double check this path matches yo
 // --- SAVE OR CREATE RESUME ---
 router.post('/resume', async (req, res) => {
     try {
-        console.log("💾 Saving Resume for User:", req.body.userId);
+        // console.log("💾 Saving Resume for User:", req.body.userId);
         let savedResume;
 
         // 1. If the frontend sends a specific Resume ID, UPDATE that exact file
@@ -25,7 +25,7 @@ router.post('/resume', async (req, res) => {
 
         res.status(201).json({ message: "✅ Resume saved successfully!", data: savedResume });
     } catch (err) {
-        console.error("❌ Save Error:", err.message);
+        // console.error("❌ Save Error:", err.message);
         res.status(500).json({ error: err.message });
     }
 });
@@ -39,7 +39,7 @@ router.get('/resume', async (req, res) => {
         const resumes = await Resume.find({ userId: userId }).sort({ updatedAt: -1 });
         res.json(resumes);
     } catch (err) {
-        console.error("❌ Load Error:", err.message);
+        // console.error("❌ Load Error:", err.message);
         res.status(500).json({ error: "Failed to load resumes from database" });
     }
 });
@@ -55,7 +55,7 @@ router.get('/resume/:id', async (req, res) => {
         
         res.json(resume);
     } catch (err) {
-        console.error("❌ Load Single Error:", err.message);
+        // console.error("❌ Load Single Error:", err.message);
         res.status(500).json({ error: "Failed to load the resume" });
     }
 });
