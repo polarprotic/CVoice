@@ -911,6 +911,12 @@
 </div>
 
 <script>
+    // ── TOUCH/MOUSE COORD HELPER ──
+    function getCoords(e) {
+        const src = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
+        return { clientX: src.clientX, clientY: src.clientY };
+    }
+
     // ── STATE ──
     let selectedElement = null;
     let multiSelected = [];          // array of elements in multi-selection
@@ -1551,81 +1557,99 @@
         if (gV) gV.style.display = 'none'; if (gH) gH.style.display = 'none';
     }
 
-    // ── DRAG (SINGLE) ──
+   // ── DRAG (SINGLE) ──
     function makeDraggable(el) {
-        el.onmousedown = (e) => {
+        function startDrag(e) {
             if (e.target.classList.contains('handle')) return;
             if (el.classList.contains('editing')) { e.stopPropagation(); return; }
+            const isTouch = e.type === 'touchstart';
+            const coords = getCoords(e);
 
-            // Ctrl+click: toggle add/remove from multi-selection
-            if (e.ctrlKey || e.metaKey) {
+            // Ctrl+click: toggle multi-selection (mouse only)
+            if (!isTouch && (e.ctrlKey || e.metaKey)) {
                 e.preventDefault(); e.stopPropagation();
-                // If there's a single selected element, absorb it into multiSelected first
                 if (selectedElement && selectedElement !== el && multiSelected.length === 0) {
                     selectedElement.classList.remove('selected');
                     addToMultiSelected(selectedElement);
                     selectedElement = null;
                     document.getElementById('controls').style.display = 'none';
                 }
-                // Toggle clicked element
                 if (multiSelected.includes(el)) {
                     removeFromMultiSelected(el);
                     if (multiSelected.length === 0) {
                         document.getElementById('no-selection').style.display = 'block';
                         document.getElementById('multi-controls').style.display = 'none';
-                    } else {
-                        showMultiPanel();
-                    }
-                } else {
-                    addToMultiSelected(el);
-                    showMultiPanel();
-                }
+                    } else { showMultiPanel(); }
+                } else { addToMultiSelected(el); showMultiPanel(); }
                 return;
             }
 
-            // If currently multi-selected and we click inside the group → drag group
+            // Drag entire multi-selection group
             if (multiSelected.includes(el)) {
                 e.preventDefault(); e.stopPropagation();
-                const startX = e.clientX, startY = e.clientY;
+                const startX = coords.clientX, startY = coords.clientY;
                 const startPositions = multiSelected.map(m => ({ el: m, left: parseFloat(m.style.left)||0, top: parseFloat(m.style.top)||0 }));
                 let dragged = false;
-              document.onmousemove = (me) => {
-                    me.preventDefault(); dragged = true;
-                    const dx = (me.clientX - startX) / zoomLevel;
-                    const dy = (me.clientY - startY) / zoomLevel;
+                const onMove = (me) => {
+                    if (me.cancelable) me.preventDefault();
+                    dragged = true;
+                    const c = getCoords(me);
+                    const dx = (c.clientX - startX) / zoomLevel;
+                    const dy = (c.clientY - startY) / zoomLevel;
                     startPositions.forEach(p => {
                         p.el.style.left = (p.left + dx) + 'px';
-                        p.el.style.top = (p.top + dy) + 'px';
+                        p.el.style.top  = (p.top  + dy) + 'px';
                     });
-                    // Smart guides for first element in group
                     if (startPositions.length > 0) {
                         const lead = startPositions[0].el;
                         const snap = calculateSnap(lead, parseFloat(lead.style.left), parseFloat(lead.style.top), lead.offsetWidth, lead.offsetHeight);
                         updateGuides(lead, snap.snappedX, snap.snappedY, snap.guideX, snap.guideY);
                     }
                 };
-                document.onmouseup = () => {
-                    document.onmousemove = null; document.onmouseup = null;
+                const onEnd = () => {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('touchmove', onMove);
+                    document.removeEventListener('mouseup',   onEnd);
+                    document.removeEventListener('touchend',  onEnd);
                     hideGuides();
                     if (dragged) saveState();
                 };
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('touchmove', onMove, { passive: false });
+                document.addEventListener('mouseup',   onEnd);
+                document.addEventListener('touchend',  onEnd);
                 return;
             }
 
             e.preventDefault(); e.stopPropagation();
             if (selectedElement !== el) selectElement(el);
-            let sx = e.clientX, sy = e.clientY, sl = el.offsetLeft, st = el.offsetTop, dragged = false;
-            document.onmouseup = () => { document.onmouseup = null; document.onmousemove = null; hideGuides(); checkPageSwitch(el); if (dragged) saveState(); };
-            document.onmousemove = (e) => {
-                e.preventDefault(); dragged = true;
-                let dx = (e.clientX-sx)/zoomLevel, dy = (e.clientY-sy)/zoomLevel;
-                let rawL = Math.round((sl+dx)/SNAP_GRID)*SNAP_GRID;
-                let rawT = Math.round((st+dy)/SNAP_GRID)*SNAP_GRID;
+            let sx = coords.clientX, sy = coords.clientY, sl = el.offsetLeft, st = el.offsetTop, dragged = false;
+            const onMove = (me) => {
+                if (me.cancelable) me.preventDefault();
+                dragged = true;
+                const c = getCoords(me);
+                let dx = (c.clientX - sx) / zoomLevel, dy = (c.clientY - sy) / zoomLevel;
+                let rawL = Math.round((sl + dx) / SNAP_GRID) * SNAP_GRID;
+                let rawT = Math.round((st + dy) / SNAP_GRID) * SNAP_GRID;
                 const snap = calculateSnap(el, rawL, rawT, el.offsetWidth, el.offsetHeight);
                 el.style.left = snap.newLeft + 'px'; el.style.top = snap.newTop + 'px';
                 updateGuides(el, snap.snappedX, snap.snappedY, snap.guideX, snap.guideY);
             };
-        };
+            const onEnd = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('mouseup',   onEnd);
+                document.removeEventListener('touchend',  onEnd);
+                hideGuides(); checkPageSwitch(el);
+                if (dragged) saveState();
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('touchmove', onMove, { passive: false });
+            document.addEventListener('mouseup',   onEnd);
+            document.addEventListener('touchend',  onEnd);
+        }
+        el.onmousedown = startDrag;
+        el.addEventListener('touchstart', startDrag, { passive: false });
     }
 
     // ── MARQUEE (drag-to-select on empty space) ──
@@ -1746,23 +1770,37 @@
         });
     }
 
-    // ── RESIZE ──
+  // ── RESIZE ──
     function makeResizable(el) {
         el.querySelectorAll('.handle').forEach(handle => {
-            handle.onmousedown = (e) => {
+            function startResize(e) {
                 e.preventDefault(); e.stopPropagation();
+                const coords = getCoords(e);
                 const dir = handle.className.split('handle-')[1];
-                const sW = el.offsetWidth, sH = el.offsetHeight, sX = e.clientX, sY = e.clientY, sL = el.offsetLeft, sT = el.offsetTop;
+                const sW = el.offsetWidth, sH = el.offsetHeight, sX = coords.clientX, sY = coords.clientY, sL = el.offsetLeft, sT = el.offsetTop;
                 const onMove = (me) => {
-                    const dx = (me.clientX-sX)/zoomLevel, dy = (me.clientY-sY)/zoomLevel;
+                    if (me.cancelable) me.preventDefault();
+                    const c = getCoords(me);
+                    const dx = (c.clientX - sX) / zoomLevel, dy = (c.clientY - sY) / zoomLevel;
                     if (dir.includes('e')) { const nW = Math.max(1,sW+dx); el.style.width=nW+'px'; if(selectedElement===el) document.getElementById('elem-width').value=Math.round(nW); }
                     if (dir.includes('s')) { const nH = Math.max(1,sH+dy); el.style.height=nH+'px'; if(selectedElement===el) document.getElementById('elem-height').value=Math.round(nH); }
                     if (dir.includes('w')) { const nW=sW-dx; if(nW>=1){ el.style.width=nW+'px'; el.style.left=(sL+dx)+'px'; if(selectedElement===el) document.getElementById('elem-width').value=Math.round(nW); } }
                     if (dir.includes('n')) { const nH=sH-dy; if(nH>=1){ el.style.height=nH+'px'; el.style.top=(sT+dy)+'px'; if(selectedElement===el) document.getElementById('elem-height').value=Math.round(nH); } }
                 };
-                const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); saveState(); };
-                window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
-            };
+                const onEnd = () => {
+                    window.removeEventListener('mousemove', onMove);
+                    window.removeEventListener('touchmove', onMove);
+                    window.removeEventListener('mouseup',   onEnd);
+                    window.removeEventListener('touchend',  onEnd);
+                    saveState();
+                };
+                window.addEventListener('mousemove', onMove);
+                window.addEventListener('touchmove', onMove, { passive: false });
+                window.addEventListener('mouseup',   onEnd);
+                window.addEventListener('touchend',  onEnd);
+            }
+            handle.onmousedown = startResize;
+            handle.addEventListener('touchstart', startResize, { passive: false });
         });
     }
 

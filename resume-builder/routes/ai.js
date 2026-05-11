@@ -18,27 +18,91 @@ router.post('/analyze', async (req, res) => {
     // but we treat it as the 'jobDescription'.
     const { jobTitle: jobDescription, resumeData } = req.body;
 
-    const prompt = `You are an elite Technical Recruiter and ATS Expert.
-        
-        TARGET JOB DESCRIPTION: 
-        "${jobDescription}"
-        
-        USER'S RESUME: 
-        ${resumeData}
+   const prompt = `You are a strict ATS (Applicant Tracking System) engine and senior technical recruiter. You are brutally accurate. You do not inflate scores. The average resume scores 45–65 on ATS. Only a near-perfect resume scores above 80.
 
-        INSTRUCTIONS: Perform a deep audit of the resume against the provided job description. Return exactly 3 scores (0-100) and 1 feedback string.
-        1. "atsScore": How machine-readable is the layout and text?
-        2. "score": Job match percentage. How relevant is the resume to the pasted job description?
-        3. "grammarScore": Spelling, punctuation, and tense consistency.
-        4. "suggestions": First, provide a clear justification for the job match score based on what is missing or aligns well. Then, give actionable, highly critical advice using **bolding** and bullet points to fix the resume flaws to better match the job description.
-        
-        CRITICAL: You must return ONLY a valid JSON object in this EXACT format. Do not use markdown blocks around the JSON.
-        {
-          "atsScore": 85,
-          "score": 75,
-          "grammarScore": 95,
-          "suggestions": "Detailed justification and advice string here..."
-        }
+TARGET JOB DESCRIPTION:
+"${jobDescription}"
+
+USER'S RESUME:
+${resumeData}
+
+---
+
+TASK 1 — ATS SCORE (0–100)
+Score the resume on ONLY the following 40 official ATS criteria. Each criterion is worth 2.5 points. Award full points only if the criterion is clearly and completely satisfied. Award 0 if it is missing or violated. Award 1.25 for partial compliance.
+
+LAYOUT & FORMAT (max 25 pts):
+[1] Uses a clean single-column layout with no tables, text boxes, or columns
+[2] No images, photos, logos, icons, or decorative graphics present
+[3] No headers or footers containing contact info or section titles
+[4] Standard fonts only (Arial, Calibri, Times New Roman, Helvetica, or similar)
+[5] Font size 10–12pt for body text, 14–18pt for headings
+[6] All text is selectable plain text (not embedded as image)
+[7] Consistent date format used throughout (e.g. Jan 2025 – Mar 2026)
+[8] Consistent formatting for headings, bullet styles, and spacing
+[9] Adequate white space — not cluttered or overly sparse
+[10] Standard bullet symbols only (• or -), no emojis or special characters
+
+CONTENT STRUCTURE (max 25 pts):
+[11] Full name present in the main body (not only in header/footer)
+[12] Phone number present
+[13] Professional email address present
+[14] LinkedIn profile link present
+[15] Location (city/state) present if relevant
+[16] Standard section headings used: Summary, Education, Experience, Projects, Skills, Certifications
+[17] Reverse chronological order used for Education and Experience
+[18] Professional Summary present with role-specific keywords
+[19] Dedicated Skills section with categorised technologies
+[20] Contact details are in the main body, not in a header or footer
+
+KEYWORD & CONTENT QUALITY (max 50 pts):
+[21] Resume is tailored — keywords from the job description appear naturally in the resume
+[22] Exact technical skills from the job posting are explicitly named
+[23] Tools and technologies from the JD are explicitly mentioned
+[24] Certifications or qualifications required by the JD are present
+[25] Industry-specific terminology from the JD is used
+[26] Job title on resume aligns with or closely matches the target role
+[27] Each bullet point starts with a strong action verb
+[28] Achievements are quantified with numbers, percentages, revenue, or time saved
+[29] Focus is on impact and accomplishments, not just responsibilities
+[30] Consistent verb tense: present for current roles, past for completed
+[31] No keyword stuffing — keywords are integrated naturally
+[32] Both full terms and acronyms used for key technologies (e.g. Artificial Intelligence (AI))
+[33] Programming languages explicitly listed
+[34] Frameworks and libraries explicitly listed
+[35] Databases and tools explicitly listed
+[36] GPA or academic performance included only if strong and relevant
+[37] GitHub, portfolio, or live project links included when relevant
+[38] No unnecessary personal info (age, gender, marital status, photo)
+[39] Abbreviations spelled out at least once if uncommon
+[40] Resume length appropriate: 1 page for students/early career, 2 pages max for experienced
+
+Sum the points for all 40 criteria. That total IS the atsScore. Do not round up. Do not add bonus points. Be strict.
+
+---
+
+TASK 2 — JOB MATCH SCORE (0–100)
+This score is already working well. Keep your existing logic: compare resume skills, experience, and responsibilities against the JD. Penalise missing required skills (-10 each), missing required experience, and misaligned seniority level. Be realistic.
+
+---
+
+TASK 3 — GRAMMAR SCORE (0–100)
+Check spelling, punctuation, and tense consistency. This can range 65–95.
+
+---
+
+TASK 4 — SUGGESTIONS
+Write a short honest paragraph explaining the ATS score — list which specific criteria from the 40 above were failed or only partially met. Then give bullet-pointed, actionable fixes using **bolding** for emphasis.
+
+---
+
+CRITICAL: Return ONLY a valid JSON object. No markdown, no backticks, nothing else.
+{
+  "atsScore": 58,
+  "score": 62,
+  "grammarScore": 88,
+  "suggestions": "Honest verdict and specific fixes here..."
+}
     `;
 
     // Loop through the models until one succeeds
