@@ -6,6 +6,12 @@
     <title>Dashboard | CVoice</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lato:wght@400;700&family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preload" as="image" href="1st.png">
+    <link rel="preload" as="image" href="2nd.png">
+    <link rel="preload" as="image" href="3rd.png">
+    <link rel="preload" as="image" href="4th.png">
+    <link rel="preload" as="image" href="5th.png">
+    <link rel="preload" as="image" href="6th.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
@@ -279,7 +285,8 @@
         }
         .tpl-card:hover .tpl-thumb { transform: scale(1.06) rotate(1deg); }
         .tpl-card.active .tpl-thumb { border-color: var(--rose-rim); }
-        .tpl-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+        .tpl-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: opacity 0.3s ease; opacity: 0; }
+        .tpl-thumb img.loaded { opacity: 1; }
 
         .tpl-info { flex: 1; min-width: 0; pointer-events: none; }
         .tpl-name {
@@ -338,7 +345,8 @@
         .sc-preview {
             width: 100%; height: 180px; overflow: hidden; background: #0f0810; position: relative;
         }
-        .sc-preview img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 0.5s var(--ease); }
+        .sc-preview img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 0.5s var(--ease), opacity 0.4s ease; opacity: 0; }
+        .sc-preview img.loaded { opacity: 1; }
         .showcase-card:hover .sc-preview img { transform: scale(1.04); }
 
         .sc-overlay {
@@ -1868,6 +1876,40 @@ function sendToCustomizer() {
                 track.style.transition = '';
             }
         });
+    })();
+
+    /* ─── Image fade-in on load ─── */
+    (function initImageReveal() {
+        function revealImg(img) {
+            if (img.complete && img.naturalWidth > 0) {
+                img.classList.add('loaded');
+            } else {
+                img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+                img.addEventListener('error', () => img.classList.add('loaded'), { once: true }); // fail gracefully
+            }
+        }
+        // Run immediately for already-in-DOM images
+        document.querySelectorAll('.sc-preview img, .tpl-thumb img').forEach(revealImg);
+
+        // Also cover the right-panel preview image
+        const previewImg = document.getElementById('preview-img');
+        if (previewImg) {
+            revealImg(previewImg);
+            // Re-run whenever src changes (template switch)
+            const _origSelect = window.selectTemplate;
+            // Patch after DOMContentLoaded so selectTemplate is defined
+            document.addEventListener('DOMContentLoaded', () => {
+                const origSelect = window.selectTemplate;
+                window.selectTemplate = function(id) {
+                    origSelect(id);
+                    const img = document.getElementById('preview-img');
+                    if (img) {
+                        img.classList.remove('loaded');
+                        revealImg(img);
+                    }
+                };
+            }, { once: true });
+        }
     })();
 
     /* ─── Filter + sort ─── */
