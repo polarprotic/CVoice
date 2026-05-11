@@ -1041,8 +1041,8 @@
     }
 
     // ── CLEAR CANVAS ──
-   function clearCanvas() {
-        if (!confirm('🗑️ Clear the entire canvas?\n\nThis cannot be undone.')) return;
+  async function clearCanvas() {
+        if (!await showConfirm('Clear the entire canvas? This cannot be undone.', 'Clear Canvas')) return;
         const page = document.getElementById('page-1');
         if (page) page.innerHTML = '';
         deselectAll(null);
@@ -1988,7 +1988,7 @@
     // ── SAVE ──
     async function saveToArchives() {
         const userId = localStorage.getItem('userId');
-        if (!userId) return alert("Log in to save!");
+        if (!userId) return showToast("Please log in to save your resume.", "error");
         if (selectedElement) { selectedElement.classList.remove('selected','editing'); if (selectedElement.classList.contains('text-element')) selectedElement.contentEditable = "false"; }
         clearMultiSelected();
         const docName = document.getElementById('doc-name-input').value.trim() || "Untitled Design";
@@ -2005,11 +2005,54 @@
             }
         };
         try {
-            const res = await fetch("http://localhost:5000/api/resume", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
+           const res = await fetch("/api/resume", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
             const result = await res.json();
-            if (res.ok) { alert("Saved to archives!"); if (!existingId && result.data?._id) window.history.replaceState(null,"",`/customize.html?id=${result.data._id}`); }
-            else alert("Server Error: " + result.error);
-        } catch(e) { alert("Error connecting to server."); }
+            if (res.ok) { showToast("Saved to archives successfully!", "success"); if (!existingId && result.data?._id) window.history.replaceState(null,"",`/customize.html?id=${result.data._id}`); }
+            else showToast("Server Error: " + result.error, "error");
+       } catch(e) { showToast("Could not connect to server. Please try again.", "error"); }
+    }
+
+   // ── TOAST UI ──
+    function showToast(message, type = 'info') {
+        const existing = document.getElementById('app-toast');
+        if (existing) existing.remove();
+        const colors = {
+            success: { bg:'#14532d', border:'#22c55e', dot:'#22c55e', color:'#dcfce7' },
+            error:   { bg:'#450a0a', border:'#ef4444', dot:'#ef4444', color:'#fee2e2' },
+            info:    { bg:'#1e293b', border:'#C45576', dot:'#C45576', color:'#EAE1E4' },
+        };
+        const c = colors[type] || colors.info;
+        const toast = document.createElement('div');
+        toast.id = 'app-toast';
+        toast.style.cssText = `position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:${c.bg};border:1px solid ${c.border};color:${c.color};padding:12px 22px;border-radius:12px;font-size:0.84rem;font-weight:600;z-index:99999;box-shadow:0 8px 30px rgba(0,0,0,0.5);display:flex;gap:10px;align-items:center;opacity:0;transition:opacity 0.25s ease,transform 0.25s ease;font-family:'Plus Jakarta Sans',sans-serif;max-width:420px;pointer-events:none;`;
+        toast.innerHTML = `<div style="width:8px;height:8px;border-radius:50%;background:${c.dot};flex-shrink:0;"></div><span>${message}</span>`;
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => { toast.style.opacity='1'; toast.style.transform='translateX(-50%) translateY(0)'; });
+        setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateX(-50%) translateY(10px)'; setTimeout(()=>toast.remove(),300); }, 3500);
+    }
+
+    // ── CONFIRM UI ──
+    function showConfirm(message, confirmLabel = 'Confirm') {
+        return new Promise((resolve) => {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;`;
+            overlay.innerHTML = `
+            <div style="background:#140D10;border:1px solid rgba(196,85,118,0.25);border-radius:16px;padding:28px 32px;max-width:380px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,0.6);display:flex;flex-direction:column;gap:18px;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <span style="color:#EAE1E4;font-weight:700;font-size:0.95rem;">Are you sure?</span>
+                </div>
+                <p style="color:#A58A94;font-size:0.84rem;line-height:1.6;margin:0;">${message}</p>
+                <div style="display:flex;gap:10px;justify-content:flex-end;">
+                    <button id="_conf_cancel" style="padding:8px 18px;border-radius:8px;border:1px solid rgba(196,85,118,0.2);background:transparent;color:#A58A94;font-weight:600;cursor:pointer;font-size:0.82rem;font-family:inherit;">Cancel</button>
+                    <button id="_conf_ok" style="padding:8px 18px;border-radius:8px;border:none;background:#9E3B56;color:white;font-weight:700;cursor:pointer;font-size:0.82rem;font-family:inherit;box-shadow:0 4px 14px rgba(158,59,86,0.4);">${confirmLabel}</button>
+                </div>
+            </div>`;
+            document.body.appendChild(overlay);
+            overlay.querySelector('#_conf_ok').onclick    = () => { overlay.remove(); resolve(true); };
+            overlay.querySelector('#_conf_cancel').onclick = () => { overlay.remove(); resolve(false); };
+            overlay.addEventListener('click', (e) => { if(e.target===overlay){ overlay.remove(); resolve(false); } });
+        });
     }
 
     // ── UTILITY ──
@@ -2049,7 +2092,7 @@
 
     async function loadResume(id) {
         try {
-            const res = await fetch(`http://localhost:5000/api/resume/${id}`);
+            const res = await fetch(`/api/resume/${id}`);
             const data = await res.json();
             if (data && data.templateSpecificInputs?.htmlContent) {
                 const page = document.getElementById('page-1');
@@ -2059,7 +2102,7 @@
                 page.querySelectorAll('.element').forEach(el => initElement(el));
                 initMarquee(page);
             }
-        } catch (err) { console.error("Load error:", err); alert("Failed to load saved data."); }
+       } catch (err) { showToast("Failed to load your resume. Please try again.", "error"); }
     }
 </script>
 </body>
