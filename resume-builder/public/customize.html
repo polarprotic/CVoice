@@ -932,6 +932,7 @@
     let historyIndex = -1;
     let currentRange = null;
     let arrowMoved = false;
+    let isPinching = false;
 
     // ── MULTI-TEXT HELPERS ──
     function multiApplyText(prop, val) {
@@ -1562,6 +1563,8 @@
         function startDrag(e) {
             if (e.target.classList.contains('handle')) return;
             if (el.classList.contains('editing')) { e.stopPropagation(); return; }
+            if (e.touches && e.touches.length >= 2) return;
+            if (isPinching) return;
             const isTouch = e.type === 'touchstart';
             const coords = getCoords(e);
 
@@ -1591,6 +1594,7 @@
                 const startPositions = multiSelected.map(m => ({ el: m, left: parseFloat(m.style.left)||0, top: parseFloat(m.style.top)||0 }));
                 let dragged = false;
                 const onMove = (me) => {
+                    if (me.touches && me.touches.length >= 2) { onEnd(); return; }
                     if (me.cancelable) me.preventDefault();
                     dragged = true;
                     const c = getCoords(me);
@@ -1625,10 +1629,11 @@
             if (selectedElement !== el) selectElement(el);
             let sx = coords.clientX, sy = coords.clientY, sl = el.offsetLeft, st = el.offsetTop, dragged = false;
             const onMove = (me) => {
+                if (me.touches && me.touches.length >= 2) { onEnd(); return; }
                 if (me.cancelable) me.preventDefault();
                 dragged = true;
                 const c = getCoords(me);
-                let dx = (c.clientX - sx) / zoomLevel, dy = (c.clientY - sy) / zoomLevel;
+                const dx = (c.clientX - sx) / zoomLevel, dy = (c.clientY - sy) / zoomLevel;
                 let rawL = Math.round((sl + dx) / SNAP_GRID) * SNAP_GRID;
                 let rawT = Math.round((st + dy) / SNAP_GRID) * SNAP_GRID;
                 const snap = calculateSnap(el, rawL, rawT, el.offsetWidth, el.offsetHeight);
@@ -2093,7 +2098,7 @@
         });
     }
 
-    // ── PINCH GESTURE (font-size on selected element / zoom on canvas) ──
+   // ── PINCH GESTURE (font-size on selected element / zoom on canvas) ──
     (function initPinch() {
         let startDist = 0, startFontSize = 0, startZoom = 0, pinchTarget = null;
 
@@ -2105,9 +2110,10 @@
 
         document.addEventListener('touchstart', (e) => {
             if (e.touches.length !== 2) return;
+            // Mark pinching immediately so drag handlers abort
+            isPinching = true;
             startDist = getTouchDist(e);
 
-            // If a text element is selected and at least one finger is over it, pinch = font size
             if (selectedElement && selectedElement.classList.contains('text-element')) {
                 const rect = selectedElement.getBoundingClientRect();
                 const near = (t) =>
@@ -2119,13 +2125,14 @@
                     return;
                 }
             }
-            // Otherwise pinch = canvas zoom
             pinchTarget = 'canvas';
             startZoom = zoomLevel;
-        }, { passive: true });
+        }, { passive: false });
 
         document.addEventListener('touchmove', (e) => {
             if (e.touches.length !== 2 || !startDist) return;
+            // Prevent scroll and any drag side-effects during pinch
+            if (e.cancelable) e.preventDefault();
             const ratio = getTouchDist(e) / startDist;
 
             if (pinchTarget === 'element' && selectedElement && selectedElement.classList.contains('text-element')) {
@@ -2141,7 +2148,7 @@
                 document.getElementById('zoom-slider').value = newZoom;
                 updateZoom(newZoom);
             }
-        }, { passive: true });
+        }, { passive: false });
 
         document.addEventListener('touchend', (e) => {
             if (e.touches.length < 2 && startDist > 0) {
@@ -2149,6 +2156,16 @@
                 startDist = 0;
                 pinchTarget = null;
             }
+            // Only clear isPinching once all fingers lifted
+            if (e.touches.length === 0) {
+                isPinching = false;
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchcancel', () => {
+            startDist = 0;
+            pinchTarget = null;
+            isPinching = false;
         }, { passive: true });
     })();
 
