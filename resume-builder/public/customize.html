@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVoice | Pro Customizer</title>
+    <title>CVoice | Customizer</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;700;800&family=Josefin+Sans:wght@300;400;600;700&family=Lato:wght@300;400;700;900&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Merriweather:wght@300;400;700&family=Montserrat:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Raleway:wght@300;400;600;700;800&family=Roboto+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -69,8 +69,9 @@
                 page-break-after: always;
                 break-after: page;
                 width: 210mm !important;
-                height: 297mm !important;
-                overflow: hidden !important;
+                min-height: 297mm !important;
+                height: auto !important;
+                overflow: visible !important;
                 position: relative !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -126,9 +127,9 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.4), inset 0 -1px 0 rgba(196, 85, 118, 0.08);
         }
 
-        .header-left { flex: 1; display: flex; align-items: center; }
+       .header-left { flex: 1; display: flex; align-items: center; min-width: 0; max-width: 220px; }
         .header-center { flex: 1; display: flex; justify-content: center; align-items: center; }
-        .header-right { flex: 1; display: flex; justify-content: flex-end; gap: 10px; }
+        .header-right { flex: 1; display: flex; justify-content: flex-end; gap: 10px; min-width: 0; max-width: 220px; }
 
         .logo { font-weight: 800; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text); }
         .logo span { color: var(--rose-light); }
@@ -195,12 +196,12 @@
             background-size: 32px 32px;
         }
 
-        .resume-page {
-            width: 794px; height: 1123px;
+       .resume-page {
+            width: 794px; min-height: 1123px; height: auto;
             background: white;
             position: relative;
             box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(196,85,118,0.1);
-            flex-shrink: 0; overflow: hidden;
+            flex-shrink: 0; overflow: visible;
             transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.3s ease;
             transform-origin: top center;
         }
@@ -592,6 +593,63 @@
         <div id="multi-controls" style="display:none;">
             <div class="inspector-title">Multi-Selection</div>
             <div id="multi-selection-info"></div>
+
+            <!-- Common text properties -->
+            <div id="multi-text-controls" class="prop-group" style="display:none;">
+                <div class="section-label-row"><span class="sl">Typography</span><div class="sl-line"></div></div>
+                <div class="prop-row">
+                    <label>Font Family</label>
+                    <select id="multi-font-family" onchange="multiApplyText('fontFamily', this.value)">
+                        <optgroup label="Used in Templates">
+                            <option value="'Computer Modern Serif', serif">Computer Modern</option>
+                            <option value="'Lato', sans-serif">Lato</option>
+                            <option value="'Inter', sans-serif">Inter</option>
+                            <option value="'Plus Jakarta Sans', sans-serif">Jakarta Sans</option>
+                        </optgroup>
+                        <optgroup label="Sans Serif">
+                            <option value="'Poppins', sans-serif">Poppins</option>
+                            <option value="'Montserrat', sans-serif">Montserrat</option>
+                            <option value="'Raleway', sans-serif">Raleway</option>
+                            <option value="'Work Sans', sans-serif">Work Sans</option>
+                            <option value="'DM Sans', sans-serif">DM Sans</option>
+                            <option value="'Nunito', sans-serif">Nunito</option>
+                            <option value="'Open Sans', sans-serif">Open Sans</option>
+                        </optgroup>
+                        <optgroup label="Serif">
+                            <option value="'Merriweather', serif">Merriweather</option>
+                            <option value="'Playfair Display', serif">Playfair Display</option>
+                            <option value="'Lora', serif">Lora</option>
+                            <option value="'Crimson Text', serif">Crimson Text</option>
+                        </optgroup>
+                        <optgroup label="Mono">
+                            <option value="'Roboto Mono', monospace">Roboto Mono</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="prop-row">
+                    <label>Font Size</label>
+                    <input type="number" id="multi-font-size" min="1" max="300" style="width:80px;" placeholder="—"
+                           onchange="multiApplyText('fontSize', this.value + 'px')">
+                </div>
+                <div class="prop-row">
+                    <label>Color</label>
+                    <input type="color" class="color-circle" id="multi-text-color" oninput="multiApplyText('color', this.value)" onchange="saveState()">
+                </div>
+                <div style="margin-bottom:8px;">
+                    <label style="font-size:0.75rem;color:var(--text-3);font-weight:700;display:block;margin-bottom:6px;">Format</label>
+                    <div class="align-row">
+                        <button class="btn-style" onmousedown="event.preventDefault()" onclick="multiToggleBold()" title="Bold">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 010 8H6z"/><path d="M6 12h9a4 4 0 010 8H6z"/></svg>
+                        </button>
+                        <button class="btn-style" onmousedown="event.preventDefault()" onclick="multiToggleItalic()" title="Italic">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>
+                        </button>
+                        <button class="btn-style" onmousedown="event.preventDefault()" onclick="multiToggleUnderline()" title="Underline">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a6 6 0 0012 0V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="prop-group" style="margin-top:14px;">
                 <div class="section-label-row"><span class="sl">Layer</span><div class="sl-line"></div></div>
                 <div style="display:flex;gap:6px;margin-bottom:8px;">
@@ -869,6 +927,53 @@
     let currentRange = null;
     let arrowMoved = false;
 
+    // ── MULTI-TEXT HELPERS ──
+    function multiApplyText(prop, val) {
+        multiSelected.forEach(el => {
+            if (el.classList.contains('text-element')) {
+                el.style[prop] = val;
+                el.querySelectorAll('*').forEach(child => { child.style[prop] = val; });
+            }
+        });
+        saveState();
+    }
+
+    function multiToggleBold() {
+        const allBold = multiSelected.filter(el => el.classList.contains('text-element'))
+            .every(el => parseInt(window.getComputedStyle(el).fontWeight) >= 600);
+        multiSelected.forEach(el => {
+            if (el.classList.contains('text-element')) {
+                el.style.fontWeight = allBold ? '400' : '700';
+                el.querySelectorAll('*').forEach(c => c.style.fontWeight = allBold ? '400' : '700');
+            }
+        });
+        saveState();
+    }
+
+    function multiToggleItalic() {
+        const allItalic = multiSelected.filter(el => el.classList.contains('text-element'))
+            .every(el => window.getComputedStyle(el).fontStyle === 'italic');
+        multiSelected.forEach(el => {
+            if (el.classList.contains('text-element')) {
+                el.style.fontStyle = allItalic ? 'normal' : 'italic';
+                el.querySelectorAll('*').forEach(c => c.style.fontStyle = allItalic ? 'normal' : 'italic');
+            }
+        });
+        saveState();
+    }
+
+    function multiToggleUnderline() {
+        const allUnderline = multiSelected.filter(el => el.classList.contains('text-element'))
+            .every(el => window.getComputedStyle(el).textDecorationLine.includes('underline'));
+        multiSelected.forEach(el => {
+            if (el.classList.contains('text-element')) {
+                el.style.textDecoration = allUnderline ? 'none' : 'underline';
+                el.querySelectorAll('*').forEach(c => c.style.textDecoration = allUnderline ? 'none' : 'underline');
+            }
+        });
+        saveState();
+    }
+
     // ── ZOOM ──
     function updateZoom(val) {
         zoomLevel = parseFloat(val);
@@ -979,6 +1084,8 @@
         document.getElementById('controls').style.display = 'none';
         document.getElementById('multi-controls').style.display = 'block';
         document.getElementById('multi-selection-info').textContent = `${multiSelected.length} elements selected`;
+        const hasText = multiSelected.some(el => el.classList.contains('text-element'));
+        document.getElementById('multi-text-controls').style.display = hasText ? 'block' : 'none';
     }
 
     function deselectAll(e) {
@@ -1450,8 +1557,8 @@
             if (e.target.classList.contains('handle')) return;
             if (el.classList.contains('editing')) { e.stopPropagation(); return; }
 
-            // Shift+click: toggle add/remove from multi-selection
-            if (e.shiftKey) {
+            // Ctrl+click: toggle add/remove from multi-selection
+            if (e.ctrlKey || e.metaKey) {
                 e.preventDefault(); e.stopPropagation();
                 // If there's a single selected element, absorb it into multiSelected first
                 if (selectedElement && selectedElement !== el && multiSelected.length === 0) {
@@ -1482,7 +1589,7 @@
                 const startX = e.clientX, startY = e.clientY;
                 const startPositions = multiSelected.map(m => ({ el: m, left: parseFloat(m.style.left)||0, top: parseFloat(m.style.top)||0 }));
                 let dragged = false;
-                document.onmousemove = (me) => {
+              document.onmousemove = (me) => {
                     me.preventDefault(); dragged = true;
                     const dx = (me.clientX - startX) / zoomLevel;
                     const dy = (me.clientY - startY) / zoomLevel;
@@ -1490,9 +1597,16 @@
                         p.el.style.left = (p.left + dx) + 'px';
                         p.el.style.top = (p.top + dy) + 'px';
                     });
+                    // Smart guides for first element in group
+                    if (startPositions.length > 0) {
+                        const lead = startPositions[0].el;
+                        const snap = calculateSnap(lead, parseFloat(lead.style.left), parseFloat(lead.style.top), lead.offsetWidth, lead.offsetHeight);
+                        updateGuides(lead, snap.snappedX, snap.snappedY, snap.guideX, snap.guideY);
+                    }
                 };
                 document.onmouseup = () => {
                     document.onmousemove = null; document.onmouseup = null;
+                    hideGuides();
                     if (dragged) saveState();
                 };
                 return;
@@ -1542,8 +1656,8 @@
             marqueeEl.style.display = 'block';
             page.appendChild(marqueeEl);
 
-            // Clear previous selection on fresh drag (not shift)
-            if (!e.shiftKey) {
+           // Clear previous selection on fresh drag (not ctrl)
+            if (!(e.ctrlKey || e.metaKey)) {
                 if (selectedElement) {
                     selectedElement.classList.remove('selected', 'editing');
                     if (selectedElement.classList.contains('text-element')) selectedElement.contentEditable = 'false';
@@ -1595,7 +1709,7 @@
                         return r > mLeft && l < mRight && b > mTop && t < mBottom;
                     });
 
-                    if (hit.length === 1 && !e.shiftKey) {
+                    if (hit.length === 1 && !(e.ctrlKey || e.metaKey)) {
                         selectElement(hit[0]);
                     } else if (hit.length > 1) {
                         // If single was selected and shift, absorb it
@@ -1675,7 +1789,7 @@
             if (el.classList.contains('editing')) { e.stopPropagation(); return; }
             e.stopPropagation();
             // Shift-click handled in makeDraggable, but in case mousedown fires here too:
-            if (!e.shiftKey && !multiSelected.includes(el)) {
+            if (!(e.ctrlKey || e.metaKey) && !multiSelected.includes(el)) {
                 if (selectedElement !== el) selectElement(el);
             }
         });
@@ -1778,9 +1892,9 @@
             }
         }
 
-        const isInspectorFocused = document.activeElement &&
+       const isInspectorFocused = document.activeElement &&
             (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT' || document.activeElement.tagName === 'TEXTAREA') &&
-            document.getElementById('inspector').contains(document.activeElement);
+            (document.getElementById('inspector').contains(document.activeElement) || document.activeElement.id === 'doc-name-input');
 
         // Delete
         if ((e.key === 'Delete' || e.key === 'Backspace') && !isTyping && !isInspectorFocused) {
