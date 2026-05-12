@@ -1909,7 +1909,91 @@
   }
 }
 
-      /* ── PDF Import Overlay ── */
+   /* ── Drag & Drop Reorder ── */
+.dynamic-item {
+  cursor: default;
+  user-select: none;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
+              margin 0.2s ease,
+              box-shadow 0.2s ease,
+              opacity 0.15s ease;
+  will-change: transform;
+}
+.drag-handle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  color: rgba(255,255,255,0.18);
+  border-radius: 9px 0 0 9px;
+  transition: color 0.15s, background 0.15s;
+  z-index: 3;
+  touch-action: none;
+}
+.drag-handle:hover {
+  color: rgba(196,85,118,0.7);
+  background: rgba(196,85,118,0.07);
+}
+.drag-handle:active { cursor: grabbing; }
+.drag-handle svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+.dynamic-item.dragging-ghost {
+  opacity: 0 !important;
+  pointer-events: none;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden;
+  transition: none !important;
+}
+.drag-floating-ghost {
+  position: fixed !important;
+  z-index: 999999 !important;
+  pointer-events: none !important;
+  opacity: 0.96;
+  transform: scale(1.04) rotate(-1.2deg) !important;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.75),
+    0 0 0 1.5px var(--rose-light),
+    0 0 40px rgba(196,85,118,0.2) !important;
+  border-left: 2px solid var(--rose-light) !important;
+  border-radius: 9px;
+  background: #1e1924 !important;
+  transition: none !important;
+  will-change: left, top;
+}
+.dynamic-item.drag-over-top {
+  transform: translateY(10px) !important;
+  margin-top: -2px;
+  box-shadow: 0 -3px 0 0 var(--rose-light),
+              inset 0 1px 0 rgba(196,85,118,0.15) !important;
+}
+.dynamic-item.drag-over-bottom {
+  transform: translateY(-10px) !important;
+  margin-bottom: -2px;
+  box-shadow: 0 3px 0 0 var(--rose-light),
+              inset 0 -1px 0 rgba(196,85,118,0.15) !important;
+}
+.dynamic-item.drag-lifted {
+  opacity: 0.96;
+  transform: scale(1.04) rotate(-1.2deg);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.75), 0 0 0 1.5px var(--rose-light);
+  border-left-color: var(--rose-light) !important;
+  z-index: 999;
+  cursor: grabbing;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+/* ── PDF Import Overlay ── */
       #pdf-import-overlay {
         position: fixed; inset: 0;
         background: rgba(0,0,0,0.72);
@@ -3198,8 +3282,9 @@ ondrop="event.preventDefault();this.style.borderColor='rgba(196,85,118,0.35)';th
  
   // Re-render inputs from THIS template's state (could be empty = clean slate)
   renderInputs();
-  render();
-  triggerPreviewAnimation();
+        injectDragHandles();
+        render();
+        triggerPreviewAnimation();
 }
 
       function update(key, val) {
@@ -3235,7 +3320,8 @@ ondrop="event.preventDefault();this.style.borderColor='rgba(196,85,118,0.35)';th
         if (type === "ecCategories")
           state.ecCategories.push({ cat: "", items: "" });
         
-        renderInputs();
+       renderInputs();
+        injectDragHandles();
         render();
       }
 
@@ -3243,6 +3329,7 @@ ondrop="event.preventDefault();this.style.borderColor='rgba(196,85,118,0.35)';th
         state[type].splice(i, 1);
         state._touched[type] = true; 
         renderInputs();
+        injectDragHandles();
         render();
       }
 
@@ -3336,7 +3423,28 @@ function updateImageUI() {
           </div>`;
       }
 
-      function renderInputs() {
+      const DRAG_HANDLE_SVG = `<div class="drag-handle" title="Drag to reorder">
+  <svg width="10" height="16" viewBox="0 0 10 16" fill="none">
+    <circle cx="3" cy="3"  r="1.5" fill="currentColor"/>
+    <circle cx="7" cy="3"  r="1.5" fill="currentColor"/>
+    <circle cx="3" cy="8"  r="1.5" fill="currentColor"/>
+    <circle cx="7" cy="8"  r="1.5" fill="currentColor"/>
+    <circle cx="3" cy="13" r="1.5" fill="currentColor"/>
+    <circle cx="7" cy="13" r="1.5" fill="currentColor"/>
+  </svg>
+</div>`;
+
+function injectDragHandles() {
+  document.querySelectorAll('.dynamic-item').forEach(el => {
+    if (!el.querySelector('.drag-handle')) {
+      el.insertAdjacentHTML('afterbegin', DRAG_HANDLE_SVG);
+      el.style.paddingLeft = '24px';
+    }
+  });
+  initDragAndDrop();
+}
+
+function renderInputs() {
   normalizeState();
  
   document.getElementById("in-name").value = state.name;
@@ -4673,6 +4781,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
       }
  
       updateTemplate(currentTemplate);
+      setTimeout(injectDragHandles, 80);
     }
   } catch (error) {
     console.error("Error loading resume:", error);
@@ -5014,7 +5123,254 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
           }
       }
 
-      /* ── PDF Resume Import ── */
+      /* ── Drag & Drop Reorder Engine ── */
+function initDragAndDrop() {
+  const ARRAY_MAP = {
+    'edu-fields':          'education',
+    'exp-fields':          'experience',
+    'proj-fields':         'projects',
+    'tech-skill-fields':   'techSkills',
+    'achieve-fields':      'achievements',
+    'cert-fields':         'certifications',
+    'extra-fields':        'extracurricular',
+    'skill-level-fields':  'skillLevels',
+    'reference-fields':    'references',
+    'leadership-fields':   'leadership',
+    'initiatives-fields':  'initiatives',
+    'ec-cat-fields':       'ecCategories',
+  };
+
+  Object.entries(ARRAY_MAP).forEach(([containerId, stateKey]) => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    let dragSrc = null;
+    let ghost   = null;
+    let ghostOffX = 0, ghostOffY = 0;
+    let longPressTimer = null;
+    let touchActive = false;
+    let lastOverEl = null;
+    let lastOverPos = null; // 'top' | 'bottom'
+
+    /* ─── helpers ─── */
+    function getItems() {
+      return Array.from(container.querySelectorAll(':scope > .dynamic-item'));
+    }
+
+    function indexOfEl(el) {
+      return getItems().indexOf(el);
+    }
+
+    function clearIndicators() {
+      getItems().forEach(it => {
+        it.classList.remove('drag-over-top','drag-over-bottom');
+      });
+    }
+
+    function commitReorder(srcEl, targetEl, pos) {
+      if (!srcEl || !targetEl || srcEl === targetEl) return;
+      const items  = getItems();
+      const srcIdx = indexOfEl(srcEl);
+      const tgtIdx = indexOfEl(targetEl);
+      if (srcIdx === -1 || tgtIdx === -1) return;
+
+      // Reorder DOM
+      if (pos === 'top') {
+        container.insertBefore(srcEl, targetEl);
+      } else {
+        container.insertBefore(srcEl, targetEl.nextSibling);
+      }
+
+      // Reorder state array
+      const arr = state[stateKey];
+      if (!Array.isArray(arr)) return;
+      const [moved] = arr.splice(srcIdx, 1);
+      const newTgt  = indexOfEl(srcEl);  // position after DOM move
+      arr.splice(newTgt, 0, moved);
+      state[stateKey] = arr;
+      state._touched[stateKey] = true;
+      render();
+    }
+
+    /* ─── mouse drag ─── */
+   container.addEventListener('mousedown', e => {
+      const handle = e.target.closest('.drag-handle');
+      if (!handle) return;
+      e.preventDefault();
+      const item = handle.closest('.dynamic-item');
+      if (!item) return;
+      dragSrc = item;
+
+      const r = item.getBoundingClientRect();
+      ghost = item.cloneNode(true);
+      ghost.classList.add('drag-floating-ghost');
+      ghost.style.left   = r.left + 'px';
+      ghost.style.top    = r.top  + 'px';
+      ghost.style.width  = r.width + 'px';
+      ghost.style.margin = '0';
+      document.body.appendChild(ghost);
+      ghostOffX = e.clientX - r.left;
+      ghostOffY = e.clientY - r.top;
+
+      dragSrc.classList.add('dragging-ghost');
+      document.body.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup',   onMouseUp);
+
+   function onMouseMove(e) {
+      if (!dragSrc) return;
+
+      if (ghost) {
+        ghost.style.left = (e.clientX - ghostOffX) + 'px';
+        ghost.style.top  = (e.clientY - ghostOffY) + 'px';
+      }
+
+      const items = getItems();
+      clearIndicators();
+
+      items.forEach(it => {
+        if (it === dragSrc) return;
+        const r = it.getBoundingClientRect();
+        const mid = r.top + r.height / 2;
+        if (e.clientY >= r.top && e.clientY <= r.bottom) {
+          if (e.clientY < mid) {
+            it.classList.add('drag-over-top');
+            lastOverEl  = it;
+            lastOverPos = 'top';
+          } else {
+            it.classList.add('drag-over-bottom');
+            lastOverEl  = it;
+            lastOverPos = 'bottom';
+          }
+        }
+      });
+    }
+
+   function onMouseUp(e) {
+      if (!dragSrc) return;
+      clearIndicators();
+      if (ghost) { ghost.remove(); ghost = null; }
+      if (lastOverEl && lastOverPos) {
+        commitReorder(dragSrc, lastOverEl, lastOverPos);
+      }
+      dragSrc.classList.remove('dragging-ghost');
+      dragSrc = null;
+      lastOverEl = null;
+      lastOverPos = null;
+      document.body.style.cursor = '';
+    }
+
+    /* ─── touch drag (long-press to activate, then drag) ─── */
+    container.addEventListener('touchstart', e => {
+      const handle = e.target.closest('.drag-handle');
+      const item   = handle ? handle.closest('.dynamic-item') : null;
+      if (!item) return;
+
+      // Long-press: 400ms hold activates drag
+      longPressTimer = setTimeout(() => {
+        touchActive = true;
+        dragSrc = item;
+
+        // Vibrate for haptic feedback (supported on most Android)
+        if (navigator.vibrate) navigator.vibrate(40);
+
+        dragSrc.classList.add('drag-lifted');
+
+        // Build floating ghost
+        const r = item.getBoundingClientRect();
+        ghost = item.cloneNode(true);
+        ghost.style.cssText = `
+          position:fixed; left:${r.left}px; top:${r.top}px;
+          width:${r.width}px; z-index:99999;
+          pointer-events:none; opacity:0.92;
+          transform:scale(1.02); border-radius:9px;
+          box-shadow:0 16px 40px rgba(0,0,0,0.6), 0 0 0 1.5px var(--rose-light);
+          background:#1a1620; transition:none;
+        `;
+        document.body.appendChild(ghost);
+
+        const t = e.touches[0];
+        ghostOffX = t.clientX - r.left;
+        ghostOffY = t.clientY - r.top;
+
+        item.classList.add('dragging-ghost');
+        e.preventDefault();
+      }, 400);
+    }, { passive: true });
+
+    container.addEventListener('touchmove', e => {
+      if (longPressTimer && !touchActive) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
+      if (!touchActive || !dragSrc) return;
+      e.preventDefault();
+
+      const t = e.touches[0];
+
+      // Move ghost
+      if (ghost) {
+        ghost.style.left = (t.clientX - ghostOffX) + 'px';
+        ghost.style.top  = (t.clientY - ghostOffY) + 'px';
+      }
+
+      // Determine drop target
+      clearIndicators();
+      const items = getItems();
+      lastOverEl  = null;
+      lastOverPos = null;
+
+      items.forEach(it => {
+        if (it === dragSrc) return;
+        const r = it.getBoundingClientRect();
+        if (t.clientY >= r.top && t.clientY <= r.bottom) {
+          const mid = r.top + r.height / 2;
+          if (t.clientY < mid) {
+            it.classList.add('drag-over-top');
+            lastOverEl  = it;
+            lastOverPos = 'top';
+          } else {
+            it.classList.add('drag-over-bottom');
+            lastOverEl  = it;
+            lastOverPos = 'bottom';
+          }
+        }
+      });
+    }, { passive: false });
+
+    container.addEventListener('touchend', e => {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+      if (!touchActive) return;
+      touchActive = false;
+
+      clearIndicators();
+      if (ghost) { ghost.remove(); ghost = null; }
+      if (dragSrc) {
+        dragSrc.classList.remove('dragging-ghost','drag-lifted');
+        if (lastOverEl && lastOverPos) {
+          commitReorder(dragSrc, lastOverEl, lastOverPos);
+        }
+        dragSrc = null;
+      }
+      lastOverEl  = null;
+      lastOverPos = null;
+    });
+
+    container.addEventListener('touchcancel', () => {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+      touchActive = false;
+      if (ghost) { ghost.remove(); ghost = null; }
+      if (dragSrc) { dragSrc.classList.remove('dragging-ghost','drag-lifted'); dragSrc = null; }
+      clearIndicators();
+    });
+  });
+}
+
+/* ── PDF Resume Import ── */
       async function handlePDFImport(input) {
         if (!input.files || !input.files[0]) return;
         const file = input.files[0];
