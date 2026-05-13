@@ -1253,4 +1253,10 @@ box.className = `notification-box ${type}`;
                     },
                     error_callback: () => showNotification(isSignup ? 'signup-notification' : 'login-notification', 'Google login was cancelled or failed.', 'error')
                 });
+                client.requestAccessToken();
+            } 
+        }
         
+    </script>
+</body>
+</html>
