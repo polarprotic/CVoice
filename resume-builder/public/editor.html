@@ -1909,15 +1909,10 @@
   }
 }
 
-   /* ── Drag & Drop Reorder ── */
+    /* ── Drag & Drop Reorder ── */
 .dynamic-item {
   cursor: default;
   user-select: none;
-  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
-              margin 0.2s ease,
-              box-shadow 0.2s ease,
-              opacity 0.15s ease;
-  will-change: transform;
 }
 .drag-handle {
   position: absolute;
@@ -1944,52 +1939,24 @@
   pointer-events: none;
   flex-shrink: 0;
 }
-.dynamic-item.dragging-ghost {
-  opacity: 0 !important;
-  pointer-events: none;
-  height: 0 !important;
-  min-height: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-  overflow: hidden;
-  transition: none !important;
-}
-.drag-floating-ghost {
-  position: fixed !important;
-  z-index: 999999 !important;
-  pointer-events: none !important;
-  opacity: 0.96;
-  transform: scale(1.04) rotate(-1.2deg) !important;
-  box-shadow:
-    0 24px 60px rgba(0,0,0,0.75),
-    0 0 0 1.5px var(--rose-light),
-    0 0 40px rgba(196,85,118,0.2) !important;
-  border-left: 2px solid var(--rose-light) !important;
-  border-radius: 9px;
-  background: #1e1924 !important;
-  transition: none !important;
-  will-change: left, top;
-}
 .dynamic-item.drag-over-top {
-  transform: translateY(10px) !important;
+  border-top: 2px solid var(--rose-light) !important;
   margin-top: -2px;
-  box-shadow: 0 -3px 0 0 var(--rose-light),
-              inset 0 1px 0 rgba(196,85,118,0.15) !important;
 }
 .dynamic-item.drag-over-bottom {
-  transform: translateY(-10px) !important;
+  border-bottom: 2px solid var(--rose-light) !important;
   margin-bottom: -2px;
-  box-shadow: 0 3px 0 0 var(--rose-light),
-              inset 0 -1px 0 rgba(196,85,118,0.15) !important;
+}
+.dynamic-item.dragging-ghost {
+  opacity: 0.35;
+  pointer-events: none;
 }
 .dynamic-item.drag-lifted {
-  opacity: 0.96;
-  transform: scale(1.04) rotate(-1.2deg);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.75), 0 0 0 1.5px var(--rose-light);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.55), 0 0 0 1px var(--rose-light);
   border-left-color: var(--rose-light) !important;
   z-index: 999;
   cursor: grabbing;
+  transform: scale(1.015);
   transition: transform 0.1s, box-shadow 0.1s;
 }
 
@@ -5193,24 +5160,13 @@ function initDragAndDrop() {
     }
 
     /* ─── mouse drag ─── */
-   container.addEventListener('mousedown', e => {
+    container.addEventListener('mousedown', e => {
       const handle = e.target.closest('.drag-handle');
       if (!handle) return;
       e.preventDefault();
       const item = handle.closest('.dynamic-item');
       if (!item) return;
       dragSrc = item;
-
-      const r = item.getBoundingClientRect();
-      ghost = item.cloneNode(true);
-      ghost.classList.add('drag-floating-ghost');
-      ghost.style.left   = r.left + 'px';
-      ghost.style.top    = r.top  + 'px';
-      ghost.style.width  = r.width + 'px';
-      ghost.style.margin = '0';
-      document.body.appendChild(ghost);
-      ghostOffX = e.clientX - r.left;
-      ghostOffY = e.clientY - r.top;
 
       dragSrc.classList.add('dragging-ghost');
       document.body.style.cursor = 'grabbing';
@@ -5219,13 +5175,8 @@ function initDragAndDrop() {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup',   onMouseUp);
 
-   function onMouseMove(e) {
+    function onMouseMove(e) {
       if (!dragSrc) return;
-
-      if (ghost) {
-        ghost.style.left = (e.clientX - ghostOffX) + 'px';
-        ghost.style.top  = (e.clientY - ghostOffY) + 'px';
-      }
 
       const items = getItems();
       clearIndicators();
@@ -5248,10 +5199,9 @@ function initDragAndDrop() {
       });
     }
 
-   function onMouseUp(e) {
+    function onMouseUp(e) {
       if (!dragSrc) return;
       clearIndicators();
-      if (ghost) { ghost.remove(); ghost = null; }
       if (lastOverEl && lastOverPos) {
         commitReorder(dragSrc, lastOverEl, lastOverPos);
       }
