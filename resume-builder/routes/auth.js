@@ -75,10 +75,10 @@ router.post('/login', async (req, res) => {
 router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
 
 router.get('/github/callback', 
-  passport.authenticate('github', { failureRedirect: '/auth.html', session: false }),
+  passport.authenticate('github', { failureRedirect: 'https://c-voice.vercel.app/auth.html', session: false }),
   (req, res) => {
     const userEncoded = encodeURIComponent(req.user.name);
-    res.redirect(`/dashboard.html?id=${req.user._id}&name=${userEncoded}`);
+    res.redirect(`https://c-voice.vercel.app/dashboard.html?id=${req.user._id}&name=${userEncoded}`);
   }
 );
 
@@ -86,10 +86,10 @@ router.get('/github/callback',
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/auth.html', session: false }),
+  passport.authenticate('google', { failureRedirect: 'https://c-voice.vercel.app/auth.html', session: false }),
   (req, res) => {
     const userEncoded = encodeURIComponent(req.user.name);
-    res.redirect(`/dashboard.html?id=${req.user._id}&name=${userEncoded}`);
+    res.redirect(`https://c-voice.vercel.app/dashboard.html?id=${req.user._id}&name=${userEncoded}`);
   }
 );
 
