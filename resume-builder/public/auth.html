@@ -1168,7 +1168,7 @@ box.className = `notification-box ${type}`;
             document.getElementById('loader-text').innerText = 'Authenticating...';
             document.getElementById('global-loader').classList.add('active');
             try {
-                const res    = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+               const res    = await fetch('https://cvoice-1.onrender.com/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
                 const result = await res.json();
                 if (res.ok) {
                     localStorage.setItem('token',     result.token);
@@ -1206,7 +1206,7 @@ box.className = `notification-box ${type}`;
             document.getElementById('loader-text').innerText = 'Creating Account...';
             document.getElementById('global-loader').classList.add('active');
             try {
-                const res    = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password }) });
+                const res    = await fetch('https://cvoice-1.onrender.com/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password }) });
                 const result = await res.json();
                 if (res.ok) {
                     localStorage.setItem('token',     result.token);

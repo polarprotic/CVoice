@@ -2657,7 +2657,7 @@ ondrop="event.preventDefault();this.style.borderColor='rgba(196,85,118,0.35)';th
       try {
           const resumeText = document.getElementById("preview").innerText;
 
-          const response = await fetch("/api/ai/analyze", {
+          const response = await fetch("https://cvoice-1.onrender.com/api/ai/analyze", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ jobTitle: job, resumeData: resumeText }),
@@ -4603,7 +4603,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
           btn.disabled = true;
 
           try {
-              const response = await fetch("/api/ai/rewrite", {
+              const response = await fetch("https://cvoice-1.onrender.com/api/ai/rewrite", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ 
@@ -4677,7 +4677,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
   };
  
   try {
-    const response = await fetch("/api/resume", {
+   const response = await fetch("https://cvoice-1.onrender.com/api/resume", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -4701,7 +4701,7 @@ ${state.github ? '<span style="display: flex; align-items: center; gap: 4px;">' 
 
       async function loadResumeData(id) {
   try {
-    const response = await fetch(`/api/resume/${id}`);
+    const response = await fetch(`https://cvoice-1.onrender.com/api/resume/${id}`);
     if (!response.ok) throw new Error("Failed to load");
  
     const data = await response.json();
@@ -5360,7 +5360,7 @@ function initDragAndDrop() {
           /* ── Step 2: send to backend ── */
           setStep(2, 'Extracting data with AI…');
 
-          const apiRes = await fetch('/api/ai/parse-resume', {
+          const apiRes = await fetch('https://cvoice-1.onrender.com/api/ai/parse-resume', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ pdfBase64: base64 })

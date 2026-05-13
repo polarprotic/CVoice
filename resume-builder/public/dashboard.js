@@ -70,11 +70,11 @@ async function fetchSavedResumes() {
 
     try {
         // Try the primary endpoint first
-        let res = await fetch(`http://localhost:5000/api/resume/user/${userId}`);
+        let res = await fetch(`https://cvoice-1.onrender.com/api/resume/user/${userId}`);
 
         // Fallback to query-param style endpoint
         if (!res.ok) {
-            res = await fetch(`http://localhost:5000/api/resume?userId=${userId}`);
+           res = await fetch(`https://cvoice-1.onrender.com/api/resume?userId=${userId}`);
         }
 
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
@@ -151,7 +151,7 @@ async function deleteResume(id) {
     if (!confirm('Delete this resume? This cannot be undone.')) return;
 
     try {
-        const res = await fetch(`http://localhost:5000/api/resume/${id}`, { method: 'DELETE' });
+        const res = await fetch(`https://cvoice-1.onrender.com/api/resume/${id}`, { method: 'DELETE' });
 
         if (res.ok) {
             const card = document.getElementById(`resume-card-${id}`);
