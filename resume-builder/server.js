@@ -12,7 +12,17 @@ const User = require('./models/User');
 const app = express();
 
 // --- Middleware ---
-app.use(cors());
+app.set('trust proxy', 1); // Required for Render to secure cookies
+
+app.use(cors({
+  origin: [
+    'https://c-voice.vercel.app', 
+    'http://localhost:3000',      
+    'http://localhost:5000'       
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true 
+}));
 
 // Allows for large image uploads (Base64)
 app.use(express.json({ limit: '50mb' }));
