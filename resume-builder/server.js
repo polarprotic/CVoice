@@ -17,7 +17,7 @@ app.set('trust proxy', 1); // Required for Render to secure cookies
 app.use(cors({
   origin: [
     'https://c-voice.vercel.app', 
-    'http://localhost:3000',      
+    
     'http://localhost:5000'       
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -44,7 +44,12 @@ mongoose.connect(process.env.MONGO_URI)
 app.use(session({
   secret: 'pro_resume_secret_key',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    secure: true,        // Required for HTTPS (Render)
+    sameSite: 'none',    // Required for cross-domain (Render API -> Vercel Frontend)
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
+  }
 }));
 
 app.use(passport.initialize());
