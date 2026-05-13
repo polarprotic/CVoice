@@ -2048,7 +2048,12 @@
             }
         };
         try {
-           const res = await fetch("https://cvoice-1.onrender.com/api/resume", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
+          const res = await fetch("https://cvoice-1.onrender.com/api/resume", { 
+               method: "POST", 
+               headers: { "Content-Type": "application/json" }, 
+               credentials: "include",
+               body: JSON.stringify(payload) 
+           });
             const result = await res.json();
             if (res.ok) { showToast("Saved to archives successfully!", "success"); if (!existingId && result.data?._id) window.history.replaceState(null,"",`/customize.html?id=${result.data._id}`); }
             else showToast("Server Error: " + result.error, "error");
@@ -2206,7 +2211,9 @@
 
     async function loadResume(id) {
         try {
-           const res = await fetch(`https://cvoice-1.onrender.com/api/resume/${id}`);
+          const res = await fetch(`https://cvoice-1.onrender.com/api/resume/${id}`, {
+               credentials: 'include'
+           });
             const data = await res.json();
             if (data && data.templateSpecificInputs?.htmlContent) {
                 const page = document.getElementById('page-1');
