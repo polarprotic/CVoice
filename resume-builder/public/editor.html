@@ -5161,6 +5161,8 @@ function initDragAndDrop() {
       arr.splice(newTgt, 0, moved);
       state[stateKey] = arr;
       state._touched[stateKey] = true;
+      renderInputs();
+      injectDragHandles();
       render();
     }
 
